@@ -38,7 +38,7 @@ public class BubblePrison extends Entity implements PlayerRideable {
             LivingEntity controlling = this.getControllingPassenger();
             Vec3 movement = position().add(0, 0.25, 0);
             if (controlling != null) {
-                movement.add(controlling.getDeltaMovement());
+                movement = movement.add(controlling.getDeltaMovement());
             }
             this.moveTo(movement);
         }
@@ -60,7 +60,12 @@ public class BubblePrison extends Entity implements PlayerRideable {
 
     @Override
     public @Nullable LivingEntity getControllingPassenger() {
-        return this.getPassengers().getFirst() instanceof LivingEntity controlling ? controlling : null;
+        if (this.getPassengers().isEmpty()) {
+            return null;
+        }
+
+        Entity passenger = this.getPassengers().get(0);
+        return passenger instanceof LivingEntity living ? living : null;
     }
 
     @Override
@@ -90,7 +95,14 @@ public class BubblePrison extends Entity implements PlayerRideable {
 
     @Override
     protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
-        return new Vec3(0, dimensions.height() / 2, 0);
+        Vec3 center = position().add(0, dimensions.height() / 2, 0);
+        Vec3 entityToCenter = entity.position().subtract(center);
+        double distance = entityToCenter.length();
+        if (distance > 5) {
+            return entityToCenter.normalize().scale(5);
+        }
+        return entity.position().subtract(center);
+        //return new Vec3(0, dimensions.height() / 2, 0);
     }
 
     @Override
