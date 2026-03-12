@@ -3,6 +3,7 @@ package dev.thomasglasser.mineraculouskamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
 import dev.thomasglasser.mineraculouskamikotizations.core.particles.MineraculousKamikotizationsParticleTypes;
 import dev.thomasglasser.mineraculouskamikotizations.data.MineraculousKamikotizationsDataGenerators;
+import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityDataSerializers;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityEvents;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
@@ -28,8 +29,7 @@ public class MineraculousKamikotizations {
         MineraculousKamikotizationsDataComponents.init();
         MineraculousKamikotizationsItems.init();
         MineraculousKamikotizationsCreativeModeTabs.init();
-        MineraculousKamikotizationsDataComponents.init();
-        MineraculousKamikotizationsEntityTypes.init();
+        MineraculousKamikotizationsEntityDataSerializers.init();
         MineraculousKamikotizationsParticleTypes.init();
 
         bus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
