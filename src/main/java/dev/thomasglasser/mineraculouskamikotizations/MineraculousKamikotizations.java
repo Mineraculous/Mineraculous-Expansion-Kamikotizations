@@ -8,6 +8,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKa
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.MineraculousKamikotizationsAttachementTypes;
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -30,10 +31,13 @@ public class MineraculousKamikotizations {
         MineraculousKamikotizationsItems.init();
         MineraculousKamikotizationsCreativeModeTabs.init();
         MineraculousKamikotizationsEntityDataSerializers.init();
+        MineraculousKamikotizationsAttachementTypes.init();
         MineraculousKamikotizationsParticleTypes.init();
 
         bus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
 
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityLeaveLevel);
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityPostTick);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityMount);
     }
 

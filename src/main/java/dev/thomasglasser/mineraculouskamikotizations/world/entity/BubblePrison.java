@@ -1,12 +1,19 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity;
 
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsDamageTypeTags;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubblePrisonData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.MineraculousKamikotizationsAttachementTypes;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,26 +24,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class BubblePrison extends Entity {
-    private float deltaRotation;
-    private int lerpSteps;
-    private double lerpX;
-    private double lerpY;
-    private double lerpZ;
-    private double lerpYRot;
-    private double lerpXRot;
-    private boolean inputLeft;
-    private boolean inputRight;
-    private boolean inputUp;
-    private boolean inputDown;
-
+    private int targetingToCapturingTickCooldown = 10;
     private LivingEntity target;
     private int retargetCooldown = 0;
     private int bounceCount = 0;
 
     private static final int MAX_BOUNCES = 8;
-    private static final double SPEED = 0.5;
-
     private static final EntityDataAccessor<BubbleBehavior> DATA_BEHAVIOUR = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_BEHAVIOR.get());
+    private static final EntityDataAccessor<List<UUID>> DATA_CAPTIVES = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_CAPTIVES.get());
 
     public BubblePrison(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -50,17 +45,164 @@ public class BubblePrison extends Entity {
 
     public void setBehavior(BubbleBehavior behavior) {
         entityData.set(DATA_BEHAVIOUR, behavior);
+        if (behavior == BubbleBehavior.TARGETING) {
+            targetingToCapturingTickCooldown = 20;
+        }
+    }
+
+    public List<UUID> getCaptives() {
+        return new ArrayList<>(entityData.get(DATA_CAPTIVES));
+    }
+
+    public void setCaptives(List<UUID> list) {
+        entityData.set(DATA_CAPTIVES, list);
     }
 
     @Override
     public void tick() {
-        tickTargeting();
-        this.move(MoverType.SELF, getDeltaMovement());
+        if (getBehavior() == BubbleBehavior.TARGETING) {
+            tickTargeting();
+        } else if (getBehavior() == BubbleBehavior.CAPTURING) {
+            tickCapturing();
+        }
 
+        this.move(MoverType.SELF, getDeltaMovement());
         super.tick();
     }
 
+    public static final double PHYSICAL_RADIUS = 1.2;
+
+    public void constrainCaptiveEntityPosition(LivingEntity captive) {
+        Vec3 center = position().add(0, PHYSICAL_RADIUS, 0);
+        Vec3 toCaptured = captive.position().subtract(center);
+        if (toCaptured.length() > PHYSICAL_RADIUS) {
+            captive.resetFallDistance();
+            Vec3 correction = toCaptured.normalize().scale(PHYSICAL_RADIUS).subtract(toCaptured);
+            captive.move(MoverType.SELF, correction);
+            captive.setDeltaMovement(captive.getDeltaMovement().multiply(1, 0.8, 1));
+        }
+    }
+
+    private void tickCapturing() {
+        pushNotCaptiveEntities();
+        pushBubbleOnPlayerMovement();
+    }
+
+    public static void onCaptiveEntityTick(Level level, Entity entity, Optional<BubblePrisonData> bubbleData) {
+        if (level instanceof ServerLevel serverLevel) {
+            Entity bubble = serverLevel.getEntity(bubbleData.get().bubbleUUID());
+            if (bubble == null || !bubble.isAlive() || bubble.isRemoved()) {
+                entity.removeData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+            } else {
+                BubblePrisonData updatedData = new BubblePrisonData(bubble.getUUID(), bubble.getId());
+                if (!updatedData.equals(bubbleData.get()))
+                    entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(updatedData));
+            }
+
+        }
+        Entity bubble = level.getEntity(bubbleData.get().bubbleID());
+        if (entity instanceof LivingEntity livingEntity && bubble instanceof BubblePrison bubblePrison) {
+            bubblePrison.constrainCaptiveEntityPosition(livingEntity);
+        }
+    }
+
+    private void pushNotCaptiveEntities() {
+        Vec3 center = position().add(0, PHYSICAL_RADIUS, 0);
+        List<Entity> entities = level().getEntities(this, getBoundingBox());
+        for (Entity entity : entities) {
+            Optional<BubblePrisonData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+            if (bubbleData.isEmpty() || !bubbleData.get().bubbleUUID().equals(getUUID())) {
+                Vec3 toEntity = entity.position().subtract(center);
+                double distance = toEntity.length();
+                if (distance < 2.2 && !entity.noPhysics) {
+                    Vec3 desiredPos = center.add(toEntity.normalize().scale(2.2));
+                    Vec3 correction = desiredPos.subtract(entity.position());
+                    entity.move(MoverType.SELF, correction);
+                    entity.hurtMarked = true;
+                }
+            }
+        }
+    }
+
+    private void pushBubbleOnPlayerMovement() {
+        setDeltaMovement(0, 0, 0); //TODO apply vertical motion here
+        if (level() instanceof ServerLevel serverLevel) {
+            Vec3 center = position().add(0, PHYSICAL_RADIUS, 0);
+            Vec3 totalPush = Vec3.ZERO;
+            int pushingPlayers = 0;
+            double pushThreshold = PHYSICAL_RADIUS * 0.5;
+            for (UUID id : getCaptives()) {
+                Entity entity = serverLevel.getEntity(id);
+                if (entity instanceof ServerPlayer player) {
+                    Vec3 offset = player.position().subtract(center);
+                    offset = new Vec3(offset.x, 0, offset.z);
+                    double distance = offset.length();
+                    if (distance > pushThreshold) {
+                        double strength = (distance - pushThreshold) / (PHYSICAL_RADIUS - pushThreshold);
+                        Vec3 push = offset.normalize().scale(strength);
+                        totalPush = totalPush.add(push);
+                        pushingPlayers++;
+                    }
+                }
+            }
+            if (pushingPlayers > 0) {
+                Vec3 movement = totalPush.scale(1.0 / pushingPlayers);
+                setDeltaMovement(movement);
+                hurtMarked = true;
+            }
+        }
+    }
+
+    public void entityLeaveLevel(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            for (UUID id : getCaptives()) {
+                Entity captive = serverLevel.getEntity(id);
+                if (captive != null) {
+                    captive.removeData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+                }
+            }
+        }
+        if (!isRemoved()) {
+            discard();
+        }
+    }
+
     private void tickTargeting() {
+        bounceAround();
+        lookForTargets();
+        captureCollidingEntities();
+    }
+
+    private void captureCollidingEntities() {
+        List<UUID> captives = getCaptives(); // copy to mutable list
+        List<Entity> entities = level().getEntities(this, getBoundingBox());
+
+        for (Entity entity : entities) {
+            Optional<BubblePrisonData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+            if (entity instanceof LivingEntity && bubbleData.isEmpty() && !entity.noPhysics) {
+                UUID uuid = entity.getUUID();
+                if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID()) {
+                    captives.add(uuid);
+                    entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubblePrisonData(getUUID(), getId())));
+                    if (captives.size() == 3) {
+                        setBehavior(BubbleBehavior.CAPTURING);
+                        setDeltaMovement(Vec3.ZERO);
+                    }
+                }
+            }
+        }
+        setCaptives(captives);
+        if (!captives.isEmpty()) {
+            targetingToCapturingTickCooldown--;
+        }
+        if (targetingToCapturingTickCooldown <= 0) {
+            setBehavior(BubbleBehavior.CAPTURING);
+            setDeltaMovement(Vec3.ZERO);
+            hurtMarked = true;
+        }
+    }
+
+    private void bounceAround() {
         Vec3 velocity = getDeltaMovement().add(0, -0.05, 0);
 
         AABB box = getBoundingBox();
@@ -78,9 +220,10 @@ public class BubblePrison extends Entity {
             discard();
         }
 
-        setDeltaMovement(velocity);
-        hurtMarked = true;
-        lookForTargets();
+        //if (getCaptives().isEmpty()) {
+            setDeltaMovement(velocity);
+            hurtMarked = true;
+        //}
     }
 
     private Vec3 handleBounce(Vec3 velocity, AABB box, double dx, double dy, double dz, Direction.Axis axis) {
@@ -137,10 +280,9 @@ public class BubblePrison extends Entity {
                 .normalize();
 
         double blendFactor = 0.3;
-        Vec3 biased = velocity.normalize().scale(0.7)
+        Vec3 biased = velocity.normalize().scale(0.8)
                 .add(toTarget.scale(blendFactor))
-                .normalize()
-                .scale(0.89);
+                .normalize();
         return biased;
     }
 
@@ -155,53 +297,13 @@ public class BubblePrison extends Entity {
     }
 
     @Override
-    public boolean canCollideWith(Entity entity) {
-        return entity.canBeCollidedWith();
-    }
-
-    @Override
     public boolean canBeCollidedWith() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isPushable() {
         return true;
-    }
-
-    @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
-        this.lerpX = x;
-        this.lerpY = y;
-        this.lerpZ = z;
-        this.lerpYRot = yRot;
-        this.lerpXRot = xRot;
-        this.lerpSteps = 10;
-    }
-
-    @Override
-    public double lerpTargetX() {
-        return this.lerpSteps > 0 ? this.lerpX : this.getX();
-    }
-
-    @Override
-    public double lerpTargetY() {
-        return this.lerpSteps > 0 ? this.lerpY : this.getY();
-    }
-
-    @Override
-    public double lerpTargetZ() {
-        return this.lerpSteps > 0 ? this.lerpZ : this.getZ();
-    }
-
-    @Override
-    public float lerpTargetXRot() {
-        return this.lerpSteps > 0 ? (float) this.lerpXRot : this.getXRot();
-    }
-
-    @Override
-    public float lerpTargetYRot() {
-        return this.lerpSteps > 0 ? (float) this.lerpYRot : this.getYRot();
     }
 
     @Override
@@ -212,6 +314,7 @@ public class BubblePrison extends Entity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_BEHAVIOUR, BubbleBehavior.TARGETING);
+        builder.define(DATA_CAPTIVES, List.of());
     }
 
     @Override

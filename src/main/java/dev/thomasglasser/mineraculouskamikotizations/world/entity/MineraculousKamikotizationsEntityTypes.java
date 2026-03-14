@@ -16,7 +16,7 @@ public class MineraculousKamikotizationsEntityTypes {
     public static final DeferredHolder<EntityType<?>, EntityType<IceCharge>> ICE_CHARGE = ENTITY_TYPES.register("ice_charge", IceCharge::new, MobCategory.MISC, builder -> builder
             .sized(0.3125F, 0.3125F));
     public static final DeferredHolder<EntityType<?>, EntityType<BubblePrison>> BUBBLE_PRISON = ENTITY_TYPES.register("bubble_prison", BubblePrison::new, MobCategory.MISC, builder -> builder
-            .sized(4F, 4F));
+            .sized(3.7F, 3.7F));
 
     // Grief Tracking
     public static final DeferredHolder<EntityType<?>, EntityType<GriefTrackingIceCharge>> GRIEF_TRACKING_ICE_CHARGE = ENTITY_TYPES.register("grief_tracking_ice_charge", GriefTrackingIceCharge::new, MobCategory.MISC, builder -> builder
