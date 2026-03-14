@@ -32,7 +32,7 @@ public class BubblePrisonRenderer extends EntityRenderer<BubblePrison> {
         MineraculousClientUtils.rotateFacingCamera(poseStack, center, 0);
         ResourceLocation texture = getTexture(entity);
         VertexConsumer vertex = bufferSource.getBuffer(RenderType.entityTranslucent(texture));
-        double quadSize = 2.1;
+        double quadSize = 0.5676 * entity.getBbHeight();
         poseStack.pushPose();
         MineraculousClientUtils.vertex(vertex, poseStack.last(), center.add(-quadSize, quadSize, 0), 0, 0, packedLight);
         MineraculousClientUtils.vertex(vertex, poseStack.last(), center.add(quadSize, quadSize, 0), 1, 0, packedLight);

@@ -1,6 +1,6 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity;
 
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubblePrisonData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubbleImprisonedData;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.MineraculousKamikotizationsAttachementTypes;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +23,7 @@ public class MineraculousKamikotizationsEntityEvents {
         Entity entity = event.getEntity();
         Level level = entity.level();
 
-        Optional<BubblePrisonData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+        Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
         if (bubbleData.isPresent()) {
             BubblePrison.onCaptiveEntityTick(level, entity, bubbleData);
         }

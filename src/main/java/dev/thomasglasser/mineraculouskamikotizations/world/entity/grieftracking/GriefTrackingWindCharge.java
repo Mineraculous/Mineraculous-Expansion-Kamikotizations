@@ -20,6 +20,9 @@ public class GriefTrackingWindCharge extends WindCharge {
         super(MineraculousKamikotizationsEntityTypes.GRIEF_TRACKING_WIND_CHARGE.get(), level);
         setOwner(player);
         this.moveTo(x, y, z, this.getYRot(), this.getXRot());
+        if (level instanceof ServerLevel serverLevel) {
+            EntityReversionData.get(serverLevel).putRemovable(player.getUUID(), this);
+        }
     }
 
     public GriefTrackingWindCharge(Level level, double x, double y, double z, Vec3 movement) {

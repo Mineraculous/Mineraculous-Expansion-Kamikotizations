@@ -26,10 +26,16 @@ public class GriefTrackingIceCharge extends IceCharge {
 
     public GriefTrackingIceCharge(EntityType<? extends IceCharge> entityType, Entity owner, double x, double y, double z, Level level) {
         super(entityType, owner, x, y, z, level);
+        if (level instanceof ServerLevel serverLevel) {
+            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
+        }
     }
 
     public GriefTrackingIceCharge(Entity owner, double x, double y, double z, Level level) {
         super(MineraculousKamikotizationsEntityTypes.GRIEF_TRACKING_ICE_CHARGE.get(), owner, x, y, z, level);
+        if (level instanceof ServerLevel serverLevel) {
+            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
+        }
     }
 
     @Override

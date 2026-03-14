@@ -1,33 +1,45 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity;
 
+import dev.thomasglasser.mineraculous.api.world.level.storage.BlockReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.EntityReversionData;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsDamageTypeTags;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubblePrisonData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubbleImprisonedData;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.MineraculousKamikotizationsAttachementTypes;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public class BubblePrison extends Entity {
+public class BubblePrison extends Entity implements OwnableEntity {
     private int targetingToCapturingTickCooldown = 10;
     private LivingEntity target;
     private int retargetCooldown = 0;
     private int bounceCount = 0;
+    private UUID ownerUUID;
 
     private static final int MAX_BOUNCES = 8;
     private static final EntityDataAccessor<BubbleBehavior> DATA_BEHAVIOUR = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_BEHAVIOR.get());
@@ -37,6 +49,18 @@ public class BubblePrison extends Entity {
         super(entityType, level);
         this.blocksBuilding = true;
         this.noPhysics = false;
+    }
+
+    public BubblePrison(LivingEntity owner, Level level, BubbleBehavior behavior) {
+        super(MineraculousKamikotizationsEntityTypes.BUBBLE_PRISON.get(), level);
+        this.blocksBuilding = true;
+        this.noPhysics = false;
+        this.setOwner(owner);
+        this.setBehavior(behavior);
+        refreshDimensions();
+        if (level instanceof ServerLevel serverLevel) {
+            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
+        }
     }
 
     public BubbleBehavior getBehavior() {
@@ -64,20 +88,91 @@ public class BubblePrison extends Entity {
             tickTargeting();
         } else if (getBehavior() == BubbleBehavior.CAPTURING) {
             tickCapturing();
+        } else if (getBehavior() == BubbleBehavior.EXPLODING) {
+            tickExploding();
         }
 
         this.move(MoverType.SELF, getDeltaMovement());
         super.tick();
     }
 
-    public static final double PHYSICAL_RADIUS = 1.2;
+    private void tickExploding() {
+        if (getBbHeight() > 3.5) {
+            refreshDimensions();
+        }
+
+        // 2. Apply gravity/friction
+        setDeltaMovement(getDeltaMovement().scale(0.93).add(0, -0.05, 0));
+        hurtMarked = true;
+
+        // 3. BLOCK COLLISION: Check if we hit a wall/floor this tick
+        if (this.horizontalCollision || this.verticalCollision) {
+            explodeBubble(3.0F);
+            return;
+        }
+
+        // 4. ENTITY COLLISION: Check for nearby entities
+        // We inflate the box slightly to ensure it catches entities we are about to "touch"
+        List<Entity> entities = level().getEntities(this, getBoundingBox().inflate(0.2));
+        for (Entity entity : entities) {
+            // Don't explode on yourself or your owner
+            if (entity != this && entity.isAlive() && !entity.getUUID().equals(getOwnerUUID())) {
+                explodeBubble(3.0F);
+                return;
+            }
+        }
+    }
+
+    private void explodeBubble(float explosionRadius) {
+        if (level() instanceof ServerLevel serverLevel) {
+            // Create the explosion logic
+            Explosion explosion = new Explosion(
+                    level(),
+                    this,
+                    getX(),
+                    getY() + getBbHeight() / 2,
+                    getZ(),
+                    explosionRadius,
+                    false,
+                    Explosion.BlockInteraction.KEEP); // Change to KEEP or NONE
+
+            explosion.explode();
+
+            // Record and remove blocks manually without drops
+            for (BlockPos pos : explosion.getToBlow()) {
+                BlockState state = level().getBlockState(pos);
+                if (!state.isAir() && getOwnerUUID() != null) {
+                    // Record the data for your restoration system
+                    BlockReversionData.get(serverLevel).putRevertible(getOwnerUUID(), level().dimension(), pos, state);
+
+                    // Remove the block without dropping items
+                    level().removeBlock(pos, false);
+                }
+            }
+
+            // Play the explosion sound
+            level().playSound(null, getX(), getY(), getZ(),
+                    SoundEvents.GENERIC_EXPLODE,
+                    SoundSource.BLOCKS,
+                    4.0F,
+                    (1.0F + (level().random.nextFloat() - level().random.nextFloat()) * 0.2F) * 0.7F);
+
+            explosion.finalizeExplosion(true);
+            discard();
+        }
+    }
+
+    public double getPhysicalRadius() {
+        return this.getBbHeight() * 0.324;
+    }
 
     public void constrainCaptiveEntityPosition(LivingEntity captive) {
-        Vec3 center = position().add(0, PHYSICAL_RADIUS, 0);
+        double radius = getPhysicalRadius();
+        Vec3 center = position().add(0, radius, 0);
         Vec3 toCaptured = captive.position().subtract(center);
-        if (toCaptured.length() > PHYSICAL_RADIUS) {
+        if (toCaptured.length() > radius) {
             captive.resetFallDistance();
-            Vec3 correction = toCaptured.normalize().scale(PHYSICAL_RADIUS).subtract(toCaptured);
+            Vec3 correction = toCaptured.normalize().scale(radius).subtract(toCaptured);
             captive.move(MoverType.SELF, correction);
             captive.setDeltaMovement(captive.getDeltaMovement().multiply(1, 0.8, 1));
         }
@@ -88,13 +183,13 @@ public class BubblePrison extends Entity {
         pushBubbleOnPlayerMovement();
     }
 
-    public static void onCaptiveEntityTick(Level level, Entity entity, Optional<BubblePrisonData> bubbleData) {
+    public static void onCaptiveEntityTick(Level level, Entity entity, Optional<BubbleImprisonedData> bubbleData) {
         if (level instanceof ServerLevel serverLevel) {
             Entity bubble = serverLevel.getEntity(bubbleData.get().bubbleUUID());
             if (bubble == null || !bubble.isAlive() || bubble.isRemoved()) {
                 entity.removeData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
             } else {
-                BubblePrisonData updatedData = new BubblePrisonData(bubble.getUUID(), bubble.getId());
+                BubbleImprisonedData updatedData = new BubbleImprisonedData(bubble.getUUID(), bubble.getId());
                 if (!updatedData.equals(bubbleData.get()))
                     entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(updatedData));
             }
@@ -107,10 +202,11 @@ public class BubblePrison extends Entity {
     }
 
     private void pushNotCaptiveEntities() {
-        Vec3 center = position().add(0, PHYSICAL_RADIUS, 0);
+        double radius = getPhysicalRadius();
+        Vec3 center = position().add(0, radius, 0);
         List<Entity> entities = level().getEntities(this, getBoundingBox());
         for (Entity entity : entities) {
-            Optional<BubblePrisonData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+            Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
             if (bubbleData.isEmpty() || !bubbleData.get().bubbleUUID().equals(getUUID())) {
                 Vec3 toEntity = entity.position().subtract(center);
                 double distance = toEntity.length();
@@ -127,10 +223,11 @@ public class BubblePrison extends Entity {
     private void pushBubbleOnPlayerMovement() {
         setDeltaMovement(0, 0, 0); //TODO apply vertical motion here
         if (level() instanceof ServerLevel serverLevel) {
-            Vec3 center = position().add(0, PHYSICAL_RADIUS, 0);
+            double radius = getPhysicalRadius();
+            Vec3 center = position().add(0, radius, 0);
             Vec3 totalPush = Vec3.ZERO;
             int pushingPlayers = 0;
-            double pushThreshold = PHYSICAL_RADIUS * 0.5;
+            double pushThreshold = radius * 0.5;
             for (UUID id : getCaptives()) {
                 Entity entity = serverLevel.getEntity(id);
                 if (entity instanceof ServerPlayer player) {
@@ -138,7 +235,7 @@ public class BubblePrison extends Entity {
                     offset = new Vec3(offset.x, 0, offset.z);
                     double distance = offset.length();
                     if (distance > pushThreshold) {
-                        double strength = (distance - pushThreshold) / (PHYSICAL_RADIUS - pushThreshold);
+                        double strength = (distance - pushThreshold) / (radius - pushThreshold);
                         Vec3 push = offset.normalize().scale(strength);
                         totalPush = totalPush.add(push);
                         pushingPlayers++;
@@ -174,16 +271,19 @@ public class BubblePrison extends Entity {
     }
 
     private void captureCollidingEntities() {
-        List<UUID> captives = getCaptives(); // copy to mutable list
+        List<UUID> captives = getCaptives();
         List<Entity> entities = level().getEntities(this, getBoundingBox());
 
         for (Entity entity : entities) {
-            Optional<BubblePrisonData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+            Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
             if (entity instanceof LivingEntity && bubbleData.isEmpty() && !entity.noPhysics) {
                 UUID uuid = entity.getUUID();
-                if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID()) {
+                if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID() && uuid != getOwnerUUID()) {
+                    if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
+                        EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
+                    }
                     captives.add(uuid);
-                    entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubblePrisonData(getUUID(), getId())));
+                    entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubbleImprisonedData(getUUID(), getId())));
                     if (captives.size() == 3) {
                         setBehavior(BubbleBehavior.CAPTURING);
                         setDeltaMovement(Vec3.ZERO);
@@ -220,10 +320,8 @@ public class BubblePrison extends Entity {
             discard();
         }
 
-        //if (getCaptives().isEmpty()) {
-            setDeltaMovement(velocity);
-            hurtMarked = true;
-        //}
+        setDeltaMovement(velocity);
+        hurtMarked = true;
     }
 
     private Vec3 handleBounce(Vec3 velocity, AABB box, double dx, double dy, double dz, Direction.Axis axis) {
@@ -287,6 +385,14 @@ public class BubblePrison extends Entity {
     }
 
     @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        if (getBehavior() == BubbleBehavior.EXPLODING) {
+            return super.getDimensions(pose).scale(0.4F);
+        }
+        return super.getDimensions(pose);
+    }
+
+    @Override
     public boolean isNoGravity() {
         return false;
     }
@@ -318,10 +424,27 @@ public class BubblePrison extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {}
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        if (compound.hasUUID("Owner")) {
+            ownerUUID = compound.getUUID("Owner");
+        }
+    }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {}
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        if (ownerUUID != null) {
+            compound.putUUID("Owner", ownerUUID);
+        }
+    }
+
+    @Override
+    public @Nullable UUID getOwnerUUID() {
+        return ownerUUID;
+    }
+
+    public void setOwner(Entity entity) {
+        this.ownerUUID = entity == null ? null : entity.getUUID();
+    }
 
     public enum BubbleBehavior {
         EXPLODING, // Red

@@ -16,7 +16,7 @@ public class MineraculousKamikotizationsAttachementTypes {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MineraculousKamikotizations.MOD_ID);
 
     // held by entities imprisoned inside a BubblePrison
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<BubblePrisonData>>> BUBBLE_DATA = ATTACHMENT_TYPES.register("bubble_uuid", () -> AttachmentType.builder(Optional::<BubblePrisonData>empty).serialize(optionalCodec(BubblePrisonData.CODEC)).sync(optionalStreamCodec(BubblePrisonData.STREAM_CODEC)).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<BubbleImprisonedData>>> BUBBLE_DATA = ATTACHMENT_TYPES.register("bubble_uuid", () -> AttachmentType.builder(Optional::<BubbleImprisonedData>empty).serialize(optionalCodec(BubbleImprisonedData.CODEC)).sync(optionalStreamCodec(BubbleImprisonedData.STREAM_CODEC)).build());
 
     private static <T> Codec<Optional<T>> optionalCodec(Codec<T> codec) {
         return codec.optionalFieldOf("data").codec();
