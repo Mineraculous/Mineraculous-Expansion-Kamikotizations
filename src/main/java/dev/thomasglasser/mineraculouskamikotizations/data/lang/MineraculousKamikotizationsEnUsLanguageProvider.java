@@ -4,6 +4,7 @@ import dev.thomasglasser.mineraculous.impl.data.lang.MineraculousEnUsLanguagePro
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
+import dev.thomasglasser.mineraculouskamikotizations.world.item.BubbleSwordItem;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
@@ -38,6 +39,11 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         add(WeatherControlParasolItem.Mode.LIGHTNING, "Lightning");
         add(WeatherControlParasolItem.Mode.WEATHER, "Weather");
         add(WeatherControlParasolItem.Mode.WIND, "Wind");
+
+        add(BubbleSwordItem.Mode.CAPTURE, "Capture");
+        add(BubbleSwordItem.Mode.FLIGHT, "Flight");
+        add(BubbleSwordItem.Mode.EXPLOSIVE, "Explosive");
+        add(BubbleSwordItem.Mode.SHOWER, "Shower");
     }
 
     protected void addEntities() {

@@ -3,6 +3,7 @@
     "mineraculouskamikotizations:mineraculouskamikotizations"
   ],
   "minecraft:data_component_type": [
+    "mineraculouskamikotizations:bubble_sword_mode",
     "mineraculouskamikotizations:weather_control_parasol_mode"
   ],
   "minecraft:entity_type": [
@@ -54,5 +55,14 @@
   "mineraculous:kamikotization": [
     "mineraculouskamikotizations:bubble_capture",
     "mineraculouskamikotizations:weather_control"
+  ],
+  "neoforge:attachment_types": [
+    "mineraculouskamikotizations:bubble_uuid"
+  ],
+  "neoforge:entity_data_serializers": [
+    "mineraculouskamikotizations:bubble_prison_data"
+  ],
+  "neoforge:synced_attachment_types": [
+    "mineraculouskamikotizations:bubble_uuid"
   ]
 }

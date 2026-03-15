@@ -62,5 +62,9 @@
   "item.mineraculouskamikotizations.yellow_parasol": "Yellow Parasol",
   "item_group.mineraculouskamikotizations.mineraculouskamikotizations": "Mineraculous Expansion: Kamikotizations",
   "kamikotization.mineraculouskamikotizations.bubble_capture": "Bubble Capture",
-  "kamikotization.mineraculouskamikotizations.weather_control": "Weather Control"
+  "kamikotization.mineraculouskamikotizations.weather_control": "Weather Control",
+  "mode.mineraculous.butterfly_cane.capture": "Capture",
+  "mode.mineraculous.butterfly_cane.explosive": "Explosive",
+  "mode.mineraculous.butterfly_cane.flight": "Flight",
+  "mode.mineraculous.butterfly_cane.shower": "Shower"
 }

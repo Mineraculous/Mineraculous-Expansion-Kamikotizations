@@ -12,6 +12,7 @@ import dev.thomasglasser.mineraculous.api.world.item.armor.MineraculousArmors;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculouses;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
+import dev.thomasglasser.mineraculouskamikotizations.client.particle.FloatingBubbleParticleOptions;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.BubblePrison;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
@@ -30,11 +31,13 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -91,23 +94,93 @@ public class BubbleSwordItem extends Item implements ICurioItem, RadialMenuProvi
     }
 
     @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return 100;
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.TOOT_HORN;
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (hand == InteractionHand.MAIN_HAND) {
             ItemStack stack = player.getMainHandItem();
             Mode mode = stack.get(MineraculousKamikotizationsDataComponents.BUBBLE_SWORD_MODE);
-            if (mode == Mode.SHOOT_EXPLOSIVES) {
-                BubblePrison bubblePrison = new BubblePrison(player, level, BubblePrison.BubbleBehavior.EXPLODING);
-                bubblePrison.setDeltaMovement(player.getLookAngle().normalize().scale(4));
-                bubblePrison.setPos(player.position().add(0, player.getEyeHeight(), 0).add(player.getLookAngle().normalize().scale(4)));
-                level.addFreshEntity(bubblePrison);
-                bubblePrison.refreshDimensions();
+            if (player.getCooldowns().isOnCooldown(this)) {
+                return InteractionResultHolder.fail(stack);
+            }
+            if (mode == Mode.EXPLOSIVE) {
+                if (!level.isClientSide()) {
+                    BubblePrison bubblePrison = new BubblePrison(player, level, BubblePrison.BubbleBehavior.EXPLODING, 0.4);
+                    bubblePrison.setDeltaMovement(player.getLookAngle().normalize().scale(4));
+                    bubblePrison.setPos(player.position().add(0, player.getEyeHeight(), 0).add(player.getLookAngle().normalize().scale(4)));
+                    level.addFreshEntity(bubblePrison);
+                    player.getCooldowns().addCooldown(this, 20);
+                }
+                return InteractionResultHolder.success(stack);
+            } else if (mode == Mode.CAPTURE) {
+                if (!level.isClientSide()) {
+                    BubblePrison bubblePrison = new BubblePrison(player, level, BubblePrison.BubbleBehavior.TARGETING, 1);
+                    bubblePrison.setDeltaMovement(player.getLookAngle().normalize());
+                    bubblePrison.setPos(player.position().add(0, player.getEyeHeight(), 0).add(player.getLookAngle().normalize().scale(4)));
+                    level.addFreshEntity(bubblePrison);
+                    player.getCooldowns().addCooldown(this, 55);
+                }
+                return InteractionResultHolder.success(stack);
+            } else if (mode == Mode.FLIGHT) {
+                player.startUsingItem(hand);
+                return InteractionResultHolder.consume(stack);
             }
         }
         return super.use(level, player, hand);
     }
 
+    @Override
+    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
+        if (entity instanceof Player player) {
+            Mode mode = stack.get(MineraculousKamikotizationsDataComponents.BUBBLE_SWORD_MODE);
+            if (mode == Mode.FLIGHT) {
+                player.setDeltaMovement(player.getLookAngle().normalize().scale(1.5));
+                player.resetFallDistance();
+                if (level.isClientSide) {
+                    for (int i = 1; i <= 20; i++)
+                        level.addParticle(new FloatingBubbleParticleOptions(0.278f, 1.0f, 0.807f, 60, true), player.getRandomX(0.5), player.getRandomY(), player.getRandomZ(0.5), 0, -0.2, 0);
+                }
+                int timeHeld = this.getUseDuration(stack, entity) - remainingUseDuration;
+
+                if (timeHeld % 10 == 0 && !level.isClientSide) {
+                    BubblePrison bubblePrison = new BubblePrison(player, level, BubblePrison.BubbleBehavior.TARGETING, 0.1);
+                    bubblePrison.setDeltaMovement(player.getDeltaMovement().scale(-0.2));
+                    bubblePrison.moveTo(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+                    level.addFreshEntity(bubblePrison);
+                    bubblePrison.refreshDimensions();
+                }
+            }
+        }
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+        if (entity instanceof Player player) {
+            Mode mode = stack.get(MineraculousKamikotizationsDataComponents.BUBBLE_SWORD_MODE);
+            if (mode == Mode.FLIGHT) {
+                player.getCooldowns().addCooldown(this, 35);
+            }
+        }
+        return super.finishUsingItem(stack, level, entity);
+    }
+
+    @Override
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
+        if (entity instanceof Player player) {
+            player.getCooldowns().addCooldown(this, 30);
+        }
+    }
+
     public enum Mode implements RadialMenuOption, StringRepresentable {
-        SHOOT_EXPLOSIVES,
+        EXPLOSIVE,
         FLIGHT,
         CAPTURE,
         SHOWER;

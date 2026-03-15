@@ -1,10 +1,14 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity;
 
+import com.mojang.serialization.Codec;
 import dev.thomasglasser.mineraculous.api.world.level.storage.BlockReversionData;
 import dev.thomasglasser.mineraculous.api.world.level.storage.EntityReversionData;
+import dev.thomasglasser.mineraculouskamikotizations.client.particle.FloatingBubbleParticleOptions;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsDamageTypeTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubbleImprisonedData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.BubblePrisonData;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.MineraculousKamikotizationsAttachementTypes;
+import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,12 +17,15 @@ import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -42,8 +49,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
     private UUID ownerUUID;
 
     private static final int MAX_BOUNCES = 8;
-    private static final EntityDataAccessor<BubbleBehavior> DATA_BEHAVIOUR = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_BEHAVIOR.get());
-    private static final EntityDataAccessor<List<UUID>> DATA_CAPTIVES = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_CAPTIVES.get());
+    private static final EntityDataAccessor<BubblePrisonData> DATA_BUBBLE = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_DATA.get());
 
     public BubblePrison(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -51,35 +57,49 @@ public class BubblePrison extends Entity implements OwnableEntity {
         this.noPhysics = false;
     }
 
-    public BubblePrison(LivingEntity owner, Level level, BubbleBehavior behavior) {
+    public BubblePrison(LivingEntity owner, Level level, BubbleBehavior behavior, double scaleFactor) {
         super(MineraculousKamikotizationsEntityTypes.BUBBLE_PRISON.get(), level);
         this.blocksBuilding = true;
         this.noPhysics = false;
         this.setOwner(owner);
         this.setBehavior(behavior);
+        this.setScaleFactor(scaleFactor);
         refreshDimensions();
         if (level instanceof ServerLevel serverLevel) {
             EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
         }
     }
 
+    private BubblePrisonData getBubbleData() {
+        return entityData.get(DATA_BUBBLE);
+    }
+
     public BubbleBehavior getBehavior() {
-        return entityData.get(DATA_BEHAVIOUR);
+        return getBubbleData().behavior();
     }
 
     public void setBehavior(BubbleBehavior behavior) {
-        entityData.set(DATA_BEHAVIOUR, behavior);
+        entityData.set(DATA_BUBBLE, getBubbleData().withBehavior(behavior));
         if (behavior == BubbleBehavior.TARGETING) {
             targetingToCapturingTickCooldown = 20;
         }
     }
 
     public List<UUID> getCaptives() {
-        return new ArrayList<>(entityData.get(DATA_CAPTIVES));
+        return new ArrayList<>(getBubbleData().captiveEntities());
     }
 
     public void setCaptives(List<UUID> list) {
-        entityData.set(DATA_CAPTIVES, list);
+        entityData.set(DATA_BUBBLE, getBubbleData().withCaptiveEntities(list));
+    }
+
+    public double getScaleFactor() {
+        return getBubbleData().scaleFactor();
+    }
+
+    public void setScaleFactor(double scaleFactor) {
+        entityData.set(DATA_BUBBLE, getBubbleData().withScaleFactor(scaleFactor));
+        refreshDimensions();
     }
 
     @Override
@@ -91,66 +111,53 @@ public class BubblePrison extends Entity implements OwnableEntity {
         } else if (getBehavior() == BubbleBehavior.EXPLODING) {
             tickExploding();
         }
-
+        if (getScaleFactor() != 1 && getBbHeight() == 3.7f)
+            refreshDimensions();
         this.move(MoverType.SELF, getDeltaMovement());
         super.tick();
     }
 
     private void tickExploding() {
-        if (getBbHeight() > 3.5) {
-            refreshDimensions();
-        }
-
-        // 2. Apply gravity/friction
         setDeltaMovement(getDeltaMovement().scale(0.93).add(0, -0.05, 0));
         hurtMarked = true;
-
-        // 3. BLOCK COLLISION: Check if we hit a wall/floor this tick
         if (this.horizontalCollision || this.verticalCollision) {
-            explodeBubble(3.0F);
+            explodeBubble();
             return;
         }
-
-        // 4. ENTITY COLLISION: Check for nearby entities
-        // We inflate the box slightly to ensure it catches entities we are about to "touch"
         List<Entity> entities = level().getEntities(this, getBoundingBox().inflate(0.2));
         for (Entity entity : entities) {
-            // Don't explode on yourself or your owner
             if (entity != this && entity.isAlive() && !entity.getUUID().equals(getOwnerUUID())) {
-                explodeBubble(3.0F);
+                explodeBubble();
+                if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
+                    EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
+                }
                 return;
             }
         }
     }
 
-    private void explodeBubble(float explosionRadius) {
+    private void explodeBubble() {
         if (level() instanceof ServerLevel serverLevel) {
-            // Create the explosion logic
             Explosion explosion = new Explosion(
                     level(),
                     this,
                     getX(),
                     getY() + getBbHeight() / 2,
                     getZ(),
-                    explosionRadius,
+                    2,
                     false,
-                    Explosion.BlockInteraction.KEEP); // Change to KEEP or NONE
+                    Explosion.BlockInteraction.KEEP);
 
             explosion.explode();
 
-            // Record and remove blocks manually without drops
             for (BlockPos pos : explosion.getToBlow()) {
                 BlockState state = level().getBlockState(pos);
                 if (!state.isAir() && getOwnerUUID() != null) {
-                    // Record the data for your restoration system
                     BlockReversionData.get(serverLevel).putRevertible(getOwnerUUID(), level().dimension(), pos, state);
-
-                    // Remove the block without dropping items
                     level().removeBlock(pos, false);
                 }
             }
 
-            // Play the explosion sound
             level().playSound(null, getX(), getY(), getZ(),
                     SoundEvents.GENERIC_EXPLODE,
                     SoundSource.BLOCKS,
@@ -158,6 +165,19 @@ public class BubblePrison extends Entity implements OwnableEntity {
                     (1.0F + (level().random.nextFloat() - level().random.nextFloat()) * 0.2F) * 0.7F);
 
             explosion.finalizeExplosion(true);
+
+            for (int i = 1; i <= 50; i++) {
+                serverLevel.sendParticles(
+                        new FloatingBubbleParticleOptions(
+                                0.928f,
+                                0.525f,
+                                0.067f,
+                                60,
+                                true),
+                        getX() + Math.random(), getY() + Math.random(), getZ() + Math.random(),
+                        serverLevel.random.nextInt(1, 2),
+                        0, 0, 0, 0);
+            }
             discard();
         }
     }
@@ -266,8 +286,16 @@ public class BubblePrison extends Entity implements OwnableEntity {
 
     private void tickTargeting() {
         bounceAround();
-        lookForTargets();
-        captureCollidingEntities();
+        if (getScaleFactor() == 1) {
+            lookForTargets();
+            captureCollidingEntities();
+        }
+        if (getBbHeight() < 3.7) {
+            setScaleFactor(getScaleFactor() + 0.01);
+        }
+        if (getScaleFactor() > 1) {
+            setScaleFactor(1);
+        }
     }
 
     private void captureCollidingEntities() {
@@ -303,7 +331,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
     }
 
     private void bounceAround() {
-        Vec3 velocity = getDeltaMovement().add(0, -0.05, 0);
+        Vec3 velocity = getDeltaMovement().scale(0.9955).add(0, -0.05, 0);
 
         AABB box = getBoundingBox();
 
@@ -358,7 +386,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
             List<LivingEntity> candidates = level().getEntitiesOfClass(
                     LivingEntity.class,
                     getBoundingBox().inflate(8),
-                    e -> e.isAlive());
+                    e -> e.isAlive() && (getOwnerUUID() == null || !getOwnerUUID().equals(e.getUUID())));
 
             if (!candidates.isEmpty()) {
                 target = candidates.stream()
@@ -386,8 +414,8 @@ public class BubblePrison extends Entity implements OwnableEntity {
 
     @Override
     public EntityDimensions getDimensions(Pose pose) {
-        if (getBehavior() == BubbleBehavior.EXPLODING) {
-            return super.getDimensions(pose).scale(0.4F);
+        if (getScaleFactor() != 1) {
+            return super.getDimensions(pose).scale((float) getScaleFactor());
         }
         return super.getDimensions(pose);
     }
@@ -419,8 +447,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_BEHAVIOUR, BubbleBehavior.TARGETING);
-        builder.define(DATA_CAPTIVES, List.of());
+        builder.define(DATA_BUBBLE, new BubblePrisonData());
     }
 
     @Override
@@ -428,12 +455,20 @@ public class BubblePrison extends Entity implements OwnableEntity {
         if (compound.hasUUID("Owner")) {
             ownerUUID = compound.getUUID("Owner");
         }
+        if (compound.contains("BubbleData")) {
+            BubblePrisonData.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, compound.get("BubbleData"))
+                    .resultOrPartial(error -> System.err.println("Failed to parse BubbleData: " + error))
+                    .ifPresent(data -> this.entityData.set(DATA_BUBBLE, data));
+        }
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
         if (ownerUUID != null) {
             compound.putUUID("Owner", ownerUUID);
+            BubblePrisonData.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, getBubbleData())
+                    .resultOrPartial(error -> System.err.println("Failed to encode BubbleData: " + error))
+                    .ifPresent(tag -> compound.put("BubbleData", tag));
         }
     }
 
@@ -446,9 +481,21 @@ public class BubblePrison extends Entity implements OwnableEntity {
         this.ownerUUID = entity == null ? null : entity.getUUID();
     }
 
-    public enum BubbleBehavior {
+    public enum BubbleBehavior implements StringRepresentable {
         EXPLODING, // Red
         TARGETING, // Green
-        CAPTURING  // Purple
+        CAPTURING;  // Purple
+
+        public static final Codec<BubbleBehavior> CODEC = StringRepresentable.fromEnum(BubbleBehavior::values);
+        public static final StreamCodec<ByteBuf, BubbleBehavior> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(BubbleBehavior::of, BubbleBehavior::getSerializedName);
+
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase();
+        }
+
+        public static BubbleBehavior of(String name) {
+            return valueOf(name.toUpperCase());
+        }
     }
 }
