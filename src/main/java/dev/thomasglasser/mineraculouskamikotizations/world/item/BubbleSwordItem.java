@@ -144,12 +144,8 @@ public class BubbleSwordItem extends Item implements ICurioItem, RadialMenuProvi
             if (mode == Mode.FLIGHT) {
                 player.setDeltaMovement(player.getLookAngle().normalize().scale(1.5));
                 player.resetFallDistance();
-                if (level.isClientSide) {
-                    for (int i = 1; i <= 20; i++)
-                        level.addParticle(new FloatingBubbleParticleOptions(0.341f, 1.0f, 0.69f, 60, true), player.getRandomX(0.5), player.getRandomY(), player.getRandomZ(0.5), 0, -0.2, 0);
-                }
+                FloatingBubbleParticleOptions.spawnGreen(level, player.position(), 10, true);
                 int timeHeld = this.getUseDuration(stack, entity) - remainingUseDuration;
-
                 if (timeHeld % 10 == 0 && !level.isClientSide) {
                     BubblePrison bubblePrison = new BubblePrison(player, level, BubblePrison.BubbleBehavior.TARGETING, 0.1);
                     bubblePrison.setDeltaMovement(player.getDeltaMovement().scale(-0.2));

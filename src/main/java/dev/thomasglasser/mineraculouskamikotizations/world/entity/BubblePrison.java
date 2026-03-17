@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,6 +52,9 @@ public class BubblePrison extends Entity implements OwnableEntity {
 
     private static final int MAX_BOUNCES = 8;
     private static final EntityDataAccessor<BubblePrisonData> DATA_BUBBLE = SynchedEntityData.defineId(BubblePrison.class, MineraculousKamikotizationsEntityDataSerializers.BUBBLE_PRISON_DATA.get());
+    private static final double DIMENSION_RADIUS_RATIO = 0.324;
+    private static final double ENERGY_LOSS_FACTOR = 0.9955;
+    private static final double GRAVITY = -0.05;
 
     public BubblePrison(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -134,21 +139,30 @@ public class BubblePrison extends Entity implements OwnableEntity {
         }
         List<Entity> entities = level().getEntities(this, getBoundingBox().inflate(0.2));
         for (Entity entity : entities) {
-            if (entity instanceof LivingEntity living && living.isBlocking() && isHitBlocked(living)) {
-                discard();
-                for (int i = 1; i <= 7; i++)
-                    spawnRedBubbleParticles(level(), position());
-                level().playSound(null, getX(), getY(), getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 18F, 1.0F);
-                return;
-            }
-            if (entity != this && entity.isAlive() && !entity.noPhysics && !entity.getUUID().equals(getOwnerUUID())) {
-                explodeBubble();
-                if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
-                    EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
-                }
-                return;
-            }
+            boolean collision = touchedEntity(
+                    entity,
+                    this::explodeBubble,
+                    (lvl, pos) -> FloatingBubbleParticleOptions.spawnRed(lvl, pos, 7, false)
+            );
+            if (collision) return;
         }
+    }
+
+    private boolean touchedEntity(Entity entity, Runnable action, BiConsumer<Level, Vec3> spawnParticles) {
+        if (entity instanceof LivingEntity living && living.isBlocking() && isHitBlocked(living)) {
+            discard();
+            spawnParticles.accept(level(), position());
+            level().playSound(null, getX(), getY(), getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 18F, 1.0F);
+            return true;
+        }
+        if (entity != this && entity.isAlive() && !entity.noPhysics && !entity.getUUID().equals(getOwnerUUID())) {
+            action.run();
+            if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
+                EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
+            }
+            return true;
+        }
+        return false;
     }
 
     private boolean isHitBlocked(LivingEntity victim) {
@@ -158,29 +172,15 @@ public class BubblePrison extends Entity implements OwnableEntity {
         return toBubble.dot(victimView) > 0.0;
     }
 
-    private static void spawnRedBubbleParticles(Level level, Vec3 position) {
-        if (level instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(
-                    new FloatingBubbleParticleOptions(1f, 0.247f, 0, 120, true),
-                    position.x + Math.random(),
-                    position.y + Math.random(),
-                    position.z + Math.random(),
-                    serverLevel.random.nextInt(1, 2),
-                    0, 0, 0, 0);
-        }
-    }
-
     private void explodeBubble() {
-        if (level() instanceof ServerLevel serverLevel) {
+        if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
             Explosion explosion = new Explosion(level(), this, getX(), getY() + getBbHeight() / 2, getZ(), 2, false, Explosion.BlockInteraction.KEEP);
             explosion.explode();
             for (BlockPos pos : explosion.getToBlow()) {
                 BlockState state = level().getBlockState(pos);
-                if (!state.isAir() && getOwnerUUID() != null) {
+                if (!state.isAir()) {
                     Vec3 particlePos = pos.getCenter();
-                    for (int i = 1; i <= 5; i++) {
-                        spawnRedBubbleParticles(serverLevel, particlePos);
-                    }
+                    FloatingBubbleParticleOptions.spawnRed(serverLevel, particlePos, 2, true);
                     if (Math.random() > 0.8) {
                         serverLevel.sendParticles(
                                 ParticleTypes.EXPLOSION,
@@ -204,7 +204,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
     }
 
     public double getPhysicalRadius() {
-        return this.getBbHeight() * 0.324;
+        return this.getBbHeight() * DIMENSION_RADIUS_RATIO;
     }
 
     public void constrainCaptiveEntityPosition(LivingEntity captive) {
@@ -232,10 +232,10 @@ public class BubblePrison extends Entity implements OwnableEntity {
                 entity.removeData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
             } else {
                 BubbleImprisonedData updatedData = new BubbleImprisonedData(bubble.getUUID(), bubble.getId());
-                if (!updatedData.equals(bubbleData.get()))
+                if (!updatedData.equals(bubbleData.get())) {
                     entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(updatedData));
+                }
             }
-
         }
         Entity bubble = level.getEntity(bubbleData.get().bubbleID());
         if (entity instanceof LivingEntity livingEntity && bubble instanceof BubblePrison bubblePrison) {
@@ -304,7 +304,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
                     ParticleTypes.BUBBLE_POP,
                     getX(), getY() + radius, getZ(),
                     particleCount,
-                    radius * 2, radius * 2, radius * 2,
+                    radius, radius, radius,
                     0.15);
             for (UUID id : getCaptives()) {
                 Entity captive = serverLevel.getEntity(id);
@@ -337,33 +337,12 @@ public class BubblePrison extends Entity implements OwnableEntity {
         List<Entity> entities = level().getEntities(this, getBoundingBox());
 
         for (Entity entity : entities) {
-            if (entity instanceof LivingEntity living && living.isBlocking() && isHitBlocked(living) && level() instanceof ServerLevel serverLevel) {
-                discard();
-                for (int i = 1; i <= 7; i++)
-                    serverLevel.sendParticles(
-                            new FloatingBubbleParticleOptions(0.341f, 1.0f, 0.69f, 120, true),
-                            position().x, position().y, position().z,
-                            serverLevel.random.nextInt(1, 2),
-                            0, 0, 0, 0);
-                level().playSound(null, getX(), getY(), getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
-                return;
-            }
-
-            Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
-            if (entity instanceof LivingEntity && bubbleData.isEmpty() && !entity.noPhysics) {
-                UUID uuid = entity.getUUID();
-                if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID() && uuid != getOwnerUUID()) {
-                    if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
-                        EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
-                    }
-                    captives.add(uuid);
-                    entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubbleImprisonedData(getUUID(), getId())));
-                    if (captives.size() == 3) {
-                        setBehavior(BubbleBehavior.CAPTURING);
-                        setDeltaMovement(Vec3.ZERO);
-                    }
-                }
-            }
+            boolean handled = touchedEntity(
+                    entity,
+                    () -> tryCapture(entity, captives),
+                    (lvl, pos) -> FloatingBubbleParticleOptions.spawnGreen(level(), position(), 7, false)
+            );
+            if (handled) return;
         }
         setCaptives(captives);
         if (!captives.isEmpty()) {
@@ -376,24 +355,37 @@ public class BubblePrison extends Entity implements OwnableEntity {
         }
     }
 
+    private void tryCapture(Entity entity, List<UUID> captives) {
+        Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+        if (entity instanceof LivingEntity && bubbleData.isEmpty() && !entity.noPhysics) {
+            UUID uuid = entity.getUUID();
+            if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID() && uuid != getOwnerUUID()) {
+                if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
+                    EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
+                }
+                captives.add(uuid);
+                entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubbleImprisonedData(getUUID(), getId())));
+                if (captives.size() == 3) {
+                    setBehavior(BubbleBehavior.CAPTURING);
+                    setDeltaMovement(Vec3.ZERO);
+                }
+            }
+        }
+    }
+
     private void bounceAround() {
-        Vec3 velocity = getDeltaMovement().scale(0.9955).add(0, -0.05, 0);
-
+        Vec3 velocity = getDeltaMovement().scale(ENERGY_LOSS_FACTOR).add(0, GRAVITY, 0);
         AABB box = getBoundingBox();
-
         velocity = handleBounce(velocity, box, velocity.x, 0, 0, Direction.Axis.X);
         velocity = handleBounce(velocity, box, 0, velocity.y, 0, Direction.Axis.Y);
         velocity = handleBounce(velocity, box, 0, 0, velocity.z, Direction.Axis.Z);
-
         double minSpeed = 0.05;
         if (velocity.lengthSqr() < minSpeed * minSpeed) {
             velocity = velocity.normalize().scale(minSpeed);
         }
-
         if (bounceCount > MAX_BOUNCES) {
             discard();
         }
-
         setDeltaMovement(velocity);
         hurtMarked = true;
     }
@@ -428,12 +420,10 @@ public class BubblePrison extends Entity implements OwnableEntity {
     private void lookForTargets() {
         if (retargetCooldown <= 0) {
             retargetCooldown = 10;
-
             List<LivingEntity> candidates = level().getEntitiesOfClass(
                     LivingEntity.class,
                     getBoundingBox().inflate(8),
                     e -> e.isAlive() && (getOwnerUUID() == null || !getOwnerUUID().equals(e.getUUID())));
-
             if (!candidates.isEmpty()) {
                 target = candidates.stream()
                         .min(Comparator.comparingDouble(e -> e.distanceToSqr(this)))
@@ -445,12 +435,10 @@ public class BubblePrison extends Entity implements OwnableEntity {
 
     private Vec3 biasBounceTowardTarget(Vec3 velocity) {
         if (target == null || !target.isAlive()) return velocity;
-
         Vec3 toTarget = target.position()
                 .add(0, target.getBbHeight() * 0.5, 0)
                 .subtract(position())
                 .normalize();
-
         double blendFactor = 0.3;
         Vec3 biased = velocity.normalize().scale(0.8)
                 .add(toTarget.scale(blendFactor))
