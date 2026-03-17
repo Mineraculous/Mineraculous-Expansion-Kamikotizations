@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -142,8 +141,7 @@ public class BubblePrison extends Entity implements OwnableEntity {
             boolean collision = touchedEntity(
                     entity,
                     this::explodeBubble,
-                    (lvl, pos) -> FloatingBubbleParticleOptions.spawnRed(lvl, pos, 7, false)
-            );
+                    (lvl, pos) -> FloatingBubbleParticleOptions.spawnRed(lvl, pos, 7, false));
             if (collision) return;
         }
     }
@@ -337,12 +335,28 @@ public class BubblePrison extends Entity implements OwnableEntity {
         List<Entity> entities = level().getEntities(this, getBoundingBox());
 
         for (Entity entity : entities) {
-            boolean handled = touchedEntity(
-                    entity,
-                    () -> tryCapture(entity, captives),
-                    (lvl, pos) -> FloatingBubbleParticleOptions.spawnGreen(level(), position(), 7, false)
-            );
-            if (handled) return;
+            if (entity instanceof LivingEntity living && living.isBlocking() && isHitBlocked(living)) {
+                discard();
+                FloatingBubbleParticleOptions.spawnGreen(level(), position(), 7, false);
+                level().playSound(null, getX(), getY(), getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                return;
+            }
+
+            Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
+            if (entity instanceof LivingEntity && bubbleData.isEmpty() && !entity.noPhysics) {
+                UUID uuid = entity.getUUID();
+                if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID() && uuid != getOwnerUUID()) {
+                    if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
+                        EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
+                    }
+                    captives.add(uuid);
+                    entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubbleImprisonedData(getUUID(), getId())));
+                    if (captives.size() == 3) {
+                        setBehavior(BubbleBehavior.CAPTURING);
+                        setDeltaMovement(Vec3.ZERO);
+                    }
+                }
+            }
         }
         setCaptives(captives);
         if (!captives.isEmpty()) {
@@ -352,24 +366,6 @@ public class BubblePrison extends Entity implements OwnableEntity {
             setBehavior(BubbleBehavior.CAPTURING);
             setDeltaMovement(Vec3.ZERO);
             hurtMarked = true;
-        }
-    }
-
-    private void tryCapture(Entity entity, List<UUID> captives) {
-        Optional<BubbleImprisonedData> bubbleData = entity.getData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA);
-        if (entity instanceof LivingEntity && bubbleData.isEmpty() && !entity.noPhysics) {
-            UUID uuid = entity.getUUID();
-            if (!captives.contains(uuid) && captives.size() < 3 && uuid != getUUID() && uuid != getOwnerUUID()) {
-                if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
-                    EntityReversionData.get(serverLevel).putRevertible(getOwnerUUID(), entity);
-                }
-                captives.add(uuid);
-                entity.setData(MineraculousKamikotizationsAttachementTypes.BUBBLE_DATA, Optional.of(new BubbleImprisonedData(getUUID(), getId())));
-                if (captives.size() == 3) {
-                    setBehavior(BubbleBehavior.CAPTURING);
-                    setDeltaMovement(Vec3.ZERO);
-                }
-            }
         }
     }
 
@@ -448,7 +444,6 @@ public class BubblePrison extends Entity implements OwnableEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        System.out.println(getHealth());
         if (isInvulnerableTo(source) || level().isClientSide || isRemoved()) {
             return false;
         }
