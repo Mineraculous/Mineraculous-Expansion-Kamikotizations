@@ -146,7 +146,7 @@ public class BubbleSwordItem extends Item implements ICurioItem, RadialMenuProvi
                 player.resetFallDistance();
                 if (level.isClientSide) {
                     for (int i = 1; i <= 20; i++)
-                        level.addParticle(new FloatingBubbleParticleOptions(0.278f, 1.0f, 0.807f, 60, true), player.getRandomX(0.5), player.getRandomY(), player.getRandomZ(0.5), 0, -0.2, 0);
+                        level.addParticle(new FloatingBubbleParticleOptions(0.341f, 1.0f, 0.69f, 60, true), player.getRandomX(0.5), player.getRandomY(), player.getRandomZ(0.5), 0, -0.2, 0);
                 }
                 int timeHeld = this.getUseDuration(stack, entity) - remainingUseDuration;
 
@@ -182,8 +182,7 @@ public class BubbleSwordItem extends Item implements ICurioItem, RadialMenuProvi
     public enum Mode implements RadialMenuOption, StringRepresentable {
         EXPLOSIVE,
         FLIGHT,
-        CAPTURE,
-        SHOWER;
+        CAPTURE;
 
         public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
         public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(Mode::of, Mode::getSerializedName);

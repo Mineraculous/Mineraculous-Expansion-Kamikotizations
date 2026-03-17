@@ -41,25 +41,18 @@ public class FloatingBubbleParticle extends TextureSheetParticle {
 
     private void updateColorAndAlpha(float progress) {
         float hue;
+        float saturation;
         if (limitedShift) {
-            // Shift only slightly (±0.1 on the 0-1 hue scale)
-            float shift = Mth.sin(progress * (float) Math.PI) * -0.1f;
-            hue = (baseHue + shift + 1.0f) % 1.0f;
+            hue = baseHue;
+            saturation = 1.0f;
         } else {
             hue = (progress * 2.5f) % 1.0f;
+            saturation = 0.6f + (Mth.sin(this.age * 0.1f) * 0.2f);
         }
-
-        float saturation = 0.6f + (Mth.sin(this.age * 0.1f) * 0.2f);
         int color = Mth.hsvToRgb(hue, saturation, 1.0f);
-
         this.rCol = (float) (color >> 16 & 255) / 255.0F;
         this.gCol = (float) (color >> 8 & 255) / 255.0F;
         this.bCol = (float) (color & 255) / 255.0F;
-
-        if (progress >= 0.9F) {
-            float popProgress = (progress - 0.9F) / 0.1F;
-            this.alpha = Mth.lerp(popProgress, 1.0F, 0.0F);
-        }
     }
 
     @Override

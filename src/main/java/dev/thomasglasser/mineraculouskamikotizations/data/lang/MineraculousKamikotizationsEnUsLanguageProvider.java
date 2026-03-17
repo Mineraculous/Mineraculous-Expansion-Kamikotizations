@@ -43,7 +43,6 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         add(BubbleSwordItem.Mode.CAPTURE, "Capture");
         add(BubbleSwordItem.Mode.FLIGHT, "Flight");
         add(BubbleSwordItem.Mode.EXPLOSIVE, "Explosive");
-        add(BubbleSwordItem.Mode.SHOWER, "Shower");
     }
 
     protected void addEntities() {

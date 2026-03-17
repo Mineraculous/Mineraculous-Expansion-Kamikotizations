@@ -36,9 +36,11 @@ public class MineraculousKamikotizations {
 
         bus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
 
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityIncomingDamage);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityLeaveLevel);
-        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityPostTick);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityMount);
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onEntityPostTick);
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onProjectileImpact);
     }
 
     public static ResourceLocation modLoc(String path) {
