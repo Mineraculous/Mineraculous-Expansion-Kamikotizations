@@ -300,7 +300,6 @@ publishing {
 				licenses {
 					license {
 						name = project.license
-						url = project.license_url
 					}
 				}
 				developers {
