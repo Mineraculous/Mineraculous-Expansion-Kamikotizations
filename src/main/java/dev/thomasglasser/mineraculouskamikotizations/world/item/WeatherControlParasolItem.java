@@ -34,7 +34,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
@@ -42,7 +41,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class WeatherControlParasolItem extends Item implements EffectRevertingItem, RadialMenuProvider<WeatherControlParasolItem.Mode> {
+public class WeatherControlParasolItem extends ParasolItem implements EffectRevertingItem, RadialMenuProvider<WeatherControlParasolItem.Mode> {
     public WeatherControlParasolItem(Properties properties) {
         super(properties);
     }
