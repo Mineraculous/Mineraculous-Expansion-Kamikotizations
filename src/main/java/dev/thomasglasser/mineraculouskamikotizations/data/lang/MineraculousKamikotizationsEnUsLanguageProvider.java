@@ -58,5 +58,6 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         add(MineraculousKamikotizationsKamikotizations.BUBBLE_CAPTURE, "Bubble Capture");
 
         add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS), "Requires an Umbrella");
+        add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.BUBBLE_WANDS), "Requires a Bubble Wand");
     }
 }
