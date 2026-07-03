@@ -1,21 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item": {
+    "has_bubble_wands": {
       "conditions": {
         "items": [
           {
             "items": "#mineraculouskamikotizations:bubble_wands"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_self": {
-      "conditions": {
-        "items": [
-          {
-            "items": "mineraculouskamikotizations:brown_bubble_wand"
           }
         ]
       },
@@ -31,8 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_item",
-      "has_self"
+      "has_bubble_wands"
     ]
   ],
   "rewards": {

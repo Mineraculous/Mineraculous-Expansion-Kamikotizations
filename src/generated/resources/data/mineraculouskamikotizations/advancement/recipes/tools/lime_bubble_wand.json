@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_bubble_wand": {
+    "has_bubble_wands": {
       "conditions": {
         "items": [
           {
@@ -11,21 +11,11 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_self": {
+    "has_copper_ingots": {
       "conditions": {
         "items": [
           {
-            "items": "mineraculouskamikotizations:lime_bubble_wand"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_stained_glass": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:lime_stained_glass"
+            "items": "#c:ingots/copper"
           }
         ]
       },
@@ -41,9 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_stained_glass",
-      "has_bubble_wand",
-      "has_self"
+      "has_copper_ingots",
+      "has_bubble_wands"
     ]
   ],
   "rewards": {

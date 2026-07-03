@@ -9,9 +9,7 @@ import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCon
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.HolderSet;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
@@ -31,9 +29,10 @@ public class MineraculousKamikotizationsKamikotizations {
                 Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
                 ImmutableList.of()));
         context.register(BUBBLE_CAPTURE, new Kamikotization(
-                "Bubbler",
-                ItemPredicate.Builder.item().of(MineraculousKamikotizationsItemTags.BUBBLE_WANDS).withCount(MinMaxBounds.Ints.exactly(1)).build(),
+                ImmutableList.of(
+                        new ItemCondition(MineraculousKamikotizationsItemTags.BUBBLE_WANDS, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
+                CustomizationSettings.EMPTY,
                 Either.left(MineraculousKamikotizationsItems.BUBBLE_SWORD.toStack()),
-                HolderSet.empty()));
+                ImmutableList.of()));
     }
 }

@@ -1,9 +1,16 @@
 {
-  "default_name": "Bubbler",
-  "item_predicate": {
-    "count": 1,
-    "items": "#mineraculouskamikotizations:bubble_wands"
-  },
+  "conditions": [
+    {
+      "type": "mineraculous:item",
+      "message": {
+        "translate": "kamikotization_condition.mineraculous.item.requires_bubble_wands"
+      },
+      "predicate": {
+        "count": 1,
+        "items": "#mineraculouskamikotizations:bubble_wands"
+      }
+    }
+  ],
   "power_source": {
     "count": 1,
     "id": "mineraculouskamikotizations:bubble_sword"

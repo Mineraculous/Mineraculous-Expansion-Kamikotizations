@@ -22,9 +22,6 @@ public class RevertingWindCharge extends WindCharge {
         super(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), level);
         setOwner(owner);
         this.moveTo(x, y, z, this.getYRot(), this.getXRot());
-        if (level instanceof ServerLevel serverLevel) {
-            EntityReversionData.get(serverLevel).putRemovable(player.getUUID(), this);
-        }
     }
 
     public RevertingWindCharge(Level level, double x, double y, double z, Vec3 movement) {

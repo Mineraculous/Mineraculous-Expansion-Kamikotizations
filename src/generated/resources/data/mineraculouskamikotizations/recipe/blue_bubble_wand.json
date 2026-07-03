@@ -2,16 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "c": {
+    "C": {
       "tag": "c:ingots/copper"
     },
-    "g": {
+    "G": {
       "item": "minecraft:blue_stained_glass"
     }
   },
   "pattern": [
-    " c ",
-    " g "
+    " C ",
+    " G "
   ],
   "result": {
     "count": 1,
