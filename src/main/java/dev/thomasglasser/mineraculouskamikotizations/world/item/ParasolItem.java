@@ -1,6 +1,5 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.item;
 
-import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -23,7 +22,7 @@ public class ParasolItem extends Item {
 
     @Override
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        if (stack.getOrDefault(MineraculousDataComponents.ACTIVE, Active.DEFAULT).active())
+        if (Active.isActive(stack))
             return ACTIVE_MODIFIERS;
         return super.getDefaultAttributeModifiers(stack);
     }

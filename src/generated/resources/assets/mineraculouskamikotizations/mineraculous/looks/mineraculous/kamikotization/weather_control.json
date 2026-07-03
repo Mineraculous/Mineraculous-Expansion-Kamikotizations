@@ -1,5 +1,5 @@
 {
-  "assets": {
+  "contexts": {
     "mineraculous:kamikotization_suit": {
       "mineraculous:geckolib_animations": "mineraculouskamikotizations:animations/item/armor/kamikotization/weather_control.animation.json",
       "mineraculous:geckolib_model": "mineraculouskamikotizations:geo/item/armor/kamikotization/weather_control.geo.json",

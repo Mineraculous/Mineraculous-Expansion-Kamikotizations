@@ -1,9 +1,16 @@
 {
-  "default_name": "Stormy Weather",
-  "item_predicate": {
-    "count": 1,
-    "items": "#c:tools/umbrella"
-  },
+  "conditions": [
+    {
+      "type": "mineraculous:item",
+      "message": {
+        "translate": "kamikotization_condition.mineraculous.item.requires_umbrella_tools"
+      },
+      "predicate": {
+        "count": 1,
+        "items": "#c:tools/umbrella"
+      }
+    }
+  ],
   "power_source": {
     "count": 1,
     "id": "mineraculouskamikotizations:weather_control_parasol"
