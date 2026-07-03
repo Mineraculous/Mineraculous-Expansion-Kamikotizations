@@ -1,7 +1,7 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.projectile;
 
+import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -34,13 +34,13 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
         this.accelerationPower = 0.0;
     }
 
-    public IceCharge(EntityType<? extends IceCharge> entityType, Entity owner, double x, double y, double z, Level level) {
+    public IceCharge(EntityType<? extends IceCharge> entityType, @Nullable Entity owner, double x, double y, double z, Level level) {
         super(entityType, x, y, z, level);
         this.setOwner(owner);
         this.accelerationPower = 0.0;
     }
 
-    public IceCharge(Entity owner, double x, double y, double z, Level level) {
+    public IceCharge(@Nullable Entity owner, double x, double y, double z, Level level) {
         this(MineraculousKamikotizationsEntityTypes.ICE_CHARGE.get(), owner, x, y, z, level);
     }
 
@@ -92,6 +92,7 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
             }
 
             entity.setTicksFrozen(Integer.MAX_VALUE);
+            entity.extinguishFire();
             entity.moveTo(entity.blockPosition().getBottomCenter());
             entity.setDeltaMovement(0, 0, 0);
             Set<BlockPos> inside = getInsidePos(entity);
@@ -115,11 +116,11 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
         AABB aabb = target.getBoundingBox();
         BlockPos startPos = BlockPos.containing(aabb.minX + 1.0E-7, aabb.minY + 1.0E-7, aabb.minZ + 1.0E-7);
         BlockPos endPos = BlockPos.containing(aabb.maxX - 1.0E-7, aabb.maxY - 1.0E-7, aabb.maxZ - 1.0E-7);
-        Set<BlockPos> inside = new ReferenceOpenHashSet<>();
+        ImmutableSet.Builder<BlockPos> inside = new ImmutableSet.Builder<>();
         for (BlockPos pos : BlockPos.betweenClosed(startPos, endPos)) {
-            inside.add(pos);
+            inside.add(pos.immutable());
         }
-        return inside;
+        return inside.build();
     }
 
     @Override
@@ -182,9 +183,6 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
         }
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return false;

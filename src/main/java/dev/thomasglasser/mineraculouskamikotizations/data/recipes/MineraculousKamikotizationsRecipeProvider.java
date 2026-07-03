@@ -41,33 +41,30 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, result)
                 .requires(itemTag)
                 .requires(dyeTag)
-                .unlockedBy("has_item", has(itemTag))
-                .unlockedBy("has_self", has(result))
+                .unlockedBy(getHasName(itemTag), has(itemTag))
                 .save(recipeOutput, RecipeBuilder.getDefaultRecipeId(result).withPath(path -> path + "_from_dye"));
     }
 
     protected void parasolFromCarpet(RecipeOutput recipeOutput, ItemLike parasol, ItemLike carpet) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, parasol)
-                .pattern(" c ")
-                .pattern("csc")
-                .pattern(" s ")
-                .define('c', carpet)
-                .define('s', ConventionalItemTags.WOODEN_RODS)
-                .unlockedBy("has_carpet", has(carpet))
-                .unlockedBy("has_parasol", has(MineraculousKamikotizationsItemTags.PARASOLS))
-                .unlockedBy("has_self", has(parasol))
+                .pattern(" C ")
+                .pattern("CSC")
+                .pattern(" S ")
+                .define('C', carpet)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
+                .unlockedBy(getHasName(carpet), has(carpet))
+                .unlockedBy(getHasName(MineraculousKamikotizationsItemTags.PARASOLS), has(MineraculousKamikotizationsItemTags.PARASOLS))
                 .save(recipeOutput);
     }
 
     protected void bubbleWandFromStainedGlass(RecipeOutput recipeOutput, ItemLike bubbleWand, ItemLike stainedGlass) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, bubbleWand)
-                .pattern(" c ")
-                .pattern(" g ")
-                .define('c', ConventionalItemTags.COPPER_INGOTS)
-                .define('g', stainedGlass)
-                .unlockedBy("has_stained_glass", has(stainedGlass))
-                .unlockedBy("has_bubble_wand", has(MineraculousKamikotizationsItemTags.BUBBLE_WANDS))
-                .unlockedBy("has_self", has(bubbleWand))
+                .pattern(" C ")
+                .pattern(" G ")
+                .define('C', ConventionalItemTags.COPPER_INGOTS)
+                .define('G', stainedGlass)
+                .unlockedBy(getHasName(ConventionalItemTags.COPPER_INGOTS), has(ConventionalItemTags.COPPER_INGOTS))
+                .unlockedBy(getHasName(MineraculousKamikotizationsItemTags.BUBBLE_WANDS), has(MineraculousKamikotizationsItemTags.BUBBLE_WANDS))
                 .save(recipeOutput);
     }
 }

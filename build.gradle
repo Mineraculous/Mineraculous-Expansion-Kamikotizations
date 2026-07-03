@@ -188,8 +188,8 @@ configurations {
 dependencies {
 	jarJar implementation("dev.thomasglasser.tommylib:tommylib-neoforge-${minecraft_version}:${tommylib_version}")
 
-	implementation "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
-	implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+	api "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
 	implementation "com.klikli_dev:modonomicon-${minecraft_version}-neoforge:${modonomicon_version}"
 	implementation "maven.modrinth:jade:${jade_version}+neoforge"
@@ -302,7 +302,6 @@ publishing {
 				licenses {
 					license {
 						name = project.license
-						url = project.license_url
 					}
 				}
 				developers {

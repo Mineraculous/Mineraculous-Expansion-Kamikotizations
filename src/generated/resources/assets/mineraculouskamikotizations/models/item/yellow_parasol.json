@@ -1,5 +1,13 @@
 {
-  "parent": "minecraft:item/handheld",
+  "base": {
+    "parent": "mineraculouskamikotizations:item/parasol_closed",
+    "textures": {
+      "particle": "mineraculouskamikotizations:item/yellow_parasol",
+      "texture": "mineraculouskamikotizations:item/yellow_parasol"
+    }
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
   "overrides": [
     {
       "model": "mineraculouskamikotizations:item/yellow_parasol_open",
@@ -8,7 +16,24 @@
       }
     }
   ],
-  "textures": {
-    "layer0": "minecraft:item/apple"
+  "perspectives": {
+    "fixed": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "mineraculouskamikotizations:item/yellow_parasol_inventory"
+      }
+    },
+    "ground": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "mineraculouskamikotizations:item/yellow_parasol_inventory"
+      }
+    },
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "mineraculouskamikotizations:item/yellow_parasol_inventory"
+      }
+    }
   }
 }

@@ -1,8 +1,11 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
+import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
+import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
@@ -22,10 +25,11 @@ public class MineraculousKamikotizationsKamikotizations {
 
     public static void bootstrap(BootstrapContext<Kamikotization> context) {
         context.register(WEATHER_CONTROL, new Kamikotization(
-                "Stormy Weather",
-                ItemPredicate.Builder.item().of(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS).withCount(MinMaxBounds.Ints.exactly(1)).build(),
+                ImmutableList.of(
+                        new ItemCondition(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
+                CustomizationSettings.EMPTY,
                 Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
-                HolderSet.empty()));
+                ImmutableList.of()));
         context.register(BUBBLE_CAPTURE, new Kamikotization(
                 "Bubbler",
                 ItemPredicate.Builder.item().of(MineraculousKamikotizationsItemTags.BUBBLE_WANDS).withCount(MinMaxBounds.Ints.exactly(1)).build(),
