@@ -91,27 +91,24 @@ repositories {
 		}
 		filter { includeGroupAndSubgroups "de.maxhenkel.voicechat" }
 	}
-	exclusiveContent {
-		forRepository {
-			maven {
-				name = 'Sherds API'
-				url = 'https://dl.cloudsmith.io/public/thomasglasser/sherdsapi/maven/'
-			}
-		}
-		filter { includeGroupAndSubgroups "dev.thomasglasser.sherdsapi" }
-	}
 	maven {
-		name = 'Mineraculous'
-		url = 'https://dl.cloudsmith.io/public/thomasglasser/mineraculous/maven/'
+		name = 'TommyLib, Sherds API, and Mineraculous'
+		url = 'https://maven.thomasglasser.dev/releases'
 		content {
+			includeGroupAndSubgroups("dev.thomasglasser.tommylib")
+			includeGroupAndSubgroups("dev.thomasglasser.sherdsapi")
 			includeGroupAndSubgroups("dev.thomasglasser.mineraculous")
 		}
 	}
 	maven {
-		name = 'TommyLib'
-		url = 'https://dl.cloudsmith.io/public/thomasglasser/tommylib/maven/'
+		name = 'Mineraculous Betas'
+		url = 'https://maven.thomasglasser.dev/betas'
+		credentials {
+			username = project.findProperty("MINERACULOUS_USERNAME") ?: System.getenv("MINERACULOUS_USERNAME")
+			password = project.findProperty("MINERACULOUS_PASSWORD") ?: System.getenv("MINERACULOUS_PASSWORD")
+		}
 		content {
-			includeGroupAndSubgroups("dev.thomasglasser.tommylib")
+			includeGroupAndSubgroups("dev.thomasglasser.mineraculous")
 		}
 	}
 	maven {
@@ -188,7 +185,8 @@ configurations {
 dependencies {
 	jarJar implementation("dev.thomasglasser.tommylib:tommylib-neoforge-${minecraft_version}:${tommylib_version}")
 
-	api "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
+	// api "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
+	api "dev.thomasglasser.mineraculous.${project.findProperty("MINERACULOUS_USERNAME") ?: System.getenv("MINERACULOUS_USERNAME")}:mineraculous-${minecraft_version}:${mineraculous_version}"
 
 	implementation "com.klikli_dev:modonomicon-${minecraft_version}-neoforge:${modonomicon_version}"
 	implementation "maven.modrinth:jade:${jade_version}+neoforge"
