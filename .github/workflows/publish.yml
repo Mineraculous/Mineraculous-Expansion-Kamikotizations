@@ -93,8 +93,7 @@ jobs:
           game-versions: |
             ${{ inputs.game_versions }}
 
-          # TODO: Replace with Modrinth ID
-          modrinth-id: abcdef
+          modrinth-id: mineraculouskamikotizations
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
       - name: Publish Curseforge Release
@@ -115,3 +114,12 @@ jobs:
           # TODO: Replace with CurseForge ID
           curseforge-id: 123456
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+  cleanup:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete artifact
+        uses: geekyeggo/delete-artifact@v6
+        with:
+          name: Mineraculous Expansion Kamikotizations

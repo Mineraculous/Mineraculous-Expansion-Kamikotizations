@@ -1,17 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_carpet": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:pink_carpet"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_parasol": {
+    "has_parasols": {
       "conditions": {
         "items": [
           {
@@ -21,11 +11,11 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_self": {
+    "has_pink_carpet": {
       "conditions": {
         "items": [
           {
-            "items": "mineraculouskamikotizations:pink_parasol"
+            "items": "minecraft:pink_carpet"
           }
         ]
       },
@@ -41,9 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_carpet",
-      "has_parasol",
-      "has_self"
+      "has_pink_carpet",
+      "has_parasols"
     ]
   ],
   "rewards": {

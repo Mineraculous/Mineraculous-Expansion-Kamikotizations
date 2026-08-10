@@ -7,6 +7,7 @@ import dev.thomasglasser.mineraculouskamikotizations.data.advancements.Mineracul
 import dev.thomasglasser.mineraculouskamikotizations.data.biome.MineraculousKamikotizationsBiomeModifiers;
 import dev.thomasglasser.mineraculouskamikotizations.data.datamaps.MineraculousKamikotizationsDataMapProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.lang.MineraculousKamikotizationsEnUsLanguageProvider;
+import dev.thomasglasser.mineraculouskamikotizations.data.look.MineraculousKamikotizationsLookProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.loot.MineraculousKamikotizationsLootTables;
 import dev.thomasglasser.mineraculouskamikotizations.data.models.MineraculousKamikotizationsItemModelProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.modonomicons.MineraculousKamikotizationsBookProvider;
@@ -42,5 +43,6 @@ public class MineraculousKamikotizationsDataGenerators {
 
         // Client
         DataGenerationUtils.createProvider(event, MineraculousKamikotizationsItemModelProvider::new);
+        event.createProvider(MineraculousKamikotizationsLookProvider::new);
     }
 }

@@ -29,8 +29,8 @@ public class MineraculousKamikotizationsItemTagsProvider extends ExtendedItemTag
 
         // Common
         tag(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS)
-                .addTag(MineraculousKamikotizationsItemTags.PARASOLS)
-                .add(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.get());
+                .add(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL)
+                .addTag(MineraculousKamikotizationsItemTags.PARASOLS);
 
         tag(ConventionalItemTags.TOOLS)
                 .addTag(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS);

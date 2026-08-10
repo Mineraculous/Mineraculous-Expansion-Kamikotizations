@@ -43,7 +43,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowEntity;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowTemptation;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomFlyingTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.ItemTemptingSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
@@ -228,7 +227,7 @@ public class Pigeon extends FlockingFlyingAnimal implements SmartBrainOwner<Pige
             } else if (!isResting() && !shouldRest() && state.isMoving()) {
                 return state.setAndContinue(FLY);
             } else
-            return state.setAndContinue(IDLE);
+                return state.setAndContinue(IDLE);
         }));
     }
 

@@ -18,28 +18,27 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
     @Override
     protected void generatePages() {
         page("receiving", () -> BookImagePageModel.create()
-                .withImages(AddToWikiBookSubProvider.wikiTexture("kamikotizations/weather_control/receiving.png"))
+                .withImages(AddToWikiBookSubProvider.wikiTexture("kamikotizations/weather_control/receiving"))
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        add(context().pageTitle(), "Receiving");
-        add(context().pageText(), """
-                The Weather Control kamikotization can be applied to any umbrella, including those from other mods (as long as they are in the 'c:tools/umbrella' tag).
-                It has the default name "Stormy Weather".
+        pageTitle("Receiving");
+        pageText("""
+                The Weather Control kamikotization can be applied to any umbrella by default, including those from other mods (as long as they are in the 'c:tools/umbrella' tag).
                 """);
 
         page("tool", () -> BookTextPageModel.create()
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        add(context().pageTitle(), "Tool");
-        add(context().pageText(), """
-                The tool of the Weather Control kamikotization is a Weather Control Parasol.
-                It has 4 abilities that can be set via the tool wheel (default: H) and activated by right clicking:
+        pageTitle("Tool");
+        pageText("""
+                The Weather Control Parasol has four tool modes:
                 - Ice
                 - Lightning
                 - Weather
-                - Wind\\
+                - Wind
+
                 When in any equipment slot, the holder is able to fly.
                 """);
 
@@ -47,8 +46,8 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        add(context().pageTitle(), "Ice");
-        add(context().pageText(), """
+        pageTitle("Ice");
+        pageText("""
                 The Ice mode will fire Ice Charges that freeze entities and blocks that they hit.
                 When frozen, entities will be captured in a prison of ice and will freeze to death.
                 """);
@@ -57,8 +56,8 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        add(context().pageTitle(), "Lightning");
-        add(context().pageText(), """
+        pageTitle("Lightning");
+        pageText("""
                 The Lightning mode will fire Lightning Bolts that will damage entities and blocks that they hit, lighting fires in the process.
                 """);
 
@@ -66,17 +65,17 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        add(context().pageTitle(), "Weather");
-        add(context().pageText(), """
-                The Weather mode will cycle the weather to rain, thunder, or clear.
+        pageTitle("Weather");
+        pageText("""
+                The Weather mode will cycle the weather through rain, thunder, and clear.
                 """);
 
         page("wind", () -> BookTextPageModel.create()
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        add(context().pageTitle(), "Wind");
-        add(context().pageText(), """
+        pageTitle("Wind");
+        pageText("""
                 The Wind mode will fire Wind Charges that will push entities and blocks that they hit.
                 """);
     }

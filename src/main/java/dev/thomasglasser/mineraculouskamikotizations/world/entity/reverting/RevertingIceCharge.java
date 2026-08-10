@@ -1,4 +1,4 @@
-package dev.thomasglasser.mineraculouskamikotizations.world.entity.grieftracking;
+package dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting;
 
 import dev.thomasglasser.mineraculous.api.world.level.storage.BlockReversionData;
 import dev.thomasglasser.mineraculous.api.world.level.storage.EntityReversionData;
@@ -18,25 +18,27 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.Nullable;
 
-public class GriefTrackingIceCharge extends IceCharge {
-    public GriefTrackingIceCharge(EntityType<? extends IceCharge> entityType, Level level) {
+public class RevertingIceCharge extends IceCharge {
+    public RevertingIceCharge(EntityType<? extends IceCharge> entityType, Level level) {
         super(entityType, level);
     }
 
-    public GriefTrackingIceCharge(EntityType<? extends IceCharge> entityType, Entity owner, double x, double y, double z, Level level) {
+    public RevertingIceCharge(EntityType<? extends IceCharge> entityType, @Nullable Entity owner, double x, double y, double z, Level level) {
         super(entityType, owner, x, y, z, level);
     }
 
-    public GriefTrackingIceCharge(Entity owner, double x, double y, double z, Level level) {
-        super(MineraculousKamikotizationsEntityTypes.GRIEF_TRACKING_ICE_CHARGE.get(), owner, x, y, z, level);
+    public RevertingIceCharge(@Nullable Entity owner, double x, double y, double z, Level level) {
+        super(MineraculousKamikotizationsEntityTypes.REVERTING_ICE_CHARGE.get(), owner, x, y, z, level);
     }
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        if (level() instanceof ServerLevel level && getOwner() != null) {
+        Entity owner = getOwner();
+        if (level() instanceof ServerLevel level && owner != null) {
+            UUID cause = owner.getUUID();
             Entity entity = result.getEntity();
-            UUID cause = getOwner().getUUID();
             EntityReversionData.get(level).putRevertible(cause, entity);
             Set<BlockPos> inside = getInsidePos(entity);
             int blocksWide = Mth.ceil(entity.getBbWidth());
@@ -61,9 +63,10 @@ public class GriefTrackingIceCharge extends IceCharge {
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
-        if (level() instanceof ServerLevel level && getOwner() != null) {
+        Entity owner = getOwner();
+        if (level() instanceof ServerLevel level && owner != null) {
             BlockReversionData blockReversionData = BlockReversionData.get(level);
-            UUID cause = getOwner().getUUID();
+            UUID cause = owner.getUUID();
             ResourceKey<Level> dimension = level().dimension();
             BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
             for (int i = -1; i <= 1; i++) {

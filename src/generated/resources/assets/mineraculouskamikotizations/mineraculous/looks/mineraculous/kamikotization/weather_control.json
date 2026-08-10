@@ -1,0 +1,14 @@
+{
+  "contexts": {
+    "mineraculous:kamikotization_suit": {
+      "mineraculous:geckolib_animations": "mineraculouskamikotizations:animations/item/armor/kamikotization/weather_control.animation.json",
+      "mineraculous:geckolib_model": "mineraculouskamikotizations:geo/item/armor/kamikotization/weather_control.geo.json",
+      "mineraculous:texture": "mineraculouskamikotizations:textures/entity/equipment/humanoid/kamikotization/weather_control.png"
+    }
+  },
+  "metadata": {
+    "mineraculous:valid_kamikotizations": [
+      "mineraculouskamikotizations:weather_control"
+    ]
+  }
+}
