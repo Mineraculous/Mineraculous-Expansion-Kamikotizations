@@ -1,6 +1,7 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity;
 
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
+import dev.thomasglasser.mineraculouskamikotizations.world.entity.animal.Pigeon;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.projectile.IceCharge;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingIceCharge;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingLightningBolt;
@@ -15,6 +16,10 @@ public class MineraculousKamikotizationsEntityTypes {
 
     public static final DeferredHolder<EntityType<?>, EntityType<IceCharge>> ICE_CHARGE = ENTITY_TYPES.register("ice_charge", IceCharge::new, MobCategory.MISC, builder -> builder
             .sized(0.3125F, 0.3125F));
+
+    // Animals
+    public static final DeferredHolder<EntityType<?>, EntityType<Pigeon>> PIGEON = ENTITY_TYPES.register("pigeon", Pigeon::new, MobCategory.CREATURE, builder -> builder
+            .sized(0.3325F, 0.3325F));
 
     // Grief Tracking
     public static final DeferredHolder<EntityType<?>, EntityType<RevertingIceCharge>> REVERTING_ICE_CHARGE = ENTITY_TYPES.register("reverting_ice_charge", RevertingIceCharge::new, MobCategory.MISC, builder -> builder

@@ -41,6 +41,9 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         add(MineraculousKamikotizationsEntityTypes.REVERTING_ICE_CHARGE.get(), "Ice Charge");
         add(MineraculousKamikotizationsEntityTypes.REVERTING_LIGHTNING_BOLT.get(), "Lightning Bolt");
         add(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), "Wind Charge");
+
+        // Animals
+        add(MineraculousKamikotizationsEntityTypes.PIGEON.get(), "Pigeon");
     }
 
     protected void addTabs() {

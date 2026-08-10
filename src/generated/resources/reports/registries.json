@@ -7,6 +7,7 @@
   ],
   "minecraft:entity_type": [
     "mineraculouskamikotizations:ice_charge",
+    "mineraculouskamikotizations:pigeon",
     "mineraculouskamikotizations:reverting_ice_charge",
     "mineraculouskamikotizations:reverting_lightning_bolt",
     "mineraculouskamikotizations:reverting_wind_charge"
@@ -32,5 +33,16 @@
   ],
   "mineraculous:kamikotization": [
     "mineraculouskamikotizations:weather_control"
+  ],
+  "mineraculouskamikotizations:pigeon_variant": [
+    "mineraculouskamikotizations:cold",
+    "mineraculouskamikotizations:temperate",
+    "mineraculouskamikotizations:warm"
+  ],
+  "neoforge:biome_modifier": [
+    "mineraculouskamikotizations:spawn_pigeons"
+  ],
+  "neoforge:entity_data_serializers": [
+    "mineraculouskamikotizations:pigeon_variant"
   ]
 }

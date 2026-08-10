@@ -23,6 +23,10 @@ public class MineraculousKamikotizationsItemTagsProvider extends ExtendedItemTag
         tag(MineraculousKamikotizationsItemTags.PARASOLS)
                 .add(MineraculousKamikotizationsItems.PARASOLS.values().toArray(new DeferredItem[0]));
 
+        // Mod Specific
+        tag(MineraculousKamikotizationsItemTags.PIGEON_FOOD)
+                .addTag(ConventionalItemTags.FOODS);
+
         // Common
         tag(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS)
                 .add(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL)
