@@ -36,14 +36,13 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
 
     protected void parasolFromCarpet(RecipeOutput recipeOutput, ItemLike parasol, ItemLike carpet) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, parasol)
-                .pattern(" c ")
-                .pattern("csc")
-                .pattern(" s ")
-                .define('c', carpet)
-                .define('s', ConventionalItemTags.WOODEN_RODS)
-                .unlockedBy("has_carpet", has(carpet))
-                .unlockedBy("has_parasol", has(MineraculousKamikotizationsItemTags.PARASOLS))
-                .unlockedBy("has_self", has(parasol))
+                .pattern(" C ")
+                .pattern("CSC")
+                .pattern(" S ")
+                .define('C', carpet)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
+                .unlockedBy(getHasName(carpet), has(carpet))
+                .unlockedBy(getHasName(MineraculousKamikotizationsItemTags.PARASOLS), has(MineraculousKamikotizationsItemTags.PARASOLS))
                 .save(recipeOutput);
     }
 
@@ -51,8 +50,7 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, result)
                 .requires(itemTag)
                 .requires(dyeTag)
-                .unlockedBy("has_item", has(itemTag))
-                .unlockedBy("has_self", has(result))
+                .unlockedBy(getHasName(itemTag), has(itemTag))
                 .save(recipeOutput, RecipeBuilder.getDefaultRecipeId(result).withPath(path -> path + "_from_dye"));
     }
 }

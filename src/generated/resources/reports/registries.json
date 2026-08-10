@@ -6,10 +6,10 @@
     "mineraculouskamikotizations:weather_control_parasol_mode"
   ],
   "minecraft:entity_type": [
-    "mineraculouskamikotizations:grief_tracking_ice_charge",
-    "mineraculouskamikotizations:grief_tracking_lightning_bolt",
-    "mineraculouskamikotizations:grief_tracking_wind_charge",
-    "mineraculouskamikotizations:ice_charge"
+    "mineraculouskamikotizations:ice_charge",
+    "mineraculouskamikotizations:reverting_ice_charge",
+    "mineraculouskamikotizations:reverting_lightning_bolt",
+    "mineraculouskamikotizations:reverting_wind_charge"
   ],
   "minecraft:item": [
     "mineraculouskamikotizations:black_parasol",
@@ -30,16 +30,7 @@
     "mineraculouskamikotizations:white_parasol",
     "mineraculouskamikotizations:yellow_parasol"
   ],
-  "mineraculous:ability": [
-    "mineraculouskamikotizations:mimic_cat_miraculous_looks",
-    "mineraculouskamikotizations:mimic_cat_miraculous_tool"
-  ],
-  "mineraculous:ability_serializer": [
-    "mineraculouskamikotizations:extra_tool",
-    "mineraculouskamikotizations:replicate_looks"
-  ],
   "mineraculous:kamikotization": [
-    "mineraculouskamikotizations:cat_miraculous_mimicry",
     "mineraculouskamikotizations:weather_control"
   ]
 }

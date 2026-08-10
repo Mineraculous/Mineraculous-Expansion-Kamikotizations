@@ -21,16 +21,16 @@ public class MineraculousKamikotizationsItems {
 
     // Parasols
     private static final Supplier<Item.Properties> PARASOL_PROPERTIES = () -> new Item.Properties().stacksTo(1).component(MineraculousDataComponents.ACTIVE, Active.DEFAULT);
-    public static final Map<DyeColor, DeferredItem<?>> PARASOLS = parasols();
+    public static final Map<DyeColor, DeferredItem<ParasolItem>> PARASOLS = parasols();
     public static final DeferredItem<WeatherControlParasolItem> WEATHER_CONTROL_PARASOL = ITEMS.register("weather_control_parasol", () -> new WeatherControlParasolItem(PARASOL_PROPERTIES.get()
             .attributes(ItemAttributeModifiers.builder()
                     .add(NeoForgeMod.CREATIVE_FLIGHT, new AttributeModifier(MineraculousKamikotizations.modLoc("parasol_flight"), 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
                     .build())));
 
-    private static SortedMap<DyeColor, DeferredItem<?>> parasols() {
-        SortedMap<DyeColor, DeferredItem<?>> parasols = new Reference2ObjectLinkedOpenHashMap<>();
+    private static SortedMap<DyeColor, DeferredItem<ParasolItem>> parasols() {
+        SortedMap<DyeColor, DeferredItem<ParasolItem>> parasols = new Reference2ObjectLinkedOpenHashMap<>();
         for (DyeColor color : DyeColor.values()) {
-            parasols.put(color, ITEMS.register(color.getName() + "_parasol", () -> new Item(PARASOL_PROPERTIES.get())));
+            parasols.put(color, ITEMS.register(color.getName() + "_parasol", () -> new ParasolItem(PARASOL_PROPERTIES.get())));
         }
         return parasols;
     }

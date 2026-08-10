@@ -6,13 +6,12 @@ import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations
 import dev.thomasglasser.mineraculouskamikotizations.data.advancements.MineraculousKamikotizationsAdvancementProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.datamaps.MineraculousKamikotizationsDataMapProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.lang.MineraculousKamikotizationsEnUsLanguageProvider;
-import dev.thomasglasser.mineraculouskamikotizations.data.looks.MineraculousKamikotizationsLookProvider;
+import dev.thomasglasser.mineraculouskamikotizations.data.look.MineraculousKamikotizationsLookProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.loot.MineraculousKamikotizationsLootTables;
 import dev.thomasglasser.mineraculouskamikotizations.data.models.MineraculousKamikotizationsItemModelProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.modonomicons.MineraculousKamikotizationsBookProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.recipes.MineraculousKamikotizationsRecipeProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.tags.MineraculousKamikotizationsItemTagsProvider;
-import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import dev.thomasglasser.tommylib.api.data.DataGenerationUtils;
 import dev.thomasglasser.tommylib.api.data.tags.EmptyBlockTagsProvider;
@@ -21,7 +20,6 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class MineraculousKamikotizationsDataGenerators {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add(MineraculousRegistries.ABILITY, MineraculousKamikotizationsAbilities::bootstrap)
             .add(MineraculousRegistries.MIRACULOUS, Miraculouses::bootstrap)
             .add(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizationsKamikotizations::bootstrap);
 
@@ -39,6 +37,6 @@ public class MineraculousKamikotizationsDataGenerators {
 
         // Client
         DataGenerationUtils.createProvider(event, MineraculousKamikotizationsItemModelProvider::new);
-        DataGenerationUtils.createProvider(event, (packOutput, lookupProvider, existingFileHelper) -> new MineraculousKamikotizationsLookProvider(packOutput, lookupProvider));
+        event.createProvider(MineraculousKamikotizationsLookProvider::new);
     }
 }

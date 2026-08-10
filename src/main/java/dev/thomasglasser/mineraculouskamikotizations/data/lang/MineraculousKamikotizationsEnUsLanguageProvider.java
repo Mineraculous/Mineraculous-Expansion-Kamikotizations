@@ -1,8 +1,9 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.lang;
 
+import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
 import dev.thomasglasser.mineraculous.impl.data.lang.MineraculousEnUsLanguageProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
-import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
+import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
@@ -21,13 +22,7 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         addItems();
         addEntities();
         addTabs();
-        addAbilities();
         addKamikotizations();
-    }
-
-    protected void addAbilities() {
-        add(MineraculousKamikotizationsAbilities.MIMIC_CAT_MIRACULOUS_TOOL, "Mimic Cat Miraculous Tool");
-        add(MineraculousKamikotizationsAbilities.MIMIC_CAT_MIRACULOUS_LOOKS, "Mimic Cat Miraculous Name");
     }
 
     protected void addItems() {
@@ -38,17 +33,14 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
         // Kamikotization Tools
         add(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.get(), "Weather Control Parasol");
-        add(WeatherControlParasolItem.Mode.ICE, "Ice");
-        add(WeatherControlParasolItem.Mode.LIGHTNING, "Lightning");
-        add(WeatherControlParasolItem.Mode.WEATHER, "Weather");
-        add(WeatherControlParasolItem.Mode.WIND, "Wind");
+        addHotbarMenuOptions(WeatherControlParasolItem.Mode.values());
     }
 
     protected void addEntities() {
         add(MineraculousKamikotizationsEntityTypes.ICE_CHARGE.get(), "Ice Charge");
-        add(MineraculousKamikotizationsEntityTypes.GRIEF_TRACKING_ICE_CHARGE.get(), "Ice Charge");
-        add(MineraculousKamikotizationsEntityTypes.GRIEF_TRACKING_LIGHTNING_BOLT.get(), "Lightning Bolt");
-        add(MineraculousKamikotizationsEntityTypes.GRIEF_TRACKING_WIND_CHARGE.get(), "Wind Charge");
+        add(MineraculousKamikotizationsEntityTypes.REVERTING_ICE_CHARGE.get(), "Ice Charge");
+        add(MineraculousKamikotizationsEntityTypes.REVERTING_LIGHTNING_BOLT.get(), "Lightning Bolt");
+        add(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), "Wind Charge");
     }
 
     protected void addTabs() {
@@ -57,6 +49,6 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     protected void addKamikotizations() {
         add(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL, "Weather Control");
-        addCapitalized(MineraculousKamikotizationsKamikotizations.CAT_MIRACULOUS_MIMICRY);
+        add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS), "Requires an Umbrella");
     }
 }

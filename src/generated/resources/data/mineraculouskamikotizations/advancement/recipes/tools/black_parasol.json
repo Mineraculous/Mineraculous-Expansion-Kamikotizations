@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_carpet": {
+    "has_black_carpet": {
       "conditions": {
         "items": [
           {
@@ -11,21 +11,11 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_parasol": {
+    "has_parasols": {
       "conditions": {
         "items": [
           {
             "items": "#mineraculouskamikotizations:parasols"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_self": {
-      "conditions": {
-        "items": [
-          {
-            "items": "mineraculouskamikotizations:black_parasol"
           }
         ]
       },
@@ -41,9 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_carpet",
-      "has_parasol",
-      "has_self"
+      "has_black_carpet",
+      "has_parasols"
     ]
   ],
   "rewards": {

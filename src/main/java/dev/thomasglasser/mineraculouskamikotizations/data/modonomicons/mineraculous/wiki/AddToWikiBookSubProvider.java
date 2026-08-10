@@ -13,7 +13,6 @@ public class AddToWikiBookSubProvider extends AddToBookSubProvider {
         super(MineraculousConstants.modLoc(WikiBookSubProvider.ID), defaultLang);
     }
 
-    // Unused in Index Mode
     @Override
     protected void registerDefaultMacros() {}
 
@@ -23,6 +22,6 @@ public class AddToWikiBookSubProvider extends AddToBookSubProvider {
     }
 
     public static ResourceLocation wikiTexture(String path) {
-        return MineraculousKamikotizations.modLoc("textures/modonomicon/wiki/" + path);
+        return MineraculousKamikotizations.modLoc("textures/modonomicon/wiki/" + path + ".png");
     }
 }

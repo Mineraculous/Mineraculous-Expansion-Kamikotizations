@@ -1,18 +1,15 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
+import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
-import dev.thomasglasser.mineraculous.api.world.ability.Abilities;
-import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
+import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
-import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
@@ -25,20 +22,11 @@ public class MineraculousKamikotizationsKamikotizations {
     }
 
     public static void bootstrap(BootstrapContext<Kamikotization> context) {
-        HolderGetter<Ability> abilities = context.lookup(MineraculousRegistries.ABILITY);
-
         context.register(WEATHER_CONTROL, new Kamikotization(
-                "Stormy Weather",
-                ItemPredicate.Builder.item().of(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS).withCount(MinMaxBounds.Ints.exactly(1)).build(),
+                ImmutableList.of(
+                        new ItemCondition(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
+                CustomizationSettings.EMPTY,
                 Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
-                HolderSet.empty()));
-        context.register(CAT_MIRACULOUS_MIMICRY, new Kamikotization(
-                "Copy Cat",
-                ItemPredicate.Builder.item().build(),
-                Either.right(abilities.getOrThrow(Abilities.CATACLYSM)),
-                HolderSet.direct(
-                        abilities.getOrThrow(Abilities.CAT_VISION),
-                        abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_CAT_MIRACULOUS_TOOL),
-                        abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_CAT_MIRACULOUS_LOOKS))));
+                ImmutableList.of()));
     }
 }
