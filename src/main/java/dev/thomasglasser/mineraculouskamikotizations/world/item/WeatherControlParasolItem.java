@@ -5,8 +5,9 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import dev.thomasglasser.mineraculous.api.client.gui.selection.HotbarMenuProvider;
 import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
-import dev.thomasglasser.mineraculous.api.world.item.EffectRevertingItem;
+import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItemUtils;
+import dev.thomasglasser.mineraculous.api.world.item.RevertingItem;
 import dev.thomasglasser.mineraculous.impl.world.level.miraculousladybugtarget.MiraculousLadybugTargetCollector;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.selection.MineraculousKamikotizationsHotbarMenuIcons;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
@@ -33,7 +34,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +42,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class WeatherControlParasolItem extends ParasolItem implements EffectRevertingItem, HotbarMenuProvider<WeatherControlParasolItem.Mode> {
+public class WeatherControlParasolItem extends ParasolItem implements RevertingItem, HotbarMenuProvider<WeatherControlParasolItem.Mode> {
     public WeatherControlParasolItem(Properties properties) {
         super(properties);
     }
@@ -99,8 +99,8 @@ public class WeatherControlParasolItem extends ParasolItem implements EffectReve
     }
 
     @Override
-    public void revert(LivingEntity entity, MiraculousLadybugTargetCollector targetCollector) {
-        ServerLevel level = (ServerLevel) entity.level();
+    public void revert(Ability.Context context, MiraculousLadybugTargetCollector targetCollector) {
+        ServerLevel level = context.level();
         KamikotizationReversionData data = KamikotizationReversionData.get(level);
         if (data.wasWeatherModified()) {
             level.getServer().overworld().resetWeatherCycle();
