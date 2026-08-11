@@ -227,6 +227,35 @@ sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 tasks.processResources.dependsOn generateModMetadata
 
+def generatePackageInfos = tasks.register('generatePackageInfos') {
+	File srcDir = file('src/main/java')
+	File outDir = layout.buildDirectory.dir("generated/sources/packageInfo/main/java").get().asFile
+	inputs.dir(srcDir)
+	outputs.dir(outDir)
+	doLast {
+		srcDir.eachFileRecurse { file ->
+			if (file.isDirectory()) {
+				def javaFiles = file.listFiles({ f -> f.name.endsWith('.java') } as FileFilter)
+				if (javaFiles != null && javaFiles.length > 0) {
+					String relPath = srcDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
+					String pkgName = relPath.replace('/', '.')
+					File pkgInfo = new File(outDir, relPath + '/package-info.java')
+					pkgInfo.parentFile.mkdirs()
+					pkgInfo.text = """@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+package ${pkgName};
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import net.minecraft.MethodsReturnNonnullByDefault;
+"""
+				}
+			}
+		}
+	}
+}
+
+sourceSets.main.java.srcDir generatePackageInfos
+
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 compileJava.dependsOn immaculateApply
@@ -281,39 +310,159 @@ immaculate {
 
 javadoc {
 	failOnError = false
+	options {
+		tags = [
+				'apiNote:a:API Note:'
+		]
+	}
+}
+
+def getBetaTesters() {
+	def testers = []
+	try {
+		def gistUrl = new URL('https://gist.githubusercontent.com/thomasglasser/aa8eb933847685b93d8f99a59f07b62e/raw/e600b1029474ed498c2d9271bb23a4d99823d5d9/mineraculous_special_players.txt')
+		gistUrl.eachLine { line ->
+			if (!line.startsWith("//") && line.contains("beta")) {
+				def parts = line.split("\\|")
+				if (parts.length > 0) {
+					testers.add(parts[0].trim())
+				}
+			}
+		}
+	} catch (Exception e) {
+		println "WARNING: Failed to fetch beta testers from Gist: ${e.message}"
+	}
+	return testers
+}
+
+def getBetaTesterUuid(String name) {
+	try {
+		def gistUrl = new URL('https://gist.githubusercontent.com/thomasglasser/aa8eb933847685b93d8f99a59f07b62e/raw/e600b1029474ed498c2d9271bb23a4d99823d5d9/mineraculous_special_players.txt')
+		for (String line : gistUrl.readLines()) {
+			if (!line.startsWith("//") && line.contains("beta")) {
+				def parts = line.split("\\|")
+				if (parts.length > 1 && parts[0].trim().equals(name)) {
+					return parts[1].trim()
+				}
+			}
+		}
+	} catch (Exception e) {
+		println "WARNING: Failed to fetch beta tester UUID for ${name}: ${e.message}"
+	}
+	return ""
+}
+
+def registerBetaJar(String testerName) {
+	String testerUuid = getBetaTesterUuid(testerName)
+	if (!tasks.names.contains("jarBeta${testerName}")) {
+		File generatedMetaDir = layout.buildDirectory.dir("generated/beta/${testerName}/META-INF").get().asFile
+		File betaDir = layout.buildDirectory.dir("generated/beta/${testerName}").get().asFile
+		String modVersion = project.version.toString()
+		String modGroup = "${project.group}.${testerName}".toString()
+
+		tasks.register("jarBeta${testerName}", Jar) { jarTask ->
+			jarTask.destinationDirectory = layout.buildDirectory.dir("libs/beta/${testerName}")
+			jarTask.archiveBaseName = base.archivesName.get()
+			jarTask.archiveVersion = project.jar.archiveVersion
+			jarTask.from sourceSets.main.output
+
+			jarTask.doFirst {
+				File propFile = new File(generatedMetaDir, "mineraculous_beta.properties")
+				propFile.parentFile.mkdirs()
+				propFile.text = "tester=${testerName}\nuuid=${testerUuid}\nversion=${modVersion}\ngroup=${modGroup}\n"
+			}
+			jarTask.from(betaDir)
+
+			jarTask.manifest {
+				attributes([
+						'Specification-Title'   : mod_name,
+						'Specification-Vendor'  : mod_author,
+						'Specification-Version' : project.jar.archiveVersion,
+						'Implementation-Title'  : project.name,
+						'Implementation-Version': project.jar.archiveVersion,
+						'Implementation-Vendor' : mod_author,
+						'Built-On-Minecraft'    : minecraft_version,
+						'Beta-Tester'           : testerName,
+						'Beta-Tester-UUID'      : testerUuid
+				])
+			}
+		}
+	}
 }
 
 publishing {
-	publications {
-		register('mavenJava', MavenPublication) {
-			artifactId base.archivesName.get()
-			from components.java
-		}
+	def isBetaBuild = project.version.contains("beta")
 
-		maven(MavenPublication) {
-			pom {
-				name = project.mod_name
-				description = project.description
-				url = "https://github.com/thomasglasser/${github_name}/wiki"
-				licenses {
-					license {
-						name = project.license
+	publications {
+		if (isBetaBuild) {
+			getBetaTesters().each { testerName ->
+				registerBetaJar(testerName)
+
+				register("mavenBeta${testerName}", MavenPublication) {
+					groupId = "${project.group}.${testerName}"
+					artifactId = base.archivesName.get()
+					version = "${project.version}"
+					from components.java
+
+					artifacts.removeIf { it.classifier == null && (it.extension == 'jar' || (it.file != null && it.file.name.endsWith('.jar'))) }
+					artifact(tasks.named("jarBeta${testerName}"))
+
+					pom {
+						name = project.mod_name
+						description = project.description
+						url = "https://github.com/thomasglasser/${github_name}/wiki"
+						licenses {
+							license {
+								name = project.license
+							}
+						}
+						developers {
+							developer {
+								id = project.mod_author
+								name = project.mod_author
+							}
+						}
+						issueManagement {
+							system = 'GitHub'
+							url = "https://github.com/thomasglasser/${github_name}/issues"
+						}
+						scm {
+							connection = "scm:git:git://github.com/thomasglasser/${github_name}.git"
+							developerConnection = "scm:git:ssh://github.com:thomasglasser/${github_name}.git"
+							url = "https://github.com/thomasglasser/${github_name}/tree/${minecraft_version}"
+						}
 					}
 				}
-				developers {
-					developer {
-						id = project.mod_author
-						name = project.mod_author
+			}
+		} else {
+			register('mavenJava', MavenPublication) {
+				artifactId = base.archivesName.get()
+				from components.java
+
+				pom {
+					name = project.mod_name
+					description = project.description
+					url = "https://github.com/thomasglasser/${github_name}/wiki"
+					licenses {
+						license {
+							name = project.license
+						}
 					}
-				}
-				issueManagement {
-					system = 'GitHub'
-					url = "https://github.com/thomasglasser/${github_name}/issues"
-				}
-				scm {
-					connection = "scm:git:git://github.com/thomasglasser/${github_name}.git"
-					developerConnection = "scm:git:ssh://github.com:thomasglasser/${github_name}.git"
-					url = "https://github.com/thomasglasser/${github_name}/tree/${minecraft_version}"
+					developers {
+						developer {
+							id = project.mod_author
+							name = project.mod_author
+						}
+					}
+					issueManagement {
+						system = 'GitHub'
+						url = "https://github.com/thomasglasser/${github_name}/issues"
+					}
+					scm {
+						connection = "scm:git:git://github.com/thomasglasser/${github_name}.git"
+						developerConnection = "scm:git:ssh://github.com:thomasglasser/${github_name}.git"
+						url = "https://github.com/thomasglasser/${github_name}/tree/${minecraft_version}"
+					}
 				}
 			}
 		}
@@ -321,11 +470,11 @@ publishing {
 
 	repositories {
 		maven {
-			name = "Cloudsmith"
-			url = "https://maven.cloudsmith.io/thomasglasser/${mod_id}/"
+			name = "Reposilite"
+			url = isBetaBuild ? "https://maven.thomasglasser.dev/betas" : "https://maven.thomasglasser.dev/releases"
 			credentials {
-				username = project.findProperty("CLOUDSMITH_USERNAME") ?: System.getenv("CLOUDSMITH_USERNAME")
-				password = project.findProperty("CLOUDSMITH_API_KEY") ?: System.getenv("CLOUDSMITH_API_KEY")
+				username = project.findProperty("REPOSILITE_USERNAME") ?: System.getenv("REPOSILITE_USERNAME")
+				password = project.findProperty("REPOSILITE_PASSWORD") ?: System.getenv("REPOSILITE_PASSWORD")
 			}
 		}
 	}
@@ -333,19 +482,29 @@ publishing {
 
 signing {
 	useGpgCmd()
-	sign publishing.publications
+	sign publishing.publications.matching { it.name == 'mavenJava' }
 }
 
-// Declare capabilities on the outgoing configurations.
-// Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
-	configurations."$variant".outgoing {
-		capability("$group:${base.archivesName.get()}:$version")
-		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
-		capability("$group:$mod_id:$version")
-	}
-	publishing.publications.configureEach {
-		suppressPomMetadataWarningsFor(variant)
+def isBetaBuild = project.version.contains("beta")
+
+// Disable Gradle Module Metadata for beta builds.
+tasks.withType(GenerateModuleMetadata).configureEach {
+	enabled = !isBetaBuild
+}
+
+// Only apply strict capabilities to the public stable release.
+if (!isBetaBuild) {
+	// Declare capabilities on the outgoing configurations.
+	// Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
+	['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
+		configurations."$variant".outgoing {
+			capability("$group:${base.archivesName.get()}:$version")
+			capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
+			capability("$group:$mod_id:$version")
+		}
+		publishing.publications.configureEach {
+			suppressPomMetadataWarningsFor(variant)
+		}
 	}
 }
 
