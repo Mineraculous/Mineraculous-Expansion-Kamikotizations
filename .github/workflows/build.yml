@@ -23,6 +23,9 @@ jobs:
 
       - name: Assemble the project
         run: ./gradlew build
+        env:
+          MINERACULOUS_USERNAME: ${{ secrets.MINERACULOUS_USERNAME }}
+          MINERACULOUS_PASSWORD: ${{ secrets.MINERACULOUS_PASSWORD }}
 
       - name: Upload Jars
         if: github.event_name == 'workflow_call'
