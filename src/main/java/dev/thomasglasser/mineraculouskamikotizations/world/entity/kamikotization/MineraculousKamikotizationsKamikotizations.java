@@ -23,7 +23,7 @@ public class MineraculousKamikotizationsKamikotizations {
     public static void bootstrap(BootstrapContext<Kamikotization> context) {
         context.register(WEATHER_CONTROL, new Kamikotization(
                 ImmutableList.of(
-                        new ItemCondition(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
+                        new ItemCondition(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
                 CustomizationSettings.EMPTY,
                 Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
                 ImmutableList.of()));

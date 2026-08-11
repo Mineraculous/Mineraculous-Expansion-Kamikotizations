@@ -44,5 +44,5 @@
   "item.mineraculouskamikotizations.yellow_parasol": "Yellow Parasol",
   "item_group.mineraculouskamikotizations.mineraculouskamikotizations": "Mineraculous Expansion: Kamikotizations",
   "kamikotization.mineraculouskamikotizations.weather_control": "Weather Control",
-  "kamikotization_condition.mineraculous.item.requires_umbrella_tools": "Requires an Umbrella"
+  "kamikotization_condition.mineraculous.item.requires_weather_control_kamikotizable": "Requires an Umbrella"
 }

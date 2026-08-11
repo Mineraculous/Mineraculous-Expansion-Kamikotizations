@@ -49,6 +49,6 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     protected void addKamikotizations() {
         add(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL, "Weather Control");
-        add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS), "Requires an Umbrella");
+        add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE), "Requires an Umbrella");
     }
 }
