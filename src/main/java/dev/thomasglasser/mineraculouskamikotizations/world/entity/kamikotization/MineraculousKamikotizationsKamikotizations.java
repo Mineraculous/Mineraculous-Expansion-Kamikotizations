@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceKey;
 
 public class MineraculousKamikotizationsKamikotizations {
     public static final ResourceKey<Kamikotization> WEATHER_CONTROL = create("weather_control");
-    public static final ResourceKey<Kamikotization> CAT_MIRACULOUS_MIMICRY = create("cat_miraculous_mimicry");
+    public static final ResourceKey<Kamikotization> MIRACULOUS_REPLICATION = create("miraculous_replication");
 
     private static ResourceKey<Kamikotization> create(String name) {
         return ResourceKey.create(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizations.modLoc(name));
@@ -25,6 +25,11 @@ public class MineraculousKamikotizationsKamikotizations {
         context.register(WEATHER_CONTROL, new Kamikotization(
                 ImmutableList.of(
                         new ItemCondition(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
+                CustomizationSettings.EMPTY,
+                Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
+                ImmutableList.of()));
+        context.register(MIRACULOUS_REPLICATION, new Kamikotization(
+                ImmutableList.of(),
                 CustomizationSettings.EMPTY,
                 Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
                 ImmutableList.of()));

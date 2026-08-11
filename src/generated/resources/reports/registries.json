@@ -30,7 +30,12 @@
     "mineraculouskamikotizations:white_parasol",
     "mineraculouskamikotizations:yellow_parasol"
   ],
+  "mineraculous:customization_setting_type": [
+    "mineraculouskamikotizations:miraculous",
+    "mineraculouskamikotizations:player"
+  ],
   "mineraculous:kamikotization": [
+    "mineraculouskamikotizations:miraculous_replication",
     "mineraculouskamikotizations:weather_control"
   ]
 }
