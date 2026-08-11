@@ -4,6 +4,7 @@ import dev.thomasglasser.mineraculous.api.client.renderer.item.MineraculousItemP
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItemDisplayContexts;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
+import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
 import dev.thomasglasser.tommylib.api.data.models.ExtendedItemModelProvider;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
@@ -35,6 +36,32 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
 
             basicItem(MineraculousKamikotizationsItems.BUBBLE_WANDS.get(color).get());
         }
+
+        ResourceLocation parasolLoc = MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.getId();
+        ResourceLocation iceLoc = parasolLoc.withSuffix("_ice");
+        ResourceLocation activeLoc = parasolLoc.withSuffix("_active");
+        ResourceLocation openLoc = parasolLoc.withSuffix("_open");
+        ResourceLocation inactiveLoc = parasolLoc.withSuffix("_inactive");
+        ItemModelBuilder inactiveParasol = withSeparateInventoryModel(inactiveLoc, withExistingParent(parasolLoc.getPath(), modLoc("item/weather_control_parasol_closed"))
+                .texture("texture", parasolLoc.withPrefix("item/"))
+                .texture("particle", parasolLoc.withPrefix("item/")), basicItem(parasolLoc.withSuffix("_inventory")));
+        withExistingParent(parasolLoc.getPath(), inactiveLoc)
+                .override()
+                .predicate(MineraculousItemProperties.MODE, MineraculousItemProperties.getPropertyForEnum(WeatherControlParasolItem.Mode.ICE))
+                .model(withSeparateInventoryModel(iceLoc, withExistingParent(iceLoc.getPath(), modLoc("item/weather_control_parasol_closed"))
+                        .texture("texture", iceLoc.withPrefix("item/"))
+                        .texture("particle", iceLoc.withPrefix("item/")), basicItem(iceLoc.withSuffix("_inventory"))))
+                .end()
+                .override()
+                .predicate(MineraculousItemProperties.MODE, MineraculousItemProperties.getPropertyForEnum(WeatherControlParasolItem.Mode.ICE) + 1)
+                .model(inactiveParasol)
+                .end()
+                .override()
+                .predicate(MineraculousItemProperties.ACTIVE, 1)
+                .model(withSeparateInventoryModel(activeLoc, withExistingParent(activeLoc.getPath(), openLoc.withPrefix("item/"))
+                        .texture("texture", openLoc.withPrefix("item/"))
+                        .texture("particle", openLoc.withPrefix("item/")), basicItem(openLoc.withSuffix("_inventory"))))
+                .end();
 
         // TODO: Convert to look model
         ItemModelBuilder inHandBubbleSword = withExistingParent("item/bubble_sword_in_hand", modItemLoc("bubble_sword_in_hand"));
