@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mineraculouskamikotizations:item/black_bubble_wand"
+  }
+}

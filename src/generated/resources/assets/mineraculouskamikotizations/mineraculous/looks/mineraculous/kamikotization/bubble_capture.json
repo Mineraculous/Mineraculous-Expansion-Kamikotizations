@@ -1,0 +1,13 @@
+{
+  "contexts": {
+    "mineraculous:kamikotization_suit": {
+      "mineraculous:geckolib_model": "mineraculouskamikotizations:geo/item/armor/kamikotization/bubble_capture.geo.json",
+      "mineraculous:texture": "mineraculouskamikotizations:textures/entity/equipment/humanoid/kamikotization/bubble_capture.png"
+    }
+  },
+  "metadata": {
+    "mineraculous:valid_kamikotizations": [
+      "mineraculouskamikotizations:bubble_capture"
+    ]
+  }
+}

@@ -7,9 +7,10 @@ import net.neoforged.fml.common.Mod;
 
 @Mod(value = MineraculousKamikotizations.MOD_ID, dist = Dist.CLIENT)
 public class MineraculousKamikotizationsClient {
-    public MineraculousKamikotizationsClient(IEventBus modBus) {
-        modBus.addListener(MineraculousKamikotizationsClientEvents::onFMLClientSetup);
-        modBus.addListener(MineraculousKamikotizationsClientEvents::onBuildCreativeModeTabContents);
-        modBus.addListener(MineraculousKamikotizationsClientEvents::onRegisterRenderers);
+    public MineraculousKamikotizationsClient(IEventBus bus) {
+        bus.addListener(MineraculousKamikotizationsClientEvents::onFMLClientSetup);
+        bus.addListener(MineraculousKamikotizationsClientEvents::onBuildCreativeModeTabContents);
+        bus.addListener(MineraculousKamikotizationsClientEvents::onRegisterRenderers);
+        bus.addListener(MineraculousKamikotizationsClientEvents::onRegisterParticleProviders);
     }
 }

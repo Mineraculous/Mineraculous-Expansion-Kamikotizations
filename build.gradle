@@ -188,6 +188,7 @@ dependencies {
 	// api "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
 	api "dev.thomasglasser.mineraculous.${project.findProperty("MINERACULOUS_USERNAME") ?: System.getenv("MINERACULOUS_USERNAME")}:mineraculous-${minecraft_version}:${mineraculous_version}"
 
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 	implementation "com.klikli_dev:modonomicon-${minecraft_version}-neoforge:${modonomicon_version}"
 	implementation "maven.modrinth:jade:${jade_version}+neoforge"
 
@@ -212,7 +213,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 			icon: icon,
 			github_name: github_name,
 			tommylib_version: tommylib_version,
-			mineraculous_version: mineraculous_version
+			mineraculous_version: mineraculous_version,
+			curios_version: curios_version,
 	]
 
 	inputs.properties replaceProperties

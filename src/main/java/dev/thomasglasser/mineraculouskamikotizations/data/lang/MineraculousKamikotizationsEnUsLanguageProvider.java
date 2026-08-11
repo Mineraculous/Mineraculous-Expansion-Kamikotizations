@@ -6,6 +6,7 @@ import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
+import dev.thomasglasser.mineraculouskamikotizations.world.item.BubbleSwordItem;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
@@ -29,15 +30,20 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         // Kamikotizables
         for (DyeColor color : DyeColor.values()) {
             add(MineraculousKamikotizationsItems.PARASOLS.get(color).get(), capitalize(color.getName()) + " Parasol");
+            add(MineraculousKamikotizationsItems.BUBBLE_WANDS.get(color).get(), capitalize(color.getName()) + " Bubble Wand");
         }
 
         // Kamikotization Tools
         add(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.get(), "Weather Control Parasol");
         addHotbarMenuOptions(WeatherControlParasolItem.Mode.values());
+        add(MineraculousKamikotizationsItems.BUBBLE_SWORD, "Bubble Sword");
+        addHotbarMenuOptions(BubbleSwordItem.Mode.values());
     }
 
     protected void addEntities() {
         add(MineraculousKamikotizationsEntityTypes.ICE_CHARGE.get(), "Ice Charge");
+        add(MineraculousKamikotizationsEntityTypes.BUBBLE_PRISON.get(), "Bubble Prison");
+
         add(MineraculousKamikotizationsEntityTypes.REVERTING_ICE_CHARGE.get(), "Ice Charge");
         add(MineraculousKamikotizationsEntityTypes.REVERTING_LIGHTNING_BOLT.get(), "Lightning Bolt");
         add(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), "Wind Charge");
@@ -49,6 +55,9 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     protected void addKamikotizations() {
         add(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL, "Weather Control");
+        add(MineraculousKamikotizationsKamikotizations.BUBBLE_CAPTURE, "Bubble Capture");
+
         add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS), "Requires an Umbrella");
+        add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.BUBBLE_WANDS), "Requires a Bubble Wand");
     }
 }

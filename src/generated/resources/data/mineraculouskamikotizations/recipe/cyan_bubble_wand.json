@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "G": {
+      "item": "minecraft:cyan_stained_glass"
+    }
+  },
+  "pattern": [
+    " C ",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mineraculouskamikotizations:cyan_bubble_wand"
+  }
+}

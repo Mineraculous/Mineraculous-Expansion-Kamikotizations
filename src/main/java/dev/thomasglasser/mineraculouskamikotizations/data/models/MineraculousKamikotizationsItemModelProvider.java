@@ -1,13 +1,16 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.models;
 
 import dev.thomasglasser.mineraculous.api.client.renderer.item.MineraculousItemProperties;
+import dev.thomasglasser.mineraculous.api.world.item.MineraculousItemDisplayContexts;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
 import dev.thomasglasser.tommylib.api.data.models.ExtendedItemModelProvider;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -30,6 +33,8 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
                                     .texture("texture", openLoc.withPrefix("item/"))
                                     .texture("particle", openLoc.withPrefix("item/")), basicItem(openLoc.withSuffix("_inventory"))))
                             .end();
+
+            basicItem(MineraculousKamikotizationsItems.BUBBLE_WANDS.get(color).get());
         }
 
         ResourceLocation parasolLoc = MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.getId();
@@ -57,5 +62,25 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
                         .texture("texture", openLoc.withPrefix("item/"))
                         .texture("particle", openLoc.withPrefix("item/")), basicItem(openLoc.withSuffix("_inventory"))))
                 .end();
+
+        // TODO: Convert to look model
+        ItemModelBuilder inHandBubbleSword = withExistingParent("item/bubble_sword_in_hand", modItemLoc("bubble_sword_in_hand"));
+        ItemModelBuilder inventoryBubbleSword = basicItem(MineraculousKamikotizationsItems.BUBBLE_SWORD.getId().withPath(path -> path + "_inventory")).guiLight(BlockModel.GuiLight.FRONT);
+        ItemModelBuilder onBackBubbleSword = withExistingParent("item/bubble_sword_on_back", modItemLoc("bubble_sword_in_hand"))
+                .texture("texture", modItemLoc("bubble_sword_on_back"))
+                .transforms()
+                .transform(MineraculousItemDisplayContexts.CURIOS_BODY.getValue())
+                .translation(0, -2.5F, 4.5F)
+                .end()
+                .end();
+        generatedModels.remove(inHandBubbleSword.getLocation());
+        generatedModels.remove(inventoryBubbleSword.getLocation());
+        generatedModels.remove(onBackBubbleSword.getLocation());
+        withSeparateTransforms(MineraculousKamikotizationsItems.BUBBLE_SWORD)
+                .base(inHandBubbleSword)
+                .perspective(ItemDisplayContext.GUI, inventoryBubbleSword)
+                .perspective(ItemDisplayContext.FIXED, inventoryBubbleSword)
+                .perspective(ItemDisplayContext.GROUND, inventoryBubbleSword)
+                .perspective(MineraculousItemDisplayContexts.CURIOS_BODY.getValue(), onBackBubbleSword);
     }
 }

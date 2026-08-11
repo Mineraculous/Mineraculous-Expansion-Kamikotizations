@@ -31,7 +31,18 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
 
             parasolFromCarpet(recipeOutput, MineraculousKamikotizationsItems.PARASOLS.get(color).get(), BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace(color.getName() + "_carpet")));
             itemFromDye(recipeOutput, MineraculousKamikotizationsItems.PARASOLS.get(color).get(), MineraculousKamikotizationsItemTags.PARASOLS, dyeTag);
+
+            bubbleWandFromStainedGlass(recipeOutput, MineraculousKamikotizationsItems.BUBBLE_WANDS.get(color).get(), BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace(color.getName() + "_stained_glass")));
+            itemFromDye(recipeOutput, MineraculousKamikotizationsItems.BUBBLE_WANDS.get(color).get(), MineraculousKamikotizationsItemTags.BUBBLE_WANDS, dyeTag);
         }
+    }
+
+    protected void itemFromDye(RecipeOutput recipeOutput, ItemLike result, TagKey<Item> itemTag, TagKey<Item> dyeTag) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, result)
+                .requires(itemTag)
+                .requires(dyeTag)
+                .unlockedBy(getHasName(itemTag), has(itemTag))
+                .save(recipeOutput, RecipeBuilder.getDefaultRecipeId(result).withPath(path -> path + "_from_dye"));
     }
 
     protected void parasolFromCarpet(RecipeOutput recipeOutput, ItemLike parasol, ItemLike carpet) {
@@ -46,11 +57,14 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
                 .save(recipeOutput);
     }
 
-    protected void itemFromDye(RecipeOutput recipeOutput, ItemLike result, TagKey<Item> itemTag, TagKey<Item> dyeTag) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, result)
-                .requires(itemTag)
-                .requires(dyeTag)
-                .unlockedBy(getHasName(itemTag), has(itemTag))
-                .save(recipeOutput, RecipeBuilder.getDefaultRecipeId(result).withPath(path -> path + "_from_dye"));
+    protected void bubbleWandFromStainedGlass(RecipeOutput recipeOutput, ItemLike bubbleWand, ItemLike stainedGlass) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, bubbleWand)
+                .pattern(" C ")
+                .pattern(" G ")
+                .define('C', ConventionalItemTags.COPPER_INGOTS)
+                .define('G', stainedGlass)
+                .unlockedBy(getHasName(ConventionalItemTags.COPPER_INGOTS), has(ConventionalItemTags.COPPER_INGOTS))
+                .unlockedBy(getHasName(MineraculousKamikotizationsItemTags.BUBBLE_WANDS), has(MineraculousKamikotizationsItemTags.BUBBLE_WANDS))
+                .save(recipeOutput);
     }
 }

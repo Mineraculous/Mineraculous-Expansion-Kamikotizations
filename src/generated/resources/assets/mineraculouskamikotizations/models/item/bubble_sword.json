@@ -1,0 +1,45 @@
+{
+  "base": {
+    "parent": "mineraculouskamikotizations:item/bubble_sword_in_hand"
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "fixed": {
+      "parent": "minecraft:item/generated",
+      "gui_light": "front",
+      "textures": {
+        "layer0": "mineraculouskamikotizations:item/bubble_sword_inventory"
+      }
+    },
+    "ground": {
+      "parent": "minecraft:item/generated",
+      "gui_light": "front",
+      "textures": {
+        "layer0": "mineraculouskamikotizations:item/bubble_sword_inventory"
+      }
+    },
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "gui_light": "front",
+      "textures": {
+        "layer0": "mineraculouskamikotizations:item/bubble_sword_inventory"
+      }
+    },
+    "mineraculous:curios_body": {
+      "parent": "mineraculouskamikotizations:item/bubble_sword_in_hand",
+      "display": {
+        "mineraculous:curios_body": {
+          "translation": [
+            0,
+            -2.5,
+            4.5
+          ]
+        }
+      },
+      "textures": {
+        "texture": "mineraculouskamikotizations:item/bubble_sword_on_back"
+      }
+    }
+  }
+}
