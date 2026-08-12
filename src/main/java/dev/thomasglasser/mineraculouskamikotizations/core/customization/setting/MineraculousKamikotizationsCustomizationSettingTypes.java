@@ -7,9 +7,7 @@ import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.tommylib.api.registration.DeferredHolder;
 import dev.thomasglasser.tommylib.api.registration.DeferredRegister;
-import java.util.UUID;
 import net.minecraft.core.Holder;
-import net.minecraft.core.UUIDUtil;
 import org.jetbrains.annotations.ApiStatus;
 
 public class MineraculousKamikotizationsCustomizationSettingTypes {
@@ -17,7 +15,7 @@ public class MineraculousKamikotizationsCustomizationSettingTypes {
 
     public static final DeferredHolder<CustomizationSettingType<?>, SimpleCustomizationSettingType<Holder<Miraculous>>> MIRACULOUS = CUSTOMIZATION_SETTING_TYPES.register("miraculous", () -> new SimpleCustomizationSettingType<>(Miraculous.CODEC, Miraculous.STREAM_CODEC));
 
-    public static final DeferredHolder<CustomizationSettingType<?>, SimpleCustomizationSettingType<UUID>> PLAYER = CUSTOMIZATION_SETTING_TYPES.register("player", () -> new SimpleCustomizationSettingType<>(UUIDUtil.LENIENT_CODEC, UUIDUtil.STREAM_CODEC.cast()));
+    public static final DeferredHolder<CustomizationSettingType<?>, PlayerCustomizationSettingType> PLAYER = CUSTOMIZATION_SETTING_TYPES.register("player", PlayerCustomizationSettingType::new);
 
     @ApiStatus.Internal
     public static void init() {}

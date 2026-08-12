@@ -1,15 +1,19 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.lang;
 
+import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
 import dev.thomasglasser.mineraculous.impl.data.lang.MineraculousEnUsLanguageProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
+import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 
 public class MineraculousKamikotizationsEnUsLanguageProvider extends MineraculousEnUsLanguageProvider {
@@ -23,6 +27,9 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         addEntities();
         addTabs();
         addKamikotizations();
+        addCustomizationSettings();
+        addAbilities();
+        addGuis();
     }
 
     protected void addItems() {
@@ -50,5 +57,27 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
     protected void addKamikotizations() {
         add(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL, "Weather Control");
         add(ItemCondition.requiresMessage(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE), "Requires an Umbrella");
+        add(MineraculousKamikotizationsKamikotizations.MIRACULOUS_REPLICATION, "Miraculous Replication");
+    }
+
+    protected void addCapitalizedCustomizationSettings(ResourceKey<?> parent, ResourceKey<Ability> ability, String... settings) {
+        for (String setting : settings) {
+            String path = parent.location().getPath() + "." + ability.location().getPath() + "." + setting;
+            add("customization_setting." + parent.location().getNamespace() + "." + path, capitalize(setting.replace('_', ' ')));
+        }
+    }
+
+    private void addCustomizationSettings() {
+        // Abilities
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_REPLICATION, MineraculousKamikotizationsAbilities.REPLICATE_ACTIVE, "replicate_active", "miraculous", "player");
+    }
+
+    private void addAbilities() {
+        add(MineraculousKamikotizationsAbilities.REPLICATE_ACTIVE, "Replicate Active");
+    }
+
+    private void addGuis() {
+        // Player Selection Screen
+        add(PlayerSelectionScreen.TITLE, "Select Player");
     }
 }

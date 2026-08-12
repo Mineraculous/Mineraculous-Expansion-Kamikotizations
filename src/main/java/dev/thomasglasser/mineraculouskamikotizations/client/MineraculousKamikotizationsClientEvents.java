@@ -1,16 +1,23 @@
 package dev.thomasglasser.mineraculouskamikotizations.client;
 
+import dev.thomasglasser.mineraculous.api.client.gui.components.CustomizationSettingWidgetRegistry;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
+import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
+import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,6 +35,36 @@ public class MineraculousKamikotizationsClientEvents {
     // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
+        event.enqueueWork(() -> {
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(), (property, parentScreen, font, widgetWidth, widgetHeight, currentUuidString, onValueChanged) -> {
+                final String[] selectedPlayerUuidHolder = new String[] { currentUuidString };
+
+                Component initialButtonText = MineraculousClientUtils.GUI_CHOOSE;
+                if (selectedPlayerUuidHolder[0] != null && !selectedPlayerUuidHolder[0].isEmpty()) {
+                    initialButtonText = Component.literal(selectedPlayerUuidHolder[0]);
+                }
+
+                return Button.builder(initialButtonText, selectionButton -> {
+                    Minecraft.getInstance().setScreen(new PlayerSelectionScreen(
+                            parentScreen,
+                            selectedProfile -> {
+                                if (selectedProfile != null) {
+                                    String playerUuidString = selectedProfile.getId().toString();
+                                    String playerDisplayName = selectedProfile.getName();
+
+                                    selectedPlayerUuidHolder[0] = playerUuidString;
+                                    onValueChanged.accept(playerUuidString);
+                                    selectionButton.setMessage(Component.literal(playerDisplayName));
+                                } else {
+                                    selectedPlayerUuidHolder[0] = null;
+                                    onValueChanged.accept(null);
+                                    selectionButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+                                }
+                                Minecraft.getInstance().setScreen(parentScreen);
+                            }));
+                }).size(widgetWidth, widgetHeight).build();
+            });
+        });
     }
 
     // Items

@@ -1,0 +1,22 @@
+{
+  "branches": [
+    {
+      "actions": [
+        {
+          "type": "mineraculouskamikotizations:replicate_active"
+        }
+      ]
+    }
+  ],
+  "customization_settings": {
+    "miraculous": {
+      "type": "mineraculouskamikotizations:miraculous",
+      "default_value": "mineraculous:cat",
+      "optional": true
+    },
+    "player": {
+      "type": "mineraculouskamikotizations:player",
+      "optional": true
+    }
+  }
+}

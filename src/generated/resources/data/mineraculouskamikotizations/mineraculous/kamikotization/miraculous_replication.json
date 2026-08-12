@@ -1,6 +1,3 @@
 {
-  "power_source": {
-    "count": 1,
-    "id": "mineraculouskamikotizations:weather_control_parasol"
-  }
+  "power_source": "mineraculouskamikotizations:replicate_active"
 }
