@@ -3,7 +3,6 @@ package dev.thomasglasser.mineraculouskamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
 import dev.thomasglasser.mineraculouskamikotizations.data.MineraculousKamikotizationsDataGenerators;
-import dev.thomasglasser.mineraculouskamikotizations.network.MineraculousKamikotizationsPayloads;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.action.MineraculousKamikotizationsAbilityActions;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
@@ -19,20 +18,19 @@ import org.slf4j.LoggerFactory;
 public class MineraculousKamikotizations {
     public static final String MOD_ID = "mineraculouskamikotizations";
     public static final String MOD_NAME = "Mineraculous Expansion: Kamikotizations";
-    private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
     public MineraculousKamikotizations(IEventBus modBus) {
         LOGGER.info("Initializing {} for {} in a {} environment...", MOD_NAME, TommyLibServices.PLATFORM.getPlatformName(), TommyLibServices.PLATFORM.getEnvironmentName());
 
-        MineraculousKamikotizationsCustomizationSettingTypes.init();
         MineraculousKamikotizationsAbilityActions.init();
+        MineraculousKamikotizationsCustomizationSettingTypes.init();
         MineraculousKamikotizationsEntityTypes.init();
         MineraculousKamikotizationsItems.init();
         MineraculousKamikotizationsCreativeModeTabs.init();
         MineraculousKamikotizationsDataComponents.init();
 
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
-        modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPackets);
     }
 
     public static ResourceLocation modLoc(String path) {

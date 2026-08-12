@@ -25,12 +25,12 @@ public class ReplicateActiveAbilityAction implements AbilityAction {
         ServerLevel level = context.level();
         // TODO: Tommy fix the holder property screen not working so it doesn't return null
         Holder<Miraculous> miraculousHolder = instance.getOptionalProperty(MIRACULOUS);
-        if (miraculousHolder != null) {
-            for (Player player : level.players()) {
-                if (player.getUUID().equals(instance.getOptionalProperty(PLAYER))) {
-                    miraculousHolder.value().activeAbility().perform(Ability.Context.of(level, context.performer(), player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder), miraculousHolder, context.target()));
-                    return Ability.Result.succeedAndContinue();
-                }
+        UUID playerUUID = instance.getOptionalProperty(PLAYER);
+        if (playerUUID != null) {
+            Player player = level.getPlayerByUUID(playerUUID);
+            if (miraculousHolder != null && player != null) {
+                miraculousHolder.value().activeAbility().perform(Ability.Context.of(level, context.performer(), player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder), miraculousHolder, context.target()));
+                return Ability.Result.succeedAndContinue();
             }
         }
         return Ability.Result.pass();

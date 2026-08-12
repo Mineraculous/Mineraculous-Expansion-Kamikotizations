@@ -5,12 +5,11 @@ import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityProperty
 import java.util.UUID;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerAbilityProperty extends AbilityProperty<UUID> {
-    private static final StreamCodec<RegistryFriendlyByteBuf, UUID> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(UUID::fromString, UUID::toString).cast();
+    private static final StreamCodec<RegistryFriendlyByteBuf, UUID> STREAM_CODEC = UUIDUtil.STREAM_CODEC.cast();
 
     public PlayerAbilityProperty(String name, @Nullable UUID defaultValue) {
         super(name, defaultValue);

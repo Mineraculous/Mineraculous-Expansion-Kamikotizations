@@ -16,7 +16,7 @@ import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerSelectionScreen extends Screen {
-    static final String ID = "player_selection";
+    private static final String ID = "player_selection";
     public static final Component TITLE = MineraculousClientUtils.translatableGui(ID, "name");
 
     private final Screen previousScreen;
@@ -37,6 +37,30 @@ public class PlayerSelectionScreen extends Screen {
         if (this.minecraft != null) {
             this.minecraft.setScreen(this.previousScreen);
         }
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        int backgroundLeftPosition = this.calculateHorizontalMargin() + 3;
+        guiGraphics.blitSprite(SocialInteractionsScreen.BACKGROUND_SPRITE, backgroundLeftPosition, SocialInteractionsScreen.MARGIN_Y, SocialInteractionsScreen.BG_WIDTH, this.calculateWindowHeight() + SocialInteractionsScreen.SEARCH_HEIGHT);
+        guiGraphics.blitSprite(SocialInteractionsScreen.SEARCH_SPRITE, backgroundLeftPosition + 10, 76, 12, 12);
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (!this.playerSelectionList.isEmpty()) {
+            this.playerSelectionList.render(guiGraphics, mouseX, mouseY, partialTick);
+        } else if (this.searchBoxWidget != null && !this.searchBoxWidget.getValue().isEmpty()) {
+            guiGraphics.drawCenteredString(this.minecraft.font, SocialInteractionsScreen.EMPTY_SEARCH, this.width / 2, (SocialInteractionsScreen.SEARCH_START + this.calculateListEndCoordinate()) / 2, -1);
+        }
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     private int calculateWindowHeight() {
@@ -69,7 +93,7 @@ public class PlayerSelectionScreen extends Screen {
         this.searchBoxWidget = new EditBox(this.font, this.calculateHorizontalMargin() + 28, 74, 200, 15, SocialInteractionsScreen.SEARCH_HINT) {
             @Override
             protected MutableComponent createNarrationMessage() {
-                return !searchBoxWidget.getValue().isEmpty() && playerSelectionList.isEmpty()
+                return !getValue().isEmpty() && playerSelectionList.isEmpty()
                         ? super.createNarrationMessage().append(", ").append(SocialInteractionsScreen.EMPTY_SEARCH)
                         : super.createNarrationMessage();
             }
@@ -109,30 +133,6 @@ public class PlayerSelectionScreen extends Screen {
         if (this.searchBoxWidget != null) {
             this.setInitialFocus(this.searchBoxWidget);
         }
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        int backgroundLeftPosition = this.calculateHorizontalMargin() + 3;
-        guiGraphics.blitSprite(SocialInteractionsScreen.BACKGROUND_SPRITE, backgroundLeftPosition, SocialInteractionsScreen.MARGIN_Y, SocialInteractionsScreen.BG_WIDTH, this.calculateWindowHeight() + SocialInteractionsScreen.SEARCH_HEIGHT);
-        guiGraphics.blitSprite(SocialInteractionsScreen.SEARCH_SPRITE, backgroundLeftPosition + 10, 76, 12, 12);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-
-        if (!this.playerSelectionList.isEmpty()) {
-            this.playerSelectionList.render(guiGraphics, mouseX, mouseY, partialTick);
-        } else if (this.searchBoxWidget != null && !this.searchBoxWidget.getValue().isEmpty()) {
-            guiGraphics.drawCenteredString(this.minecraft.font, SocialInteractionsScreen.EMPTY_SEARCH, this.width / 2, (SocialInteractionsScreen.SEARCH_START + this.calculateListEndCoordinate()) / 2, -1);
-        }
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return false;
     }
 
     private void handleSearchQueryChange(String updatedQuery) {

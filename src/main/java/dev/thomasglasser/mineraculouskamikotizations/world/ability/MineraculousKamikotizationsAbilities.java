@@ -25,12 +25,11 @@ public class MineraculousKamikotizationsAbilities {
 
     public static void bootstrap(BootstrapContext<Ability> context) {
         Holder.Reference<AbilityAction> replicateActive = context.lookup(MineraculousRegistries.ABILITY_ACTION).getOrThrow(MineraculousKamikotizationsAbilityActions.REPLICATE_ACTIVE.getKey());
-        HolderGetter<Miraculous> miraculouses = context.lookup(MineraculousRegistries.MIRACULOUS);
 
         context.register(REPLICATE_ACTIVE, Ability.builder()
                 .branch(AbilityBranch.builder()
                         .action(replicateActive, AbilityProperties.builder()))
-                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.of(miraculouses.getOrThrow(Miraculouses.CAT)), true)
+                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), true)
                 .customizationSetting("player", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER, Optional.empty(), true)
                 .build());
     }

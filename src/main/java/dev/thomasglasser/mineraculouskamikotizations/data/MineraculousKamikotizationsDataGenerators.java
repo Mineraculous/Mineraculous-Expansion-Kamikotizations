@@ -21,9 +21,9 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class MineraculousKamikotizationsDataGenerators {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add(MineraculousRegistries.MIRACULOUS, Miraculouses::bootstrap)
             .add(MineraculousRegistries.ABILITY, MineraculousKamikotizationsAbilities::bootstrap)
-            .add(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizationsKamikotizations::bootstrap);
+            .add(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizationsKamikotizations::bootstrap)
+            .add(MineraculousRegistries.MIRACULOUS, Miraculouses::bootstrap);
 
     public static void onGatherData(GatherDataEvent event) {
         // Server

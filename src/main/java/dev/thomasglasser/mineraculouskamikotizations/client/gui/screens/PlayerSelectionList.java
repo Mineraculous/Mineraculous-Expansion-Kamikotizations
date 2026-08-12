@@ -1,6 +1,7 @@
 package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
 import com.mojang.authlib.GameProfile;
+import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.lang.reflect.Field;
@@ -83,7 +84,7 @@ public class PlayerSelectionList extends ContainerObjectSelectionList<PlayerSele
                     gatheredProfiles.add(profile);
                 }
             } catch (Exception exception) {
-                exception.printStackTrace();
+                MineraculousKamikotizations.LOGGER.error(exception.getMessage());
             }
         } else if (this.minecraft.getConnection() != null) {
             for (PlayerInfo onlinePlayerInfo : this.minecraft.getConnection().getOnlinePlayers()) {
