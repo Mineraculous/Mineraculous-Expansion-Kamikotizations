@@ -185,14 +185,14 @@ configurations {
 dependencies {
 	jarJar implementation("dev.thomasglasser.tommylib:tommylib-neoforge-${minecraft_version}:${tommylib_version}")
 
-	// api "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
-	api "dev.thomasglasser.mineraculous.${project.findProperty("MINERACULOUS_USERNAME") ?: System.getenv("MINERACULOUS_USERNAME")}:mineraculous-${minecraft_version}:${mineraculous_version}"
+    api "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    // api "dev.thomasglasser.mineraculous:mineraculous-${minecraft_version}:${mineraculous_version}"
+    api "dev.thomasglasser.mineraculous.${project.findProperty("MINERACULOUS_USERNAME") ?: System.getenv("MINERACULOUS_USERNAME")}:mineraculous-${minecraft_version}:${mineraculous_version}"
 
-    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    implementation "com.klikli_dev:modonomicon-${minecraft_version}-neoforge:${modonomicon_version}"
 	implementation "maven.modrinth:jade:${jade_version}+neoforge"
+    implementation "com.klikli_dev:modonomicon-${minecraft_version}-neoforge:${modonomicon_version}"
 
-	// Runtime
+    // Runtime
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 

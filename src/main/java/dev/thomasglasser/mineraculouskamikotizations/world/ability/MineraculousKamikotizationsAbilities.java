@@ -7,6 +7,7 @@ import dev.thomasglasser.mineraculous.api.world.ability.action.AbilityAction;
 import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityProperties;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
+import dev.thomasglasser.mineraculouskamikotizations.world.ability.action.MimicActiveAbilityAction;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.action.MineraculousKamikotizationsAbilityActions;
 import java.util.Optional;
 import net.minecraft.core.Holder;
@@ -24,9 +25,9 @@ public class MineraculousKamikotizationsAbilities {
         Holder.Reference<AbilityAction> replicateActive = context.lookup(MineraculousRegistries.ABILITY_ACTION).getOrThrow(MineraculousKamikotizationsAbilityActions.REPLICATE_ACTIVE.getKey());
 
         context.register(REPLICATE_ACTIVE, Ability.builder()
-                .branch(AbilityBranch.builder()
-                        .action(replicateActive, AbilityProperties.builder()))
-                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), true)
+                .branch(AbilityBranch.builder().action(replicateActive, AbilityProperties.builder()
+                        .add(MimicActiveAbilityAction.MIRACULOUS, "miraculous")))
+                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
                 .customizationSetting("player", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER, Optional.empty(), true)
                 .build());
     }

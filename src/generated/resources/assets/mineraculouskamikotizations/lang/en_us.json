@@ -18,9 +18,9 @@
   "book.mineraculous.wiki.kamikotizations.weather_control.weather.title": "Weather",
   "book.mineraculous.wiki.kamikotizations.weather_control.wind.text": "The Wind mode will fire Wind Charges that will push entities and blocks that they hit.\n",
   "book.mineraculous.wiki.kamikotizations.weather_control.wind.title": "Wind",
-  "customization_setting.mineraculouskamikotizations.miraculous_replication.replicate_active.miraculous": "Miraculous",
-  "customization_setting.mineraculouskamikotizations.miraculous_replication.replicate_active.player": "Player",
-  "customization_setting.mineraculouskamikotizations.miraculous_replication.replicate_active.replicate_active": "Replicate Active",
+  "customization_setting.mineraculouskamikotizations.miraculous_mimicry.replicate_active.miraculous": "Miraculous",
+  "customization_setting.mineraculouskamikotizations.miraculous_mimicry.replicate_active.player": "Player",
+  "customization_setting.mineraculouskamikotizations.miraculous_mimicry.replicate_active.replicate_active": "Replicate Active",
   "entity.mineraculouskamikotizations.ice_charge": "Ice Charge",
   "entity.mineraculouskamikotizations.reverting_ice_charge": "Ice Charge",
   "entity.mineraculouskamikotizations.reverting_lightning_bolt": "Lightning Bolt",
@@ -48,7 +48,7 @@
   "item.mineraculouskamikotizations.white_parasol": "White Parasol",
   "item.mineraculouskamikotizations.yellow_parasol": "Yellow Parasol",
   "item_group.mineraculouskamikotizations.mineraculouskamikotizations": "Mineraculous Expansion: Kamikotizations",
-  "kamikotization.mineraculouskamikotizations.miraculous_replication": "Miraculous Replication",
+  "kamikotization.mineraculouskamikotizations.miraculous_mimicry": "Miraculous Mimicry",
   "kamikotization.mineraculouskamikotizations.weather_control": "Weather Control",
   "kamikotization_condition.mineraculous.item.requires_weather_control_kamikotizable": "Requires an Umbrella"
 }

@@ -3,16 +3,15 @@
     {
       "actions": [
         {
-          "type": "mineraculouskamikotizations:replicate_active"
+          "type": "mineraculouskamikotizations:replicate_active",
+          "miraculous": "miraculous"
         }
       ]
     }
   ],
   "customization_settings": {
     "miraculous": {
-      "type": "mineraculouskamikotizations:miraculous",
-      "default_value": "mineraculous:cat",
-      "optional": true
+      "type": "mineraculouskamikotizations:miraculous"
     },
     "player": {
       "type": "mineraculouskamikotizations:player",

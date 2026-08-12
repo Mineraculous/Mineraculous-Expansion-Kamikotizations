@@ -7,6 +7,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.ability.action.Minera
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -24,6 +25,7 @@ public class MineraculousKamikotizations {
         LOGGER.info("Initializing {} for {} in a {} environment...", MOD_NAME, TommyLibServices.PLATFORM.getPlatformName(), TommyLibServices.PLATFORM.getEnvironmentName());
 
         MineraculousKamikotizationsAbilityActions.init();
+        MineraculousKamikotizationsAbilityStates.init();
         MineraculousKamikotizationsCustomizationSettingTypes.init();
         MineraculousKamikotizationsEntityTypes.init();
         MineraculousKamikotizationsItems.init();

@@ -2,21 +2,19 @@ package dev.thomasglasser.mineraculouskamikotizations.core.customization.setting
 
 import com.mojang.serialization.Codec;
 import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettingType;
+import java.util.UUID;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public class PlayerCustomizationSettingType implements CustomizationSettingType<String> {
-    public static final Codec<String> CODEC = Codec.STRING;
-    public static final StreamCodec<RegistryFriendlyByteBuf, String> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.cast();
-
+public class PlayerCustomizationSettingType implements CustomizationSettingType<UUID> {
     @Override
-    public Codec<String> codec() {
-        return CODEC;
+    public Codec<UUID> codec() {
+        return UUIDUtil.CODEC;
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, String> streamCodec() {
-        return STREAM_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, UUID> streamCodec() {
+        return UUIDUtil.STREAM_CODEC.cast();
     }
 }

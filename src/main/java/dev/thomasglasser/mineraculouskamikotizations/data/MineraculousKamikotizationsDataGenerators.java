@@ -1,7 +1,6 @@
 package dev.thomasglasser.mineraculouskamikotizations.data;
 
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
-import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculouses;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.data.advancements.MineraculousKamikotizationsAdvancementProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.datamaps.MineraculousKamikotizationsDataMapProvider;
@@ -22,8 +21,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 public class MineraculousKamikotizationsDataGenerators {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(MineraculousRegistries.ABILITY, MineraculousKamikotizationsAbilities::bootstrap)
-            .add(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizationsKamikotizations::bootstrap)
-            .add(MineraculousRegistries.MIRACULOUS, Miraculouses::bootstrap);
+            .add(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizationsKamikotizations::bootstrap);
 
     public static void onGatherData(GatherDataEvent event) {
         // Server

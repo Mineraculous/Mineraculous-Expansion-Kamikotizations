@@ -12,7 +12,6 @@ import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
 import java.util.UUID;
-import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.model.HumanoidModel;
@@ -33,46 +32,42 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class MineraculousKamikotizationsClientEvents {
-    // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
         event.enqueueWork(() -> {
-            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(), (property, parentScreen, font, widgetWidth, widgetHeight, currentUuidString, onValueChanged) -> {
-                final String[] selectedPlayerUuidHolder = new String[] { currentUuidString };
+            CustomizationSettingWidgetRegistry.register(
+                    MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(),
+                    (property, parentScreen, font, widgetWidth, widgetHeight, currentUuidObj, onValueChanged) -> {
+                        UUID currentUuid = currentUuidObj instanceof UUID uuid ? uuid : null;
+                        Component initialButtonText = resolvePlayerName(currentUuid);
+                        return Button.builder(initialButtonText, selectionButton -> {
+                            Minecraft.getInstance().setScreen(new PlayerSelectionScreen(
+                                    parentScreen,
+                                    selectedProfile -> {
+                                        if (selectedProfile != null) {
+                                            UUID playerUuid = selectedProfile.getId();
+                                            String playerDisplayName = selectedProfile.getName();
 
-                Component initialButtonText = resolvePlayerName(selectedPlayerUuidHolder[0]);
-
-                return Button.builder(initialButtonText, selectionButton -> {
-                    Minecraft.getInstance().setScreen(new PlayerSelectionScreen(
-                            parentScreen,
-                            selectedProfile -> {
-                                if (selectedProfile != null) {
-                                    String playerUuidString = selectedProfile.getId().toString();
-                                    String playerDisplayName = selectedProfile.getName();
-
-                                    selectedPlayerUuidHolder[0] = playerUuidString;
-                                    onValueChanged.accept(playerUuidString);
-                                    selectionButton.setMessage(Component.literal(playerDisplayName));
-                                } else {
-                                    selectedPlayerUuidHolder[0] = null;
-                                    onValueChanged.accept(null);
-                                    selectionButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
-                                }
-                                Minecraft.getInstance().setScreen(parentScreen);
-                            }));
-                }).size(widgetWidth, widgetHeight).build();
-            });
+                                            onValueChanged.accept(playerUuid);
+                                            selectionButton.setMessage(Component.literal(playerDisplayName));
+                                        } else {
+                                            onValueChanged.accept(null);
+                                            selectionButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+                                        }
+                                        Minecraft.getInstance().setScreen(parentScreen);
+                                    }));
+                        }).size(widgetWidth, widgetHeight).build();
+                    });
         });
     }
 
-    private static Component resolvePlayerName(@Nullable String uuidString) {
-        if (uuidString == null || uuidString.isEmpty()) {
+    private static Component resolvePlayerName(@Nullable UUID playerUuid) {
+        if (playerUuid == null) {
             return MineraculousClientUtils.GUI_CHOOSE;
         }
-
-        UUID playerUuid = UUID.fromString(uuidString);
         Minecraft minecraft = Minecraft.getInstance();
 
         if (minecraft.getConnection() != null) {
@@ -85,10 +80,10 @@ public class MineraculousKamikotizationsClientEvents {
         if (minecraft.getSingleplayerServer() != null) {
             return minecraft.getSingleplayerServer().getProfileCache().get(playerUuid)
                     .map(profile -> (Component) Component.literal(profile.getName()))
-                    .orElse(Component.literal(uuidString));
+                    .orElseGet(() -> Component.literal(playerUuid.toString()));
         }
 
-        return Component.literal(uuidString);
+        return Component.literal(playerUuid.toString());
     }
 
     // Items

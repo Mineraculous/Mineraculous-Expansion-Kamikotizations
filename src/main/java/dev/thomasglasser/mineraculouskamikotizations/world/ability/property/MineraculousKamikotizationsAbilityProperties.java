@@ -1,12 +1,12 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.ability.property;
 
-import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
-import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityProperty;
-import dev.thomasglasser.mineraculous.api.world.ability.property.HolderAbilityProperty;
+import dev.thomasglasser.mineraculous.api.world.ability.property.CustomizationSettingAbilityProperty;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
+import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
 import java.util.UUID;
+import net.minecraft.core.Holder;
 
 public class MineraculousKamikotizationsAbilityProperties {
-    public static final HolderAbilityProperty<Miraculous> MIRACULOUS = new HolderAbilityProperty<>("miraculous", MineraculousRegistries.MIRACULOUS);
-    public static final AbilityProperty<UUID> PLAYER = new PlayerAbilityProperty("player");
+    public static final CustomizationSettingAbilityProperty<Holder<Miraculous>> MIRACULOUS = new CustomizationSettingAbilityProperty<>("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS);
+    public static final CustomizationSettingAbilityProperty<UUID> PLAYER = new CustomizationSettingAbilityProperty<>("player", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER);
 }
