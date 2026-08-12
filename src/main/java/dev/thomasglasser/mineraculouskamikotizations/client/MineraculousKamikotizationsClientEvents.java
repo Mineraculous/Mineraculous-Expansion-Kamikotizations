@@ -11,9 +11,12 @@ import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKami
 import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
+import java.util.UUID;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
@@ -39,10 +42,7 @@ public class MineraculousKamikotizationsClientEvents {
             CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(), (property, parentScreen, font, widgetWidth, widgetHeight, currentUuidString, onValueChanged) -> {
                 final String[] selectedPlayerUuidHolder = new String[] { currentUuidString };
 
-                Component initialButtonText = MineraculousClientUtils.GUI_CHOOSE;
-                if (selectedPlayerUuidHolder[0] != null && !selectedPlayerUuidHolder[0].isEmpty()) {
-                    initialButtonText = Component.literal(selectedPlayerUuidHolder[0]);
-                }
+                Component initialButtonText = resolvePlayerName(selectedPlayerUuidHolder[0]);
 
                 return Button.builder(initialButtonText, selectionButton -> {
                     Minecraft.getInstance().setScreen(new PlayerSelectionScreen(
@@ -65,6 +65,30 @@ public class MineraculousKamikotizationsClientEvents {
                 }).size(widgetWidth, widgetHeight).build();
             });
         });
+    }
+
+    private static Component resolvePlayerName(@Nullable String uuidString) {
+        if (uuidString == null || uuidString.isEmpty()) {
+            return MineraculousClientUtils.GUI_CHOOSE;
+        }
+
+        UUID playerUuid = UUID.fromString(uuidString);
+        Minecraft minecraft = Minecraft.getInstance();
+
+        if (minecraft.getConnection() != null) {
+            PlayerInfo onlinePlayerInfo = minecraft.getConnection().getPlayerInfo(playerUuid);
+            if (onlinePlayerInfo != null) {
+                return Component.literal(onlinePlayerInfo.getProfile().getName());
+            }
+        }
+
+        if (minecraft.getSingleplayerServer() != null) {
+            return minecraft.getSingleplayerServer().getProfileCache().get(playerUuid)
+                    .map(profile -> (Component) Component.literal(profile.getName()))
+                    .orElse(Component.literal(uuidString));
+        }
+
+        return Component.literal(uuidString);
     }
 
     // Items
