@@ -1,0 +1,68 @@
+name: AI Reviewer Bot (TommyBot)
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  ai-review:
+    # Only run if this is a PR (not a regular issue) and the comment contains /tommybot review
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/tommybot review')
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.TOMMYBOT_APP_ID }}
+          private-key: ${{ secrets.TOMMYBOT_PRIVATE_KEY }}
+
+      - name: Acknowledge Request (👀)
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions \
+            -f content='eyes'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyGithub google-genai requests
+
+      - name: Run AI Reviewer
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          # For issue_comment events on PRs, the PR number is the issue number
+          PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+        run: |
+          python .github/scripts/ai_reviewer.py
+
+      - name: Report Failure (😕)
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions \
+            -f content='confused'

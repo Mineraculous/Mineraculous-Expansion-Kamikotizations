@@ -3,11 +3,11 @@
     {
       "type": "mineraculous:item",
       "message": {
-        "translate": "kamikotization_condition.mineraculous.item.requires_umbrella_tools"
+        "translate": "kamikotization_condition.mineraculous.item.requires_weather_control_kamikotizable"
       },
       "predicate": {
         "count": 1,
-        "items": "#c:tools/umbrella"
+        "items": "#mineraculouskamikotizations:kamikotizable/weather_control"
       }
     }
   ],

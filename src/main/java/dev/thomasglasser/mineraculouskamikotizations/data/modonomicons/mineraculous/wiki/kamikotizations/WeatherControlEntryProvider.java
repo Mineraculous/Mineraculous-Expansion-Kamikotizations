@@ -17,14 +17,16 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
 
     @Override
     protected void generatePages() {
-        page("receiving", () -> BookImagePageModel.create()
-                .withImages(AddToWikiBookSubProvider.wikiTexture("kamikotizations/weather_control/receiving"))
+        page("overview", () -> BookImagePageModel.create()
+                .withImages(AddToWikiBookSubProvider.wikiTexture("kamikotizations/weather_control/overview"))
                 .withTitle(context().pageTitle())
                 .withText(context().pageText()));
 
-        pageTitle("Receiving");
+        pageTitle("Overview");
         pageText("""
-                The Weather Control kamikotization can be applied to any umbrella by default, including those from other mods (as long as they are in the 'c:tools/umbrella' tag).
+                The Weather Control kamikotization grants the receiver the power over weather and storms.
+                Its tool is the Weather Control Parasol.
+                This kamikotization can be applied to any umbrella by default, including those from other mods (as long as they are in the 'c:tools/umbrella' tag).
                 """);
 
         page("tool", () -> BookTextPageModel.create()
@@ -39,7 +41,7 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
                 - Weather
                 - Wind
 
-                When in any equipment slot, the holder is able to fly.
+                When in any equipment slot, the holder is granted creative flight and reduced fall damage. When open and actively used, the holder will fall slowly.
                 """);
 
         page("ice", () -> BookTextPageModel.create()
@@ -58,7 +60,7 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
 
         pageTitle("Lightning");
         pageText("""
-                The Lightning mode will fire Lightning Bolts that will damage entities and blocks that they hit, lighting fires in the process.
+                The Lightning mode will summon Lightning Bolts at the targeted entity or block, damaging them and lighting fires in the process.
                 """);
 
         page("weather", () -> BookTextPageModel.create()
@@ -87,7 +89,7 @@ public class WeatherControlEntryProvider extends IndexModeEntryProvider {
 
     @Override
     protected String entryDescription() {
-        return "Powers to control the weather.";
+        return "Powers to control the weather";
     }
 
     @Override

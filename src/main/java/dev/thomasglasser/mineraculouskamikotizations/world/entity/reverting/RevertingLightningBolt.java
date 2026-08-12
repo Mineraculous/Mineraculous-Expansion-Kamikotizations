@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 public class RevertingLightningBolt extends LightningBolt {
+    private boolean markedRemovable = false;
+
     public RevertingLightningBolt(EntityType<? extends LightningBolt> entityType, Level level) {
         super(entityType, level);
     }
@@ -25,16 +27,22 @@ public class RevertingLightningBolt extends LightningBolt {
     @Override
     public void tick() {
         ServerPlayer cause = getCause();
-        if (!visualOnly && level() instanceof ServerLevel level && cause != null) {
-            List<Entity> hit = level
-                    .getEntities(
-                            this,
-                            new AABB(this.getX() - 3.0, this.getY() - 3.0, this.getZ() - 3.0, this.getX() + 3.0, this.getY() + 6.0 + 3.0, this.getZ() + 3.0),
-                            Entity::isAlive);
+        if (level() instanceof ServerLevel level && cause != null) {
             EntityReversionData entityReversionData = EntityReversionData.get(level);
             UUID causeId = cause.getUUID();
-            for (Entity entity : hit) {
-                entityReversionData.putRevertible(causeId, entity);
+            if (!markedRemovable) {
+                markedRemovable = true;
+                entityReversionData.putRemovable(causeId, this);
+            }
+            if (!visualOnly) {
+                List<Entity> hit = level
+                        .getEntities(
+                                this,
+                                new AABB(this.getX() - 3.0, this.getY() - 3.0, this.getZ() - 3.0, this.getX() + 3.0, this.getY() + 6.0 + 3.0, this.getZ() + 3.0),
+                                Entity::isAlive);
+                for (Entity entity : hit) {
+                    entityReversionData.putRevertible(causeId, entity);
+                }
             }
         }
         super.tick();

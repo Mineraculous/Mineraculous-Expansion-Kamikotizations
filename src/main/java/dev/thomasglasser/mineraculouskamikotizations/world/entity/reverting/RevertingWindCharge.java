@@ -8,7 +8,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.WindCharge;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +21,8 @@ public class RevertingWindCharge extends WindCharge {
         super(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), level);
         setOwner(owner);
         this.moveTo(x, y, z, this.getYRot(), this.getXRot());
+        if (level instanceof ServerLevel serverLevel && owner != null)
+            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
     }
 
     public RevertingWindCharge(Level level, double x, double y, double z, Vec3 movement) {
@@ -40,11 +41,5 @@ public class RevertingWindCharge extends WindCharge {
             EntityReversionData.get(level).putRevertible(owner.getUUID(), result.getEntity());
         }
         super.onHitEntity(result);
-    }
-
-    @Override
-    protected void onHitBlock(BlockHitResult result) {
-        // TODO: Track block changes
-        super.onHitBlock(result);
     }
 }

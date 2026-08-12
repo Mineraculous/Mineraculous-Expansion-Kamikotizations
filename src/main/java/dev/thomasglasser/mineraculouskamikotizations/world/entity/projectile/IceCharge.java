@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -104,7 +105,7 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
                         BlockPos blockpos = entity.blockPosition().offset(i, j, k);
                         BlockState oldState = level().getBlockState(blockpos);
                         if (!inside.contains(blockpos) && oldState.canBeReplaced()) {
-                            level().setBlockAndUpdate(blockpos, Blocks.ICE.defaultBlockState());
+                            level().setBlockAndUpdate(blockpos, Blocks.BLUE_ICE.defaultBlockState());
                         }
                     }
                 }
@@ -136,8 +137,8 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
                     BlockPos blockpos = pos.offset(i, 0, k).above();
                     if (level().canSeeSky(blockpos))
                         blockpos = level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos.offset(i, 0, k));
-                    if (level().getBlockState(blockpos).canBeReplaced() && !level().getBlockState(blockpos.below()).is(Blocks.ICE)) {
-                        level().setBlockAndUpdate(blockpos, Blocks.ICE.defaultBlockState());
+                    if (level().getBlockState(blockpos).canBeReplaced() && !level().getBlockState(blockpos.below()).is(BlockTags.ICE)) {
+                        level().setBlockAndUpdate(blockpos, Blocks.BLUE_ICE.defaultBlockState());
                     }
                 }
             }
@@ -190,6 +191,6 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     @Override
     public ItemStack getItem() {
-        return Items.ICE.getDefaultInstance();
+        return Items.BLUE_ICE.getDefaultInstance();
     }
 }

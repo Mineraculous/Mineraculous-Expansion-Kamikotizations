@@ -17,10 +17,10 @@
         "type": "modonomicon:none"
       },
       "images": [
-        "mineraculouskamikotizations:textures/modonomicon/wiki/kamikotizations/weather_control/receiving.png"
+        "mineraculouskamikotizations:textures/modonomicon/wiki/kamikotizations/weather_control/overview.png"
       ],
-      "text": "book.mineraculous.wiki.kamikotizations.weather_control.receiving.text",
-      "title": "book.mineraculous.wiki.kamikotizations.weather_control.receiving.title",
+      "text": "book.mineraculous.wiki.kamikotizations.weather_control.overview.text",
+      "title": "book.mineraculous.wiki.kamikotizations.weather_control.overview.title",
       "use_legacy_rendering": false
     },
     {

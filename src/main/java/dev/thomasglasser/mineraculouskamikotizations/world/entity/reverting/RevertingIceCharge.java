@@ -27,10 +27,14 @@ public class RevertingIceCharge extends IceCharge {
 
     public RevertingIceCharge(EntityType<? extends IceCharge> entityType, @Nullable Entity owner, double x, double y, double z, Level level) {
         super(entityType, owner, x, y, z, level);
+        if (level instanceof ServerLevel serverLevel && owner != null)
+            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
     }
 
     public RevertingIceCharge(@Nullable Entity owner, double x, double y, double z, Level level) {
         super(MineraculousKamikotizationsEntityTypes.REVERTING_ICE_CHARGE.get(), owner, x, y, z, level);
+        if (level instanceof ServerLevel serverLevel && owner != null)
+            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
     }
 
     @Override

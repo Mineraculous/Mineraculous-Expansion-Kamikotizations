@@ -8,6 +8,7 @@ import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataCompone
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItemUtils;
 import dev.thomasglasser.mineraculous.api.world.item.RevertingItem;
+import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculous.impl.world.level.miraculousladybugtarget.MiraculousLadybugTargetCollector;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.selection.MineraculousKamikotizationsHotbarMenuIcons;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
@@ -50,6 +51,8 @@ public class WeatherControlParasolItem extends ParasolItem implements RevertingI
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
+        if (Active.isActive(stack))
+            return super.use(level, player, usedHand);
         Mode mode = stack.get(MineraculousKamikotizationsDataComponents.WEATHER_CONTROL_PARASOL_MODE);
         if (mode == null) return InteractionResultHolder.fail(stack);
         if (level instanceof ServerLevel serverLevel) {
@@ -111,6 +114,11 @@ public class WeatherControlParasolItem extends ParasolItem implements RevertingI
     @Override
     public List<Mode> getOptions(ItemStack stack, InteractionHand hand, Player holder) {
         return Mode.valuesList();
+    }
+
+    @Override
+    public boolean canOpenHotbarMenu(ItemStack stack, Player holder) {
+        return !Active.isActive(stack);
     }
 
     @Override

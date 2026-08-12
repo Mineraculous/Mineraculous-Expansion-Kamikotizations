@@ -10,6 +10,7 @@ public class MineraculousKamikotizationsClient {
     public MineraculousKamikotizationsClient(IEventBus modBus) {
         modBus.addListener(MineraculousKamikotizationsClientEvents::onFMLClientSetup);
         modBus.addListener(MineraculousKamikotizationsClientEvents::onBuildCreativeModeTabContents);
+        modBus.addListener(MineraculousKamikotizationsClientEvents::onRegisterClientExtensions);
         modBus.addListener(MineraculousKamikotizationsClientEvents::onRegisterRenderers);
     }
 }

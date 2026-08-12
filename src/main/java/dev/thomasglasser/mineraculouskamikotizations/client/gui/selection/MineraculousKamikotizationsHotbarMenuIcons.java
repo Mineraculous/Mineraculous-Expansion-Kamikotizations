@@ -5,7 +5,6 @@ import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations
 import net.minecraft.resources.ResourceLocation;
 
 public class MineraculousKamikotizationsHotbarMenuIcons {
-    // TODO: Icon textures
     public static final ResourceLocation ICE = icon("ice");
     public static final ResourceLocation LIGHTNING = icon("lightning");
     public static final ResourceLocation CLOUD = icon("cloud");

@@ -19,6 +19,10 @@ public class MineraculousKamikotizationsItemTagsProvider extends ExtendedItemTag
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        // Kamikotizables
+        tag(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE)
+                .addTag(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS);
+
         // Mod Specific
         tag(MineraculousKamikotizationsItemTags.PARASOLS)
                 .add(MineraculousKamikotizationsItems.PARASOLS.values().toArray(new DeferredItem[0]));

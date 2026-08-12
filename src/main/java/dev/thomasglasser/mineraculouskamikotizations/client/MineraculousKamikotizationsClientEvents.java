@@ -4,14 +4,24 @@ import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
+import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
+import dev.thomasglasser.tommylib.api.registration.DeferredItem;
+import java.util.List;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 public class MineraculousKamikotizationsClientEvents {
@@ -63,6 +73,23 @@ public class MineraculousKamikotizationsClientEvents {
         } else if (event.getTabKey() == CreativeModeTabs.OP_BLOCKS) {
 
         }
+    }
+
+    static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+        List<DeferredItem<ParasolItem>> values = MineraculousKamikotizationsItems.PARASOLS.values().stream().toList();
+        Item[] parasols = new Item[values.size() + 1];
+        for (int i = 0; i < values.size(); i++) {
+            parasols[i] = values.get(i).get();
+        }
+        parasols[values.size()] = MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.get();
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                if (entityLiving.getUsedItemHand() == hand && entityLiving.getUseItemRemainingTicks() > 0)
+                    return HumanoidModel.ArmPose.SPYGLASS;
+                return IClientItemExtensions.super.getArmPose(entityLiving, hand, itemStack);
+            }
+        }, parasols);
     }
 
     // Entities

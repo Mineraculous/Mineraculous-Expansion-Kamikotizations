@@ -3,6 +3,7 @@ package dev.thomasglasser.mineraculouskamikotizations.world.item;
 import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
+import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import dev.thomasglasser.tommylib.api.registration.DeferredRegister;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
@@ -23,6 +24,7 @@ public class MineraculousKamikotizationsItems {
     private static final Supplier<Item.Properties> PARASOL_PROPERTIES = () -> new Item.Properties().stacksTo(1).component(MineraculousDataComponents.ACTIVE, Active.DEFAULT);
     public static final Map<DyeColor, DeferredItem<ParasolItem>> PARASOLS = parasols();
     public static final DeferredItem<WeatherControlParasolItem> WEATHER_CONTROL_PARASOL = ITEMS.register("weather_control_parasol", () -> new WeatherControlParasolItem(PARASOL_PROPERTIES.get()
+            .component(MineraculousKamikotizationsDataComponents.WEATHER_CONTROL_PARASOL_MODE.get(), WeatherControlParasolItem.Mode.WIND)
             .attributes(ItemAttributeModifiers.builder()
                     .add(NeoForgeMod.CREATIVE_FLIGHT, new AttributeModifier(MineraculousKamikotizations.modLoc("parasol_flight"), 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
                     .build())));
