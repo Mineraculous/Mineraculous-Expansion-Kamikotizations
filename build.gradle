@@ -321,7 +321,7 @@ javadoc {
 def getBetaTesters() {
 	def testers = []
 	try {
-		def gistUrl = new URL('https://gist.githubusercontent.com/thomasglasser/aa8eb933847685b93d8f99a59f07b62e/raw/e600b1029474ed498c2d9271bb23a4d99823d5d9/mineraculous_special_players.txt')
+		def gistUrl = new URL('https://gist.githubusercontent.com/thomasglasser/aa8eb933847685b93d8f99a59f07b62e/raw/mineraculous_special_players.txt')
 		gistUrl.eachLine { line ->
 			if (!line.startsWith("//") && line.contains("beta")) {
 				def parts = line.split("\\|")
@@ -338,7 +338,7 @@ def getBetaTesters() {
 
 def getBetaTesterUuid(String name) {
 	try {
-		def gistUrl = new URL('https://gist.githubusercontent.com/thomasglasser/aa8eb933847685b93d8f99a59f07b62e/raw/e600b1029474ed498c2d9271bb23a4d99823d5d9/mineraculous_special_players.txt')
+		def gistUrl = new URL('https://gist.githubusercontent.com/thomasglasser/aa8eb933847685b93d8f99a59f07b62e/raw/mineraculous_special_players.txt')
 		for (String line : gistUrl.readLines()) {
 			if (!line.startsWith("//") && line.contains("beta")) {
 				def parts = line.split("\\|")

@@ -1,4 +1,4 @@
-name: AI Reviewer Bot (TommyBot)
+name: AI Reviewer Bot (T.O.M.M.I.)
 
 on:
   issue_comment:
@@ -6,8 +6,8 @@ on:
 
 jobs:
   ai-review:
-    # Only run if this is a PR (not a regular issue) and the comment contains /tommybot review
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/tommybot review')
+    # Only run if this is a PR (not a regular issue) and the comment contains /review
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/review')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -22,8 +22,8 @@ jobs:
         id: generate-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.TOMMYBOT_APP_ID }}
-          private-key: ${{ secrets.TOMMYBOT_PRIVATE_KEY }}
+          app-id: ${{ secrets.TOMMI_APP_ID }}
+          private-key: ${{ secrets.TOMMI_PRIVATE_KEY }}
 
       - name: Acknowledge Request (👀)
         env:
