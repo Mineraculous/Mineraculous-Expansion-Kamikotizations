@@ -27,9 +27,7 @@ public class ReplicateActiveAbilityAction implements AbilityAction {
         Holder<Miraculous> miraculousHolder = instance.getOptionalProperty(MIRACULOUS);
         if (miraculousHolder != null) {
             for (Player player : level.players()) {
-                System.out.println(player);
                 if (player.getUUID().equals(instance.getOptionalProperty(PLAYER))) {
-                    System.out.println(player.getUUID());
                     miraculousHolder.value().activeAbility().perform(Ability.Context.of(level, context.performer(), player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder), miraculousHolder, context.target()));
                     return Ability.Result.succeedAndContinue();
                 }
