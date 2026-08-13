@@ -35,9 +35,12 @@ public class MimicActiveAbilityAction implements AbilityAction {
         LivingEntity performer = context.performer();
         if (PerformerAbilityData.has(performer, MineraculousKamikotizationsAbilityStates.MIMIC)) {
             MimicAbilityState mimicAbilityState = PerformerAbilityData.get(performer, MineraculousKamikotizationsAbilityStates.MIMIC);
-            if (mimicAbilityState != null && mimicAbilityState.data() != null) {
-                AbilityUtils.performAbilityWithEvents(miraculousHolder.value().activeAbility(), Ability.Context.of(level, performer, mimicAbilityState.data(), miraculousHolder, context.target()));
-                return Ability.Result.succeedAndContinue();
+            if (mimicAbilityState != null) {
+                MiraculousData miraculousData = mimicAbilityState.data();
+                if (miraculousData != null) {
+                    AbilityUtils.performAbilityWithEvents(miraculousHolder.value().activeAbility(), Ability.Context.of(level, performer, miraculousData, miraculousHolder, context.target()));
+                    return Ability.Result.succeedAndContinue();
+                }
             }
         }
         return Ability.Result.pass();
