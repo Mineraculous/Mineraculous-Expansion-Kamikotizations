@@ -37,7 +37,7 @@ public class MineraculousKamikotizationsKamikotizations {
         context.register(MIRACULOUS_MIMICRY, new Kamikotization(
                 ImmutableList.of(),
                 CustomizationSettings.EMPTY,
-                Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.REPLICATE_ACTIVE))),
+                Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE))),
                 ImmutableList.of()));
     }
 }

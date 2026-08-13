@@ -8,5 +8,5 @@ import net.minecraft.core.Holder;
 
 public class MineraculousKamikotizationsAbilityProperties {
     public static final CustomizationSettingAbilityProperty<Holder<Miraculous>> MIRACULOUS = new CustomizationSettingAbilityProperty<>("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS);
-    public static final CustomizationSettingAbilityProperty<UUID> PLAYER = new CustomizationSettingAbilityProperty<>("player", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER);
+    public static final CustomizationSettingAbilityProperty<UUID> TARGET = new CustomizationSettingAbilityProperty<>("target", MineraculousKamikotizationsCustomizationSettingTypes.TARGET);
 }

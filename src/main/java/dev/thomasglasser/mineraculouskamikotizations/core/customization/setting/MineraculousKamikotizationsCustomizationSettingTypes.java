@@ -1,10 +1,13 @@
 package dev.thomasglasser.mineraculouskamikotizations.core.customization.setting;
 
 import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettingType;
+import dev.thomasglasser.mineraculous.api.core.customization.setting.SimpleCustomizationSettingType;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.tommylib.api.registration.DeferredHolder;
 import dev.thomasglasser.tommylib.api.registration.DeferredRegister;
+import java.util.UUID;
+import net.minecraft.core.UUIDUtil;
 import org.jetbrains.annotations.ApiStatus;
 
 public class MineraculousKamikotizationsCustomizationSettingTypes {
@@ -12,7 +15,7 @@ public class MineraculousKamikotizationsCustomizationSettingTypes {
 
     public static final DeferredHolder<CustomizationSettingType<?>, MiraculousCustomizationSettingType> MIRACULOUS = CUSTOMIZATION_SETTING_TYPES.register("miraculous", MiraculousCustomizationSettingType::new);
 
-    public static final DeferredHolder<CustomizationSettingType<?>, PlayerCustomizationSettingType> PLAYER = CUSTOMIZATION_SETTING_TYPES.register("player", PlayerCustomizationSettingType::new);
+    public static final DeferredHolder<CustomizationSettingType<?>, SimpleCustomizationSettingType<UUID>> TARGET = CUSTOMIZATION_SETTING_TYPES.register("target", () -> new SimpleCustomizationSettingType<>(UUIDUtil.CODEC, UUIDUtil.STREAM_CODEC.cast()));
 
     @ApiStatus.Internal
     public static void init() {}

@@ -60,15 +60,15 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     private void addCustomizationSettings() {
         // Abilities
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.REPLICATE_ACTIVE, "replicate_active", "miraculous", "player");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_ACTIVE, "miraculous", "target");
     }
 
     private void addAbilities() {
-        add(MineraculousKamikotizationsAbilities.REPLICATE_ACTIVE, "Replicate Active");
+        add(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE, "Mimic Active");
     }
 
     private void addGuis() {
         // Player Selection Screen
-        add(PlayerSelectionScreen.TITLE, "Select Player");
+        add(PlayerSelectionScreen.TITLE, "Select Target");
     }
 }

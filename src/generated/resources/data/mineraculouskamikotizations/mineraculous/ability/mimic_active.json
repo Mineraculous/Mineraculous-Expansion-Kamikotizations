@@ -3,8 +3,9 @@
     {
       "actions": [
         {
-          "type": "mineraculouskamikotizations:replicate_active",
-          "miraculous": "miraculous"
+          "type": "mineraculouskamikotizations:mimic_active",
+          "miraculous": "miraculous",
+          "target": "target"
         }
       ]
     }
@@ -13,8 +14,8 @@
     "miraculous": {
       "type": "mineraculouskamikotizations:miraculous"
     },
-    "player": {
-      "type": "mineraculouskamikotizations:player",
+    "target": {
+      "type": "mineraculouskamikotizations:target",
       "optional": true
     }
   }

@@ -35,11 +35,12 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class MineraculousKamikotizationsClientEvents {
+    // init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
         event.enqueueWork(() -> {
             CustomizationSettingWidgetRegistry.register(
-                    MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(),
+                    MineraculousKamikotizationsCustomizationSettingTypes.TARGET.get(),
                     (property, parentScreen, font, widgetWidth, widgetHeight, currentUuidObj, onValueChanged) -> {
                         UUID currentUuid = currentUuidObj instanceof UUID uuid ? uuid : null;
                         Component initialButtonText = resolvePlayerName(currentUuid);
