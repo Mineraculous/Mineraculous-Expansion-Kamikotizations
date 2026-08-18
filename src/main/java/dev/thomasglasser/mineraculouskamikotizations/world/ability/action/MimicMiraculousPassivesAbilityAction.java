@@ -33,10 +33,10 @@ public class MimicMiraculousPassivesAbilityAction extends AbstractMimicMiraculou
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         CustomizationSettings settings = context.source().customizationSettings();
-        UUID targetUUID = settings.get(instance.getCustomizationSetting(TARGET));
+        UUID targetId = settings.get(instance.getCustomizationSetting(TARGET));
         Holder<Miraculous> miraculousHolder = settings.get(instance.getCustomizationSetting(MIRACULOUS));
         LivingEntity performer = context.performer();
-        if (targetUUID != null && context.level().getPlayerByUUID(targetUUID) instanceof Player player && !player.isRemoved()) {
+        if (targetId != null && context.level().getServer().getPlayerList().getPlayer(targetId) instanceof Player player && !player.isRemoved()) {
             PerformerAbilityData.add(performer, new MimicMiraculousPassivesAbilityState(player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder)));
         } else {
             PerformerAbilityData.add(performer, new MimicMiraculousPassivesAbilityState(performer.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder)));

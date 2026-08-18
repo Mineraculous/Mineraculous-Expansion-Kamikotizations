@@ -26,7 +26,7 @@ public class AbstractMimicMiraculousAbilityAction implements AbilityAction {
 
     @Override
     public void detransform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_ACTIVE.get());
+        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_ACTIVE.get(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_PASSIVES.get());
     }
 
     @Override
