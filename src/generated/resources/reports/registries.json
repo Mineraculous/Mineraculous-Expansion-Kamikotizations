@@ -39,7 +39,8 @@
     "mineraculouskamikotizations:mimic_miraculous_passives"
   ],
   "mineraculous:ability_state": [
-    "mineraculouskamikotizations:mimic_miraculous"
+    "mineraculouskamikotizations:mimic_miraculous_active",
+    "mineraculouskamikotizations:mimic_miraculous_passives"
   ],
   "mineraculous:customization_setting_type": [
     "mineraculouskamikotizations:miraculous",
