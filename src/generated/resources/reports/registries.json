@@ -31,17 +31,19 @@
     "mineraculouskamikotizations:yellow_parasol"
   ],
   "mineraculous:ability": [
-    "mineraculouskamikotizations:mimic_active"
+    "mineraculouskamikotizations:mimic_miraculous_active",
+    "mineraculouskamikotizations:mimic_miraculous_passives"
   ],
   "mineraculous:ability_action": [
-    "mineraculouskamikotizations:mimic_active"
+    "mineraculouskamikotizations:mimic_miraculous_active",
+    "mineraculouskamikotizations:mimic_miraculous_passives"
   ],
   "mineraculous:ability_state": [
-    "mineraculouskamikotizations:mimic"
+    "mineraculouskamikotizations:mimic_miraculous"
   ],
   "mineraculous:customization_setting_type": [
     "mineraculouskamikotizations:miraculous",
-    "mineraculouskamikotizations:target"
+    "mineraculouskamikotizations:player"
   ],
   "mineraculous:kamikotization": [
     "mineraculouskamikotizations:miraculous_mimicry",

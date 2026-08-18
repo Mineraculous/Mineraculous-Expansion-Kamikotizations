@@ -13,7 +13,7 @@ import dev.thomasglasser.mineraculous.api.world.level.storage.ability.PerformerA
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculous.api.world.miraculous.MiraculousData;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.property.MineraculousKamikotizationsAbilityProperties;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicAbilityState;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import java.util.UUID;
 import net.minecraft.core.Holder;
@@ -21,7 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-public class MimicActiveAbilityAction implements AbilityAction {
+public class MimicMiraculousActiveAbilityAction implements AbilityAction {
     public static final CustomizationSettingAbilityProperty<Holder<Miraculous>> MIRACULOUS = MineraculousKamikotizationsAbilityProperties.MIRACULOUS;
     public static final CustomizationSettingAbilityProperty<UUID> TARGET = MineraculousKamikotizationsAbilityProperties.TARGET;
     private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(MIRACULOUS);
@@ -30,39 +30,37 @@ public class MimicActiveAbilityAction implements AbilityAction {
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         ServerLevel level = context.level();
-        CustomizationSettings settings = context.source().customizationSettings();
-        Holder<Miraculous> miraculousHolder = settings.get(instance.getCustomizationSetting(MIRACULOUS));
+        Holder<Miraculous> miraculousHolder = context.source().customizationSettings().get(instance.getCustomizationSetting(MIRACULOUS));
         LivingEntity performer = context.performer();
-        if (PerformerAbilityData.has(performer, MineraculousKamikotizationsAbilityStates.MIMIC)) {
-            MimicAbilityState mimicAbilityState = PerformerAbilityData.get(performer, MineraculousKamikotizationsAbilityStates.MIMIC);
-            if (mimicAbilityState != null) {
-                MiraculousData miraculousData = mimicAbilityState.data();
-                if (miraculousData != null) {
-                    AbilityUtils.performAbilityWithEvents(miraculousHolder.value().activeAbility(), Ability.Context.of(level, performer, miraculousData, miraculousHolder, context.target()));
-                    return Ability.Result.succeedAndContinue();
-                }
-            }
+        MimicMiraculousAbilityState mimicAbilityState = PerformerAbilityData.get(performer, MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS);
+        if (mimicAbilityState != null) {
+            Miraculous miraculous = miraculousHolder.value();
+            MiraculousData miraculousData = mimicAbilityState.data();
+            return AbilityUtils.performPassiveAbilities(miraculous.passiveAbilities(), level, performer, miraculousHolder.getKey(), miraculous.customizationSettings(), miraculousData.powerLevel(), miraculous.color().getValue(), miraculousData.powerActive(), miraculousData.storedEntities(), AbilityUtils.findItem(performer, stack -> miraculousData.isTool(stack, performer, miraculousHolder)));
         }
-        return Ability.Result.pass();
+        return Ability.Result.fail();
     }
 
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        ServerLevel level = context.level();
         CustomizationSettings settings = context.source().customizationSettings();
         UUID targetUUID = settings.get(instance.getCustomizationSetting(TARGET));
+        Holder<Miraculous> miraculousHolder = settings.get(instance.getCustomizationSetting(MIRACULOUS));
+        LivingEntity performer = context.performer();
         if (targetUUID != null) {
-            Player player = level.getPlayerByUUID(targetUUID);
-            if (player != null && !player.isRemoved() && player.hasData(MineraculousAttachmentTypes.MIRACULOUSES)) {
-                MiraculousData miraculousData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(settings.get(instance.getCustomizationSetting(MIRACULOUS)));
-                PerformerAbilityData.add(context.performer(), new MimicAbilityState(miraculousData));
+            // TODO: get data from offline players
+            Player player = context.level().getPlayerByUUID(targetUUID);
+            if (player != null && !player.isRemoved()) {
+                PerformerAbilityData.add(performer, new MimicMiraculousAbilityState(player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder)));
             }
+        } else {
+            PerformerAbilityData.add(performer, new MimicMiraculousAbilityState(performer.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder)));
         }
     }
 
     @Override
     public void detransform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC.get());
+        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS.get());
     }
 
     @Override

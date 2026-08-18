@@ -3,19 +3,19 @@
     {
       "actions": [
         {
-          "type": "mineraculouskamikotizations:mimic_active",
-          "miraculous": "miraculous",
+          "type": "mineraculouskamikotizations:mimic_miraculous_active",
+          "miraculous": "miraculous_active",
           "target": "target"
         }
       ]
     }
   ],
   "customization_settings": {
-    "miraculous": {
+    "miraculous_active": {
       "type": "mineraculouskamikotizations:miraculous"
     },
     "target": {
-      "type": "mineraculouskamikotizations:target",
+      "type": "mineraculouskamikotizations:player",
       "optional": true
     }
   }

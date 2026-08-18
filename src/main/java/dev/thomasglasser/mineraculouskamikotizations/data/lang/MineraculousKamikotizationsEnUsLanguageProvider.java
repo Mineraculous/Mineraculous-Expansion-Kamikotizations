@@ -60,11 +60,13 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     private void addCustomizationSettings() {
         // Abilities
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_ACTIVE, "miraculous", "target");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE, "miraculous_active", "target");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES, "miraculous_passives", "target");
     }
 
     private void addAbilities() {
-        add(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE, "Mimic Active");
+        add(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE, "Mimic Miraculous Active");
+        add(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES, "Mimic Miraculous Passives");
     }
 
     private void addGuis() {

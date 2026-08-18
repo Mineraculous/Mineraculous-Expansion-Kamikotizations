@@ -15,7 +15,7 @@ public class MineraculousKamikotizationsLookProvider extends MineraculousLookPro
     @Override
     protected void registerLooks(HolderLookup.Provider provider) {
         kamikotizationLook(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL);
-        // TODO: Remove when lookless kamikotizations are supported
+        // TODO: Lookless kamikotizations
         kamikotizationLook(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY);
     }
 }

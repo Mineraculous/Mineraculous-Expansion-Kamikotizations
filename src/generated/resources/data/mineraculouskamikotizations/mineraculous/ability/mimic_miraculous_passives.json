@@ -1,0 +1,22 @@
+{
+  "branches": [
+    {
+      "actions": [
+        {
+          "type": "mineraculouskamikotizations:mimic_miraculous_passives",
+          "miraculous": "miraculous_passives",
+          "target": "target"
+        }
+      ]
+    }
+  ],
+  "customization_settings": {
+    "miraculous_passives": {
+      "type": "mineraculouskamikotizations:miraculous"
+    },
+    "target": {
+      "type": "mineraculouskamikotizations:player",
+      "optional": true
+    }
+  }
+}
