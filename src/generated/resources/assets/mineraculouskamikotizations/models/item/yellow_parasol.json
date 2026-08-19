@@ -2,8 +2,8 @@
   "base": {
     "parent": "mineraculouskamikotizations:item/parasol_closed",
     "textures": {
-      "particle": "mineraculouskamikotizations:item/yellow_parasol",
-      "texture": "mineraculouskamikotizations:item/yellow_parasol"
+      "particle": "mineraculouskamikotizations:item/yellow_parasol_in_hand",
+      "texture": "mineraculouskamikotizations:item/yellow_parasol_in_hand"
     }
   },
   "gui_light": "front",
@@ -20,19 +20,19 @@
     "fixed": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/yellow_parasol_inventory"
+        "layer0": "mineraculouskamikotizations:item/yellow_parasol"
       }
     },
     "ground": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/yellow_parasol_inventory"
+        "layer0": "mineraculouskamikotizations:item/yellow_parasol"
       }
     },
     "gui": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/yellow_parasol_inventory"
+        "layer0": "mineraculouskamikotizations:item/yellow_parasol"
       }
     }
   }

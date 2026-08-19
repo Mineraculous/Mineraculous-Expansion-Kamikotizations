@@ -4,11 +4,16 @@ import dev.thomasglasser.mineraculous.api.client.gui.components.CustomizationSet
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
+import dev.thomasglasser.mineraculous.api.client.look.util.KamikotizationToolClientExtensions;
+import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToolLookGeoItemRenderer;
+import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
+import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
+import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
 import java.util.UUID;
@@ -134,11 +139,10 @@ public class MineraculousKamikotizationsClientEvents {
 
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         List<DeferredItem<ParasolItem>> values = MineraculousKamikotizationsItems.PARASOLS.values().stream().toList();
-        Item[] parasols = new Item[values.size() + 1];
+        Item[] parasols = new Item[values.size()];
         for (int i = 0; i < values.size(); i++) {
             parasols[i] = values.get(i).get();
         }
-        parasols[values.size()] = MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.get();
         event.registerItem(new IClientItemExtensions() {
             @Override
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
@@ -147,6 +151,14 @@ public class MineraculousKamikotizationsClientEvents {
                 return IClientItemExtensions.super.getArmPose(entityLiving, hand, itemStack);
             }
         }, parasols);
+        event.registerItem(new KamikotizationToolClientExtensions<KamikotizationToolLookGeoItemRenderer<WeatherControlParasolItem>>() {
+            @Override
+            public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                if (Active.isActive(itemStack) && entityLiving.getUsedItemHand() == hand && entityLiving.getUseItemRemainingTicks() > 0)
+                    return HumanoidModel.ArmPose.SPYGLASS;
+                return super.getArmPose(entityLiving, hand, itemStack);
+            }
+        }, MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL);
     }
 
     // Entities

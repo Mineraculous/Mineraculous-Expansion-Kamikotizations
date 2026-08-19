@@ -4,6 +4,45 @@
       "mineraculous:geckolib_animations": "mineraculouskamikotizations:animations/item/armor/kamikotization/weather_control.animation.json",
       "mineraculous:geckolib_model": "mineraculouskamikotizations:geo/item/armor/kamikotization/weather_control.geo.json",
       "mineraculous:texture": "mineraculouskamikotizations:textures/entity/equipment/humanoid/kamikotization/weather_control.png"
+    },
+    "mineraculous:kamikotization_tool": {
+      "assets": {
+        "mineraculous:flat_texture": "mineraculouskamikotizations:textures/item/weather_control_parasol.png",
+        "mineraculous:geckolib_model": "mineraculouskamikotizations:geo/item/weather_control_parasol.geo.json",
+        "mineraculous:item_transforms": "mineraculouskamikotizations:models/item/weather_control_parasol_in_hand.json",
+        "mineraculous:texture": "mineraculouskamikotizations:textures/item/geo/weather_control_parasol.png"
+      },
+      "overrides": [
+        {
+          "assets": {
+            "mineraculous:flat_texture": "mineraculouskamikotizations:textures/item/weather_control_parasol_ice.png",
+            "mineraculous:texture": "mineraculouskamikotizations:textures/item/geo/weather_control_parasol_ice.png"
+          },
+          "predicate": {
+            "mineraculous:mode": 1.0
+          }
+        },
+        {
+          "assets": {
+            "mineraculous:flat_texture": "mineraculouskamikotizations:textures/item/weather_control_parasol.png",
+            "mineraculous:texture": "mineraculouskamikotizations:textures/item/geo/weather_control_parasol.png"
+          },
+          "predicate": {
+            "mineraculous:mode": 2.0
+          }
+        },
+        {
+          "assets": {
+            "mineraculous:flat_texture": "mineraculouskamikotizations:textures/item/weather_control_parasol_open.png",
+            "mineraculous:geckolib_model": "mineraculouskamikotizations:geo/item/weather_control_parasol_open.geo.json",
+            "mineraculous:item_transforms": "mineraculouskamikotizations:models/item/weather_control_parasol_open.json",
+            "mineraculous:texture": "mineraculouskamikotizations:textures/item/geo/weather_control_parasol_open.png"
+          },
+          "predicate": {
+            "mineraculous:active": 1.0
+          }
+        }
+      ]
     }
   },
   "metadata": {
