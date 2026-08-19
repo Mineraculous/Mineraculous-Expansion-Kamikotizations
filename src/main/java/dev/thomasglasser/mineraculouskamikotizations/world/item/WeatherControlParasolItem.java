@@ -6,13 +6,16 @@ import com.mojang.serialization.Codec;
 import dev.thomasglasser.mineraculous.api.client.gui.selection.HotbarMenuProvider;
 import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
+import dev.thomasglasser.mineraculous.api.world.item.KamikotizationBoundItem;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItemUtils;
 import dev.thomasglasser.mineraculous.api.world.item.RevertingItem;
+import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculous.impl.world.level.miraculousladybugtarget.MiraculousLadybugTargetCollector;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.selection.MineraculousKamikotizationsHotbarMenuIcons;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
+import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingIceCharge;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingLightningBolt;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingWindCharge;
@@ -26,6 +29,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,10 +46,29 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WeatherControlParasolItem extends ParasolItem implements RevertingItem, HotbarMenuProvider<WeatherControlParasolItem.Mode> {
+public class WeatherControlParasolItem extends ParasolItem implements GeoItem, KamikotizationBoundItem, RevertingItem, HotbarMenuProvider<WeatherControlParasolItem.Mode> {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public WeatherControlParasolItem(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
+
+    @Override
+    public ResourceKey<Kamikotization> getKamikotization() {
+        return MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL;
     }
 
     @Override

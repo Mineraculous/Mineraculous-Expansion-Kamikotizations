@@ -3,12 +3,14 @@ package dev.thomasglasser.mineraculouskamikotizations.data.models;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.MineraculousItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
 import dev.thomasglasser.tommylib.api.data.models.ExtendedItemModelProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemModelProvider {
@@ -18,6 +20,11 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
 
     @Override
     protected void registerModels() {
+        registerLookTransforms();
+
+        // Look Powered
+        withEntityModel(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL);
+
         for (DyeColor color : DyeColor.values()) {
             ResourceLocation parasolLoc = MineraculousKamikotizationsItems.PARASOLS.get(color).getId();
             ResourceLocation openLoc = parasolLoc.withSuffix("_open");
@@ -27,25 +34,35 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
                     .model(parasol(openLoc, modLoc("item/parasol_open"), modItemLoc(openLoc.getPath() + "_in_hand")))
                     .end();
         }
+    }
 
-        ResourceLocation parasolLoc = MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.getId();
-        ResourceLocation iceLoc = parasolLoc.withSuffix("_ice");
-        ResourceLocation openLoc = parasolLoc.withSuffix("_open");
-        ItemModelBuilder closedModel = parasol(parasolLoc.withSuffix("_closed"), modLoc("item/weather_control_parasol_closed_base"), modItemLoc(parasolLoc.getPath() + "_in_hand"), parasolLoc);
-        getBuilder(parasolLoc.getPath())
-                .parent(closedModel)
-                .override()
-                .predicate(MineraculousItemProperties.MODE, MineraculousItemProperties.getPropertyForEnum(WeatherControlParasolItem.Mode.ICE))
-                .model(parasol(iceLoc, modLoc("item/weather_control_parasol_closed_base"), modItemLoc(iceLoc.getPath() + "_in_hand")))
-                .end()
-                .override()
-                .predicate(MineraculousItemProperties.MODE, MineraculousItemProperties.getPropertyForEnum(WeatherControlParasolItem.Mode.ICE) + 1)
-                .model(closedModel)
-                .end()
-                .override()
-                .predicate(MineraculousItemProperties.ACTIVE, 1)
-                .model(parasol(openLoc, modLoc("item/weather_control_parasol_open_base"), modItemLoc(openLoc.getPath() + "_in_hand")))
+    private void registerLookTransforms() {
+        transforms(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL, "in_hand")
+                .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).translation(0, -4.5F, 1).scale(0.75F).end()
+                .transform(ItemDisplayContext.THIRD_PERSON_LEFT_HAND).translation(0, -4.5F, 1).scale(0.75F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).translation(0, -0.25F, 1).scale(0.5F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_LEFT_HAND).translation(0, -0.25F, 1).scale(0.5F).end()
+                .transform(ItemDisplayContext.HEAD).translation(0, 1.25F, 0).scale(0.75F).end()
                 .end();
+        transforms(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL, "open")
+                .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).translation(0, -4.5F, 1).scale(0.75F).end()
+                .transform(ItemDisplayContext.THIRD_PERSON_LEFT_HAND).translation(0, -4.5F, 1).scale(0.75F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).translation(0, -0.25F, 1).scale(0.5F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_LEFT_HAND).translation(0, -0.25F, 1).scale(0.5F).end()
+                .transform(ItemDisplayContext.HEAD).translation(0, -14.5F, 0).scale(0.75F).end()
+                .end();
+    }
+
+    private ModelBuilder<ItemModelBuilder>.TransformsBuilder transforms(String name) {
+        return getBuilder(name).transforms();
+    }
+
+    private ModelBuilder<ItemModelBuilder>.TransformsBuilder transforms(ItemLike item) {
+        return transforms(item.asItem().builtInRegistryHolder().key().location().getPath());
+    }
+
+    private ModelBuilder<ItemModelBuilder>.TransformsBuilder transforms(ItemLike item, String suffix) {
+        return transforms(item.asItem().builtInRegistryHolder().key().location().getPath() + "_" + suffix);
     }
 
     private ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture, ResourceLocation guiLoc) {

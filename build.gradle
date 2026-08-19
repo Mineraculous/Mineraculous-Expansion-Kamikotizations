@@ -85,6 +85,15 @@ repositories {
 	exclusiveContent {
 		forRepository {
 			maven {
+				name = 'Player Animation Library'
+				url = "https://repo.redlance.org/public"
+			}
+		}
+		filter { includeGroupAndSubgroups "com.zigythebird" }
+	}
+	exclusiveContent {
+		forRepository {
+			maven {
 				name = 'Voice Chat API'
 				url = 'https://maven.maxhenkel.de/repository/public'
 			}
