@@ -1,9 +1,9 @@
 {
   "base": {
-    "parent": "mineraculouskamikotizations:item/weather_control_parasol_closed",
+    "parent": "mineraculouskamikotizations:item/weather_control_parasol_closed_base",
     "textures": {
-      "particle": "mineraculouskamikotizations:item/weather_control_parasol_ice",
-      "texture": "mineraculouskamikotizations:item/weather_control_parasol_ice"
+      "particle": "mineraculouskamikotizations:item/weather_control_parasol_ice_in_hand",
+      "texture": "mineraculouskamikotizations:item/weather_control_parasol_ice_in_hand"
     }
   },
   "gui_light": "front",
@@ -12,19 +12,19 @@
     "fixed": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/weather_control_parasol_ice_inventory"
+        "layer0": "mineraculouskamikotizations:item/weather_control_parasol_ice"
       }
     },
     "ground": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/weather_control_parasol_ice_inventory"
+        "layer0": "mineraculouskamikotizations:item/weather_control_parasol_ice"
       }
     },
     "gui": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/weather_control_parasol_ice_inventory"
+        "layer0": "mineraculouskamikotizations:item/weather_control_parasol_ice"
       }
     }
   }

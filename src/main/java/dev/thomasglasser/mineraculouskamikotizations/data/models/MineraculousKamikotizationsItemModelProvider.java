@@ -21,41 +21,40 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
         for (DyeColor color : DyeColor.values()) {
             ResourceLocation parasolLoc = MineraculousKamikotizationsItems.PARASOLS.get(color).getId();
             ResourceLocation openLoc = parasolLoc.withSuffix("_open");
-            withSeparateInventoryModel(parasolLoc, withExistingParent(parasolLoc.getPath(), modLoc("item/parasol_closed"))
-                    .texture("texture", parasolLoc.withPrefix("item/"))
-                    .texture("particle", parasolLoc.withPrefix("item/")), basicItem(parasolLoc.withSuffix("_inventory")))
-                            .override()
-                            .predicate(MineraculousItemProperties.ACTIVE, 1)
-                            .model(withSeparateInventoryModel(openLoc, withExistingParent(openLoc.getPath(), modLoc("item/parasol_open"))
-                                    .texture("texture", openLoc.withPrefix("item/"))
-                                    .texture("particle", openLoc.withPrefix("item/")), basicItem(openLoc.withSuffix("_inventory"))))
-                            .end();
+            parasol(parasolLoc, modLoc("item/parasol_closed"), modItemLoc(parasolLoc.getPath() + "_in_hand"))
+                    .override()
+                    .predicate(MineraculousItemProperties.ACTIVE, 1)
+                    .model(parasol(openLoc, modLoc("item/parasol_open"), modItemLoc(openLoc.getPath() + "_in_hand")))
+                    .end();
         }
 
         ResourceLocation parasolLoc = MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.getId();
         ResourceLocation iceLoc = parasolLoc.withSuffix("_ice");
-        ResourceLocation activeLoc = parasolLoc.withSuffix("_active");
         ResourceLocation openLoc = parasolLoc.withSuffix("_open");
-        ResourceLocation inactiveLoc = parasolLoc.withSuffix("_inactive");
-        ItemModelBuilder inactiveParasol = withSeparateInventoryModel(inactiveLoc, withExistingParent(parasolLoc.getPath(), modLoc("item/weather_control_parasol_closed"))
-                .texture("texture", parasolLoc.withPrefix("item/"))
-                .texture("particle", parasolLoc.withPrefix("item/")), basicItem(parasolLoc.withSuffix("_inventory")));
-        withExistingParent(parasolLoc.getPath(), inactiveLoc)
+        ItemModelBuilder closedModel = parasol(parasolLoc.withSuffix("_closed"), modLoc("item/weather_control_parasol_closed_base"), modItemLoc(parasolLoc.getPath() + "_in_hand"), parasolLoc);
+        getBuilder(parasolLoc.getPath())
+                .parent(closedModel)
                 .override()
                 .predicate(MineraculousItemProperties.MODE, MineraculousItemProperties.getPropertyForEnum(WeatherControlParasolItem.Mode.ICE))
-                .model(withSeparateInventoryModel(iceLoc, withExistingParent(iceLoc.getPath(), modLoc("item/weather_control_parasol_closed"))
-                        .texture("texture", iceLoc.withPrefix("item/"))
-                        .texture("particle", iceLoc.withPrefix("item/")), basicItem(iceLoc.withSuffix("_inventory"))))
+                .model(parasol(iceLoc, modLoc("item/weather_control_parasol_closed_base"), modItemLoc(iceLoc.getPath() + "_in_hand")))
                 .end()
                 .override()
                 .predicate(MineraculousItemProperties.MODE, MineraculousItemProperties.getPropertyForEnum(WeatherControlParasolItem.Mode.ICE) + 1)
-                .model(inactiveParasol)
+                .model(closedModel)
                 .end()
                 .override()
                 .predicate(MineraculousItemProperties.ACTIVE, 1)
-                .model(withSeparateInventoryModel(activeLoc, withExistingParent(activeLoc.getPath(), openLoc.withPrefix("item/"))
-                        .texture("texture", openLoc.withPrefix("item/"))
-                        .texture("particle", openLoc.withPrefix("item/")), basicItem(openLoc.withSuffix("_inventory"))))
+                .model(parasol(openLoc, modLoc("item/weather_control_parasol_open_base"), modItemLoc(openLoc.getPath() + "_in_hand")))
                 .end();
+    }
+
+    private ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture, ResourceLocation guiLoc) {
+        return withSeparateInventoryModel(loc, withExistingParent(inHandTexture.getPath(), parent)
+                .texture("texture", inHandTexture)
+                .texture("particle", inHandTexture), basicItem(guiLoc));
+    }
+
+    private ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture) {
+        return parasol(loc, parent, inHandTexture, loc);
     }
 }

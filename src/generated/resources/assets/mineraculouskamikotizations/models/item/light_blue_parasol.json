@@ -2,8 +2,8 @@
   "base": {
     "parent": "mineraculouskamikotizations:item/parasol_closed",
     "textures": {
-      "particle": "mineraculouskamikotizations:item/light_blue_parasol",
-      "texture": "mineraculouskamikotizations:item/light_blue_parasol"
+      "particle": "mineraculouskamikotizations:item/light_blue_parasol_in_hand",
+      "texture": "mineraculouskamikotizations:item/light_blue_parasol_in_hand"
     }
   },
   "gui_light": "front",
@@ -20,19 +20,19 @@
     "fixed": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/light_blue_parasol_inventory"
+        "layer0": "mineraculouskamikotizations:item/light_blue_parasol"
       }
     },
     "ground": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/light_blue_parasol_inventory"
+        "layer0": "mineraculouskamikotizations:item/light_blue_parasol"
       }
     },
     "gui": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "mineraculouskamikotizations:item/light_blue_parasol_inventory"
+        "layer0": "mineraculouskamikotizations:item/light_blue_parasol"
       }
     }
   }

@@ -1,5 +1,5 @@
 {
-  "parent": "mineraculouskamikotizations:item/weather_control_parasol_inactive",
+  "parent": "mineraculouskamikotizations:item/weather_control_parasol_closed",
   "overrides": [
     {
       "model": "mineraculouskamikotizations:item/weather_control_parasol_ice",
@@ -8,13 +8,13 @@
       }
     },
     {
-      "model": "mineraculouskamikotizations:item/weather_control_parasol_inactive",
+      "model": "mineraculouskamikotizations:item/weather_control_parasol_closed",
       "predicate": {
         "mineraculous:mode": 2.0
       }
     },
     {
-      "model": "mineraculouskamikotizations:item/weather_control_parasol_active",
+      "model": "mineraculouskamikotizations:item/weather_control_parasol_open",
       "predicate": {
         "mineraculous:active": 1.0
       }
