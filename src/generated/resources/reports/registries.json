@@ -44,7 +44,8 @@
   ],
   "mineraculous:customization_setting_type": [
     "mineraculouskamikotizations:miraculous",
-    "mineraculouskamikotizations:player"
+    "mineraculouskamikotizations:player",
+    "mineraculouskamikotizations:timer"
   ],
   "mineraculous:kamikotization": [
     "mineraculouskamikotizations:miraculous_mimicry",

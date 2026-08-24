@@ -3,6 +3,8 @@ package dev.thomasglasser.mineraculouskamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
 import dev.thomasglasser.mineraculouskamikotizations.data.MineraculousKamikotizationsDataGenerators;
+import dev.thomasglasser.mineraculouskamikotizations.event.MineraculousKamikotizationsMiraculousEvents;
+import dev.thomasglasser.mineraculouskamikotizations.network.MineraculousKamikotizationsPayloads;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.action.MineraculousKamikotizationsAbilityActions;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
@@ -12,6 +14,7 @@ import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +35,9 @@ public class MineraculousKamikotizations {
         MineraculousKamikotizationsCreativeModeTabs.init();
         MineraculousKamikotizationsDataComponents.init();
 
+        modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPackets);
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsMiraculousEvents::onPreTransformMiraculous);
     }
 
     public static ResourceLocation modLoc(String path) {

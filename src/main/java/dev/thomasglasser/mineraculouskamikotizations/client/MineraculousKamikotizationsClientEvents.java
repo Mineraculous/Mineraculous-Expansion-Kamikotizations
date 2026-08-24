@@ -1,26 +1,27 @@
 package dev.thomasglasser.mineraculouskamikotizations.client;
 
 import dev.thomasglasser.mineraculous.api.client.gui.components.CustomizationSettingWidgetRegistry;
-import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
-import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
-import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
 import dev.thomasglasser.mineraculous.api.client.look.util.KamikotizationToolClientExtensions;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToolLookGeoItemRenderer;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
+import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
+import dev.thomasglasser.mineraculouskamikotizations.network.ClientBoundOpenTransformationHistoryScreenPayload;
+import dev.thomasglasser.mineraculouskamikotizations.network.ServerBoundRequestTransformationHistoryPayload;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
+import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
@@ -46,50 +47,26 @@ public class MineraculousKamikotizationsClientEvents {
         event.enqueueWork(() -> {
             CustomizationSettingWidgetRegistry.register(
                     MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(),
-                    (property, parentScreen, font, widgetWidth, widgetHeight, currentUuidObj, onValueChanged) -> {
-                        UUID currentUuid = currentUuidObj instanceof UUID uuid ? uuid : null;
-                        Component initialButtonText = resolvePlayerName(currentUuid);
-                        return Button.builder(initialButtonText, selectionButton -> {
-                            Minecraft.getInstance().setScreen(new PlayerSelectionScreen(
-                                    parentScreen,
-                                    selectedProfile -> {
-                                        if (selectedProfile != null) {
-                                            UUID playerUuid = selectedProfile.getId();
-                                            String playerDisplayName = selectedProfile.getName();
+                    (rawProperty, screen, font, width, height, uuid, uuidConsumer) -> {
+                        final UUID[] currentValue = new UUID[] { uuid };
+                        TransformationHistoryData.@Nullable TransformationEntry initialEntry = ClientBoundOpenTransformationHistoryScreenPayload.getLastSelectedEntry();
+                        Component initialText = (currentValue[0] != null && initialEntry != null) ? PlayerSelectionScreen.getEntryDisplayName(initialEntry) : MineraculousClientUtils.GUI_CHOOSE;
+                        return Button.builder(initialText, button -> {
+                            ClientBoundOpenTransformationHistoryScreenPayload.setSelectConsumer((targetUuid, selectedEntry) -> {
+                                UUID selectedUuid = selectedEntry != null ? targetUuid : null;
+                                currentValue[0] = selectedUuid;
+                                uuidConsumer.accept(selectedUuid);
 
-                                            onValueChanged.accept(playerUuid);
-                                            selectionButton.setMessage(Component.literal(playerDisplayName));
-                                        } else {
-                                            onValueChanged.accept(null);
-                                            selectionButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
-                                        }
-                                        Minecraft.getInstance().setScreen(parentScreen);
-                                    }));
-                        }).size(widgetWidth, widgetHeight).build();
+                                if (selectedEntry != null) {
+                                    button.setMessage(PlayerSelectionScreen.getEntryDisplayName(selectedEntry));
+                                } else {
+                                    button.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+                                }
+                            });
+                            TommyLibServices.NETWORK.sendToServer(new ServerBoundRequestTransformationHistoryPayload(currentValue[0]));
+                        }).size(width, height).build();
                     });
         });
-    }
-
-    private static Component resolvePlayerName(@Nullable UUID playerUuid) {
-        if (playerUuid == null) {
-            return MineraculousClientUtils.GUI_CHOOSE;
-        }
-        Minecraft minecraft = Minecraft.getInstance();
-
-        if (minecraft.getConnection() != null) {
-            PlayerInfo onlinePlayerInfo = minecraft.getConnection().getPlayerInfo(playerUuid);
-            if (onlinePlayerInfo != null) {
-                return Component.literal(onlinePlayerInfo.getProfile().getName());
-            }
-        }
-
-        if (minecraft.getSingleplayerServer() != null) {
-            return minecraft.getSingleplayerServer().getProfileCache().get(playerUuid)
-                    .map(profile -> (Component) Component.literal(profile.getName()))
-                    .orElseGet(() -> Component.literal(playerUuid.toString()));
-        }
-
-        return Component.literal(playerUuid.toString());
     }
 
     // Items

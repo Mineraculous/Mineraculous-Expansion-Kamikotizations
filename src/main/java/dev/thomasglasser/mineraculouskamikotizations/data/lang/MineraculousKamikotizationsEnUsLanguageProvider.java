@@ -60,7 +60,7 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     private void addCustomizationSettings() {
         // Abilities
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE, "miraculous_active", "target");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE, "miraculous_active", "target", "timer");
         addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES, "miraculous_passives", "target");
     }
 
@@ -71,6 +71,6 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     private void addGuis() {
         // Player Selection Screen
-        add(PlayerSelectionScreen.TITLE, "Select Target");
+        add(PlayerSelectionScreen.TITLE, "Select Player");
     }
 }

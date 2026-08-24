@@ -50,5 +50,7 @@ public class MineraculousKamikotizationsLookProvider extends MineraculousLookPro
                 .add(LookAssetTypes.GECKOLIB_MODEL, modString("geo/item/weather_control_parasol_open.geo.json"))
                 .add(LookAssetTypes.ITEM_TRANSFORMS, modString("models/item/weather_control_parasol_open.json"))
                 .add(LookAssetTypes.FLAT_TEXTURE, modString("textures/item/weather_control_parasol_open.png"));
+
+        kamikotizationLook(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY);
     }
 }

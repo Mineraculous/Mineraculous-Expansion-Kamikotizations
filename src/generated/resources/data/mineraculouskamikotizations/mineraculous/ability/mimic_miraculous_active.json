@@ -5,7 +5,8 @@
         {
           "type": "mineraculouskamikotizations:mimic_miraculous_active",
           "miraculous": "miraculous_active",
-          "target": "target"
+          "target": "target",
+          "timer": "timer"
         }
       ]
     }
@@ -16,6 +17,11 @@
     },
     "target": {
       "type": "mineraculouskamikotizations:player",
+      "optional": true
+    },
+    "timer": {
+      "type": "mineraculouskamikotizations:timer",
+      "default_value": false,
       "optional": true
     }
   }

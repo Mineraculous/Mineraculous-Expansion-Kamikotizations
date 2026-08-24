@@ -1,145 +1,65 @@
 package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
-import com.mojang.authlib.GameProfile;
+import com.google.common.collect.ImmutableList;
+import dev.thomasglasser.mineraculous.api.client.gui.IconRenderer;
+import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
+import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
+import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
+import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
+import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSetting;
+import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData.TransformationEntry;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
-import net.minecraft.client.GameNarrator;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.social.SocialInteractionsScreen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class PlayerSelectionScreen extends Screen {
+/// Selects a player UUID based on their historical transformation entries.
+public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> {
     private static final String ID = "player_selection";
-    public static final Component TITLE = MineraculousClientUtils.translatableGui(ID, "name");
+    public static final Component TITLE = MineraculousClientUtils.translatableGui(ID, "title");
 
-    private final Screen previousScreen;
-    private final HeaderAndFooterLayout screenLayout = new HeaderAndFooterLayout(this);
-    private final Consumer<GameProfile> onProfileSelected;
-    private PlayerSelectionList playerSelectionList;
-    private @Nullable EditBox searchBoxWidget;
-    private String lastSearchQuery = "";
-
-    public PlayerSelectionScreen(Screen previousScreen, Consumer<GameProfile> onProfileSelected) {
-        super(TITLE);
-        this.previousScreen = previousScreen;
-        this.onProfileSelected = onProfileSelected;
+    public PlayerSelectionScreen(@Nullable Screen parent, boolean allowNone, @Nullable TransformationEntry initialValue, Collection<TransformationEntry> entries, UUID targetPlayerUuid, Consumer<@Nullable TransformationEntry> onApply) {
+        super(TITLE, parent, allowNone, initialValue, ImmutableList.copyOf(entries),
+                PlayerSelectionScreen::getEntryDisplayName,
+                createMiraculousIconRenderer(),
+                onApply);
     }
 
-    @Override
-    public void onClose() {
-        if (this.minecraft != null) {
-            this.minecraft.setScreen(this.previousScreen);
+    public static Component getEntryDisplayName(TransformationHistoryData.TransformationEntry entry) {
+        Component customName = getCustomName(entry);
+        if (customName != null) {
+            return customName.copy();
         }
+        return Miraculous.createMiraculousStack(entry.miraculous()).getHoverName();
     }
 
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        int backgroundLeftPosition = this.calculateHorizontalMargin() + 3;
-        guiGraphics.blitSprite(SocialInteractionsScreen.BACKGROUND_SPRITE, backgroundLeftPosition, SocialInteractionsScreen.MARGIN_Y, SocialInteractionsScreen.BG_WIDTH, this.calculateWindowHeight() + SocialInteractionsScreen.SEARCH_HEIGHT);
-        guiGraphics.blitSprite(SocialInteractionsScreen.SEARCH_SPRITE, backgroundLeftPosition + 10, 76, 12, 12);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-
-        if (!this.playerSelectionList.isEmpty()) {
-            this.playerSelectionList.render(guiGraphics, mouseX, mouseY, partialTick);
-        } else if (this.searchBoxWidget != null && !this.searchBoxWidget.getValue().isEmpty()) {
-            guiGraphics.drawCenteredString(this.minecraft.font, SocialInteractionsScreen.EMPTY_SEARCH, this.width / 2, (SocialInteractionsScreen.SEARCH_START + this.calculateListEndCoordinate()) / 2, -1);
-        }
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    private int calculateWindowHeight() {
-        return Math.max(52, this.height - 128 - SocialInteractionsScreen.SEARCH_HEIGHT);
-    }
-
-    private int calculateListEndCoordinate() {
-        return 80 + this.calculateWindowHeight() - SocialInteractionsScreen.BG_BORDER_SIZE;
-    }
-
-    private int calculateHorizontalMargin() {
-        return (this.width - SocialInteractionsScreen.IMAGE_WIDTH) / 2;
-    }
-
-    @Override
-    protected void init() {
-        this.screenLayout.addTitleHeader(TITLE, this.font);
-        this.playerSelectionList = new PlayerSelectionList(
-                this.minecraft,
-                this.width,
-                this.calculateListEndCoordinate() - SocialInteractionsScreen.LIST_START,
-                SocialInteractionsScreen.LIST_START,
-                SocialInteractionsScreen.ITEM_HEIGHT,
-                selectedGameProfile -> {
-                    this.onProfileSelected.accept(selectedGameProfile);
-                    this.onClose();
-                });
-
-        String initialSearchText = this.searchBoxWidget != null ? this.searchBoxWidget.getValue() : "";
-        this.searchBoxWidget = new EditBox(this.font, this.calculateHorizontalMargin() + 28, 74, 200, 15, SocialInteractionsScreen.SEARCH_HINT) {
-            @Override
-            protected MutableComponent createNarrationMessage() {
-                return !getValue().isEmpty() && playerSelectionList.isEmpty()
-                        ? super.createNarrationMessage().append(", ").append(SocialInteractionsScreen.EMPTY_SEARCH)
-                        : super.createNarrationMessage();
+    private static @Nullable Component getCustomName(TransformationEntry entry) {
+        Optional<CustomizationData> optionalData = entry.customizationData();
+        if (optionalData.isPresent()) {
+            CustomizationData customizationData = optionalData.get();
+            Optional<CustomizationSetting<String>> nameSetting = customizationData.nameSetting();
+            if (nameSetting.isPresent()) {
+                String actualName = customizationData.settings().get(nameSetting.get());
+                if (actualName != null && !actualName.isEmpty()) {
+                    return Component.literal(actualName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
+                }
             }
+        }
+        return null;
+    }
+
+    private static IconRenderer<TransformationEntry> createMiraculousIconRenderer() {
+        return (guiGraphics, transformationEntry, x, y) -> {
+            ItemStack miraculousStack = Miraculous.createMiraculousStack(transformationEntry.miraculous());
+            transformationEntry.customizationData().ifPresent(data -> miraculousStack.set(MineraculousDataComponents.CUSTOMIZATION_DATA, data));
+            return IconRenderers.ITEM_STACK.render(guiGraphics, miraculousStack, x, y);
         };
-        this.searchBoxWidget.setMaxLength(16);
-        this.searchBoxWidget.setVisible(true);
-        this.searchBoxWidget.setTextColor(-1);
-        this.searchBoxWidget.setValue(initialSearchText);
-        this.searchBoxWidget.setHint(SocialInteractionsScreen.SEARCH_HINT);
-        this.searchBoxWidget.setResponder(this::handleSearchQueryChange);
-
-        this.addRenderableWidget(this.searchBoxWidget);
-        this.addWidget(this.playerSelectionList);
-        this.playerSelectionList.updatePlayerList(this.playerSelectionList.getScrollAmount());
-
-        GameNarrator narrator = this.minecraft.getNarrator();
-        if (!this.searchBoxWidget.getValue().isEmpty() && this.playerSelectionList.isEmpty() && !this.searchBoxWidget.isFocused()) {
-            narrator.sayNow(SocialInteractionsScreen.EMPTY_SEARCH);
-        }
-
-        this.screenLayout.addToFooter(Button.builder(CommonComponents.GUI_CANCEL, cancelButton -> this.onClose()).width(200).build());
-        this.screenLayout.visitWidgets(this::addRenderableWidget);
-        this.repositionElements();
-    }
-
-    @Override
-    protected void repositionElements() {
-        this.screenLayout.arrangeElements();
-        this.playerSelectionList.updateSizeAndPosition(this.width, this.calculateListEndCoordinate() - SocialInteractionsScreen.LIST_START, SocialInteractionsScreen.LIST_START);
-        if (this.searchBoxWidget != null) {
-            this.searchBoxWidget.setPosition(this.calculateHorizontalMargin() + 28, 74);
-        }
-    }
-
-    @Override
-    protected void setInitialFocus() {
-        if (this.searchBoxWidget != null) {
-            this.setInitialFocus(this.searchBoxWidget);
-        }
-    }
-
-    private void handleSearchQueryChange(String updatedQuery) {
-        String normalizedQuery = updatedQuery.toLowerCase();
-        if (!normalizedQuery.equals(this.lastSearchQuery)) {
-            this.playerSelectionList.setFilter(normalizedQuery);
-            this.lastSearchQuery = normalizedQuery;
-        }
     }
 }

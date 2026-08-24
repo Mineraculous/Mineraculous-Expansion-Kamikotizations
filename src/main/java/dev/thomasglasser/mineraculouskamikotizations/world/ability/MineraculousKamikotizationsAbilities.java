@@ -29,9 +29,12 @@ public class MineraculousKamikotizationsAbilities {
         context.register(MIMIC_MIRACULOUS_ACTIVE, Ability.builder()
                 .branch(AbilityBranch.builder().action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_MIRACULOUS_ACTIVE.getKey()), AbilityProperties.builder()
                         .add(MimicMiraculousActiveAbilityAction.MIRACULOUS, "miraculous_active")
-                        .add(MimicMiraculousActiveAbilityAction.TARGET, "target")))
+                        .add(MimicMiraculousActiveAbilityAction.TARGET, "target")
+                        .add(MimicMiraculousActiveAbilityAction.TIMER, "timer")))
                 .customizationSetting("miraculous_active", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
                 .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER, Optional.empty(), true)
+                .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.TIMER, Optional.of(false), true)
+
                 .build());
 
         context.register(MIMIC_MIRACULOUS_PASSIVES, Ability.builder()
