@@ -23,17 +23,12 @@ public record ServerBoundRequestTransformationHistoryPayload(Optional<UUID> targ
             ServerBoundRequestTransformationHistoryPayload::targetPlayerUuid,
             ServerBoundRequestTransformationHistoryPayload::new);
 
-    public ServerBoundRequestTransformationHistoryPayload(UUID targetPlayerUuid) {
-        this(Optional.ofNullable(targetPlayerUuid));
-    }
-
     // ON SERVER
     @Override
     public void handle(Player player) {
         if (player instanceof ServerPlayer serverPlayer && player.level() instanceof ServerLevel serverLevel) {
-            UUID uuid = targetPlayerUuid.orElseGet(serverPlayer::getUUID);
-            Collection<TransformationHistoryData.TransformationEntry> entries = TransformationHistoryData.get(serverLevel).getHistory(uuid);
-            TommyLibServices.NETWORK.sendToClient(new ClientBoundOpenTransformationHistoryScreenPayload(uuid, entries), serverPlayer);
+            Collection<TransformationHistoryData.TransformationEntry> entries = TransformationHistoryData.get(serverLevel).getHistory(targetPlayerUuid.orElseGet(serverPlayer::getUUID));
+            TommyLibServices.NETWORK.sendToClient(new ClientBoundOpenTransformationHistoryScreenPayload(entries), serverPlayer);
         }
     }
 

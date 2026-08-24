@@ -16,7 +16,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlPa
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
@@ -43,12 +43,9 @@ public class MineraculousKamikotizationsClientEvents {
         event.enqueueWork(() -> {
             CustomizationSettingWidgetRegistry.register(
                     MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(),
-                    (rawProperty, screen, font, width, height, uuid, uuidConsumer) -> {
-                        final UUID[] currentValue = new UUID[] { uuid };
-                        return Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
-                            TommyLibServices.NETWORK.sendToServer(new ServerBoundRequestTransformationHistoryPayload(currentValue[0]));
-                        }).size(width, height).build();
-                    });
+                    (rawProperty, screen, font, width, height, uuid, uuidConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
+                        TommyLibServices.NETWORK.sendToServer(new ServerBoundRequestTransformationHistoryPayload(Optional.ofNullable(uuid)));
+                    }).size(width, height).build());
         });
     }
 

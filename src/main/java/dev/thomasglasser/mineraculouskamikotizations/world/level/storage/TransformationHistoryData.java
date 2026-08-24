@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
+import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.util.Map;
@@ -73,7 +74,9 @@ public class TransformationHistoryData extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.put("Entries", MAP_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), entryById).getOrThrow());
+        MAP_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), entryById)
+                .resultOrPartial(MineraculousKamikotizations.LOGGER::error)
+                .ifPresent(encoded -> tag.put("Entries", encoded));
         return tag;
     }
 

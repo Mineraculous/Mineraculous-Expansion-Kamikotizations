@@ -13,7 +13,6 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.Transfo
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData.TransformationEntry;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -25,7 +24,7 @@ public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> 
     public static final String ID = "player_selection";
     public static final Component TITLE = MineraculousClientUtils.translatableGui(ID, "title");
 
-    public PlayerSelectionScreen(@Nullable Screen parent, boolean allowNone, @Nullable TransformationEntry initialValue, Collection<TransformationEntry> entries, UUID targetPlayerUuid, Consumer<@Nullable TransformationEntry> onApply) {
+    public PlayerSelectionScreen(@Nullable Screen parent, boolean allowNone, @Nullable TransformationEntry initialValue, Collection<TransformationEntry> entries, Consumer<@Nullable TransformationEntry> onApply) {
         super(TITLE, parent, allowNone, initialValue, ImmutableList.copyOf(entries),
                 PlayerSelectionScreen::getEntryDisplayName,
                 createMiraculousIconRenderer(),

@@ -37,7 +37,7 @@ public class MineraculousKamikotizations {
 
         modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPackets);
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
-        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsMiraculousEvents::onPreTransformMiraculous);
+        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsMiraculousEvents::onFinishTransformMiraculous);
     }
 
     public static ResourceLocation modLoc(String path) {

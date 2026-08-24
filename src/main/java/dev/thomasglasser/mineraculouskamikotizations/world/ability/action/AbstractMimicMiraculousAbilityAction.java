@@ -19,6 +19,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
@@ -36,8 +37,14 @@ public abstract class AbstractMimicMiraculousAbilityAction implements AbilityAct
         UUID targetId = settings.get(instance.getOptionalCustomizationSetting(TARGET));
         Holder<Miraculous> miraculousHolder = settings.get(instance.getRequiredCustomizationSetting(MIRACULOUS));
         LivingEntity performer = context.performer();
-        MiraculousData sourceData = targetId != null && context.level().getServer().getPlayerList().getPlayer(targetId) instanceof Player player && !player.isRemoved() ? player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder) : null;
-        CustomizationData customization = sourceData != null ? sourceData.customizationData() : CustomizationData.EMPTY;
+        MiraculousData sourceData = new MiraculousData(CustomizationData.EMPTY);
+        if (targetId != null && context.level() instanceof ServerLevel serverLevel) {
+            Player player = serverLevel.getServer().getPlayerList().getPlayer(targetId);
+            if (player != null && !player.isRemoved()) {
+                sourceData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder);
+            }
+        }
+        CustomizationData customization = sourceData.customizationData();
         PerformerAbilityData.add(performer, createState(customization));
     }
 
