@@ -6,16 +6,13 @@ import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToo
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
-import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
-import dev.thomasglasser.mineraculouskamikotizations.network.ClientBoundOpenTransformationHistoryScreenPayload;
 import dev.thomasglasser.mineraculouskamikotizations.network.ServerBoundRequestTransformationHistoryPayload;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
@@ -25,7 +22,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -42,27 +38,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class MineraculousKamikotizationsClientEvents {
     // Init
-    static void onFMLClientSetup(FMLClientSetupEvent event) {
+    public static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
         event.enqueueWork(() -> {
             CustomizationSettingWidgetRegistry.register(
                     MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(),
                     (rawProperty, screen, font, width, height, uuid, uuidConsumer) -> {
                         final UUID[] currentValue = new UUID[] { uuid };
-                        TransformationHistoryData.@Nullable TransformationEntry initialEntry = ClientBoundOpenTransformationHistoryScreenPayload.getLastSelectedEntry();
-                        Component initialText = (currentValue[0] != null && initialEntry != null) ? PlayerSelectionScreen.getEntryDisplayName(initialEntry) : MineraculousClientUtils.GUI_CHOOSE;
-                        return Button.builder(initialText, button -> {
-                            ClientBoundOpenTransformationHistoryScreenPayload.setSelectConsumer((targetUuid, selectedEntry) -> {
-                                UUID selectedUuid = selectedEntry != null ? targetUuid : null;
-                                currentValue[0] = selectedUuid;
-                                uuidConsumer.accept(selectedUuid);
-
-                                if (selectedEntry != null) {
-                                    button.setMessage(PlayerSelectionScreen.getEntryDisplayName(selectedEntry));
-                                } else {
-                                    button.setMessage(MineraculousClientUtils.GUI_CHOOSE);
-                                }
-                            });
+                        return Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
                             TommyLibServices.NETWORK.sendToServer(new ServerBoundRequestTransformationHistoryPayload(currentValue[0]));
                         }).size(width, height).build();
                     });

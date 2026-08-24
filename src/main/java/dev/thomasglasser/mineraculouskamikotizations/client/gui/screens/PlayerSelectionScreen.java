@@ -42,14 +42,12 @@ public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> 
 
     private static @Nullable Component getCustomName(TransformationEntry entry) {
         Optional<CustomizationData> optionalData = entry.customizationData();
-        if (optionalData.isPresent()) {
+        if (optionalData.isPresent() && optionalData.get().nameSetting().isPresent()) {
             CustomizationData customizationData = optionalData.get();
-            Optional<CustomizationSetting<String>> nameSetting = customizationData.nameSetting();
-            if (nameSetting.isPresent()) {
-                String actualName = customizationData.settings().get(nameSetting.get());
-                if (actualName != null && !actualName.isEmpty()) {
-                    return Component.literal(actualName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
-                }
+            CustomizationSetting<String> nameSetting = customizationData.nameSetting().get();
+            String transformedName = customizationData.settings().get(nameSetting);
+            if (transformedName != null && !transformedName.isEmpty()) {
+                return Component.literal(transformedName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
             }
         }
         return null;

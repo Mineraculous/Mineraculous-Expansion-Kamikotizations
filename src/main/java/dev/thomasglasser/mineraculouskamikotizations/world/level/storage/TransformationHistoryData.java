@@ -41,11 +41,17 @@ public class TransformationHistoryData extends SavedData {
     /// Records a transformation event if an identical one doesn't already exist for this player.
     public void recordTransformation(UUID ownerUuid, Holder<Miraculous> miraculous, @Nullable CustomizationData customizationData) {
         Optional<CustomizationData> optionalCustomizationData = Optional.ofNullable(customizationData);
-
-        if (!historyIndex.get(ownerUuid).stream().anyMatch(entry -> entry.miraculous().equals(miraculous) && entry.customizationData().equals(optionalCustomizationData))) {
-            TransformationEntry entry = new TransformationEntry(UUID.randomUUID(), miraculous, optionalCustomizationData);
-            historyIndex.put(ownerUuid, entry);
-            entryById.put(entry.transformationId(), entry);
+        boolean exists = false;
+        for (TransformationEntry entry : historyIndex.get(ownerUuid)) {
+            if (entry.miraculous().equals(miraculous) && entry.customizationData().equals(optionalCustomizationData)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            TransformationEntry transformationEntry = new TransformationEntry(UUID.randomUUID(), ownerUuid, miraculous, optionalCustomizationData);
+            historyIndex.put(ownerUuid, transformationEntry);
+            entryById.put(transformationEntry.transformationId(), transformationEntry);
             setDirty();
         }
     }
@@ -77,21 +83,27 @@ public class TransformationHistoryData extends SavedData {
     private static TransformationHistoryData load(CompoundTag tag, HolderLookup.Provider registries) {
         TransformationHistoryData transformationHistoryData = new TransformationHistoryData();
         if (tag.contains("Entries")) {
-            Map<UUID, TransformationEntry> transformationEntryMap = MAP_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("Entries")).getOrThrow();
-            transformationHistoryData.entryById.putAll(transformationEntryMap);
+            Map<UUID, TransformationEntry> map = MAP_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("Entries")).getOrThrow();
+            for (TransformationEntry entry : map.values()) {
+                transformationHistoryData.entryById.put(entry.transformationId(), entry);
+                transformationHistoryData.historyIndex.put(entry.ownerUuid(), entry);
+            }
         }
         return transformationHistoryData;
     }
 
-    public record TransformationEntry(UUID transformationId, Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData) {
+    public record TransformationEntry(UUID transformationId, UUID ownerUuid, Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData) {
         public static final Codec<TransformationEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 UUIDUtil.CODEC.fieldOf("transformation_id").forGetter(TransformationEntry::transformationId),
+                UUIDUtil.CODEC.fieldOf("owner_uuid").forGetter(TransformationEntry::ownerUuid),
                 Miraculous.CODEC.fieldOf("miraculous").forGetter(TransformationEntry::miraculous),
                 CustomizationData.CODEC.optionalFieldOf("customization_data").forGetter(TransformationEntry::customizationData)).apply(instance, TransformationEntry::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, TransformationEntry> STREAM_CODEC = StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC,
                 TransformationEntry::transformationId,
+                UUIDUtil.STREAM_CODEC,
+                TransformationEntry::ownerUuid,
                 ByteBufCodecs.holderRegistry(MineraculousRegistries.MIRACULOUS),
                 TransformationEntry::miraculous,
                 ByteBufCodecs.optional(CustomizationData.STREAM_CODEC),

@@ -41,9 +41,7 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
     @Override
     public ImmutableSet<AbilityProperty<?>> getOptionalProperties() {
         ImmutableSet.Builder<AbilityProperty<?>> builder = ImmutableSet.builder();
-        for (AbilityProperty<?> properties : super.getOptionalProperties()) {
-            builder.add(properties);
-        }
+        builder.addAll(super.getOptionalProperties());
         builder.add(TIMER);
         return builder.build();
     }
