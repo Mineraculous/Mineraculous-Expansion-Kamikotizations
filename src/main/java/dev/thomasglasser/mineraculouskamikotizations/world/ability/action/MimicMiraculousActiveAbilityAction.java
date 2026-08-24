@@ -2,6 +2,7 @@ package dev.thomasglasser.mineraculouskamikotizations.world.ability.action;
 
 import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
+import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.ability.AbilityUtils;
 import dev.thomasglasser.mineraculous.api.world.ability.action.AbilityAction;
@@ -10,12 +11,10 @@ import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityProperty
 import dev.thomasglasser.mineraculous.api.world.ability.property.CustomizationSettingAbilityProperty;
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.PerformerAbilityData;
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.state.AbilityState;
-import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.property.MineraculousKamikotizationsAbilityProperties;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousActiveAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import java.util.Optional;
-import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 
 public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousAbilityAction {
@@ -28,22 +27,22 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
 
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        Holder<Miraculous> miraculousHolder = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(MIRACULOUS));
+        CustomizationSettings customizationSettings = context.source().customizationSettings();
         LivingEntity performer = context.performer();
         MimicMiraculousActiveAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(performer, MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_ACTIVE);
         if (mimicMiraculousActiveAbilityState != null) {
-            if (context.source().customizationSettings().get(instance.getOptionalCustomizationSetting(TIMER))) {
+            if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(TIMER)))) {
                 // TODO: make timer logic and stuff
             }
-            return AbilityUtils.performActiveAbility(Optional.of(miraculousHolder.value().activeAbility()), Ability.Context.of(context.level(), performer, createProxyData(mimicMiraculousActiveAbilityState.customizationData(), context), miraculousHolder, context.target()));
+            return AbilityUtils.performActiveAbility(Optional.of(customizationSettings.get(instance.getRequiredCustomizationSetting(MIRACULOUS)).value().activeAbility()), Ability.Context.of(context.level(), performer, createProxyData(mimicMiraculousActiveAbilityState.customizationData(), context), miraculousHolder, context.target()));
         }
         return Ability.Result.fail();
     }
 
     @Override
-    public ImmutableSet<AbilityProperty<?>> getOptionalProperties() {
+    public ImmutableSet<AbilityProperty<?>> getRequiredProperties() {
         ImmutableSet.Builder<AbilityProperty<?>> builder = ImmutableSet.builder();
-        builder.addAll(super.getOptionalProperties());
+        builder.addAll(super.getRequiredProperties());
         builder.add(TIMER);
         return builder.build();
     }

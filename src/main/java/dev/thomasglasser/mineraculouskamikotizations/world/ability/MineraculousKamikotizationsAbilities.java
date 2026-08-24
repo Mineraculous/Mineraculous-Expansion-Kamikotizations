@@ -33,7 +33,7 @@ public class MineraculousKamikotizationsAbilities {
                         .add(MimicMiraculousActiveAbilityAction.TIMER, "timer")))
                 .customizationSetting("miraculous_active", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
                 .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER, Optional.empty(), true)
-                .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.TIMER, Optional.of(false), true)
+                .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.TIMER, Optional.of(false), false)
 
                 .build());
 

@@ -6,13 +6,10 @@ import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
 import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
 import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
-import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSetting;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData.TransformationEntry;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -31,7 +28,7 @@ public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> 
                 onApply);
     }
 
-    public static Component getEntryDisplayName(TransformationHistoryData.TransformationEntry entry) {
+    public static Component getEntryDisplayName(TransformationEntry entry) {
         Component customName = getCustomName(entry);
         if (customName != null) {
             return customName.copy();
@@ -40,16 +37,16 @@ public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> 
     }
 
     private static @Nullable Component getCustomName(TransformationEntry entry) {
-        Optional<CustomizationData> optionalData = entry.customizationData();
-        if (optionalData.isPresent() && optionalData.get().nameSetting().isPresent()) {
-            CustomizationData customizationData = optionalData.get();
-            CustomizationSetting<String> nameSetting = customizationData.nameSetting().get();
-            String actualName = customizationData.settings().get(nameSetting);
-            if (actualName != null && !actualName.isEmpty()) {
-                return Component.literal(actualName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
-            }
-        }
-        return null;
+        return entry.customizationData()
+                .flatMap(CustomizationData::nameSetting)
+                .map(nameSetting -> {
+                    CustomizationData customizationData = entry.customizationData().get();
+                    String actualName = customizationData.settings().get(nameSetting);
+                    if (actualName != null && !actualName.isEmpty()) {
+                        return Component.literal(actualName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
+                    }
+                    return null;
+                }).orElse(null);
     }
 
     private static IconRenderer<TransformationEntry> createMiraculousIconRenderer() {

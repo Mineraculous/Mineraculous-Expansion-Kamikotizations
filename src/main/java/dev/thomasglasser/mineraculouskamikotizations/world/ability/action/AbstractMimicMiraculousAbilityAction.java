@@ -37,14 +37,16 @@ public abstract class AbstractMimicMiraculousAbilityAction implements AbilityAct
         UUID targetId = settings.get(instance.getOptionalCustomizationSetting(TARGET));
         Holder<Miraculous> miraculousHolder = settings.get(instance.getRequiredCustomizationSetting(MIRACULOUS));
         LivingEntity performer = context.performer();
-        MiraculousData sourceData = new MiraculousData(CustomizationData.EMPTY);
+
+        MiraculousData sourceData = null;
         if (targetId != null && context.level() instanceof ServerLevel serverLevel) {
             Player player = serverLevel.getServer().getPlayerList().getPlayer(targetId);
             if (player != null && !player.isRemoved()) {
                 sourceData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculousHolder);
             }
         }
-        CustomizationData customization = sourceData.customizationData();
+
+        CustomizationData customization = sourceData != null ? sourceData.customizationData() : CustomizationData.EMPTY;
         PerformerAbilityData.add(performer, createState(customization));
     }
 
