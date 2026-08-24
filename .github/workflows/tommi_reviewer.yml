@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run T.O.M.M.I.
-        uses: thomasglasser/tommi@v1
+        uses: thomasglasser/tommi@main
         with:
           app-id: ${{ secrets.TOMMI_APP_ID }}
           private-key: ${{ secrets.TOMMI_PRIVATE_KEY }}
