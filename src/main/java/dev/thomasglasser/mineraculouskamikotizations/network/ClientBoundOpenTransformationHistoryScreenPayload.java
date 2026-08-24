@@ -4,7 +4,7 @@ import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData.TransformationEntry;
 import dev.thomasglasser.tommylib.api.network.ExtendedPacketPayload;
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import net.minecraft.core.UUIDUtil;
@@ -19,7 +19,7 @@ public record ClientBoundOpenTransformationHistoryScreenPayload(UUID targetPlaye
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientBoundOpenTransformationHistoryScreenPayload> CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
             ClientBoundOpenTransformationHistoryScreenPayload::targetPlayerUuid,
-            ByteBufCodecs.collection(ArrayList::new, TransformationEntry.STREAM_CODEC),
+            ByteBufCodecs.collection(ObjectArrayList::new, TransformationEntry.STREAM_CODEC),
             ClientBoundOpenTransformationHistoryScreenPayload::entries,
             ClientBoundOpenTransformationHistoryScreenPayload::new);
 

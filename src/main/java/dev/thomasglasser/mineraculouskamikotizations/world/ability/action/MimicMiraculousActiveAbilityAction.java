@@ -32,7 +32,9 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
         LivingEntity performer = context.performer();
         MimicMiraculousActiveAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(performer, MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_ACTIVE);
         if (mimicMiraculousActiveAbilityState != null) {
-            if (context.source().customizationSettings().get(instance.getOptionalCustomizationSetting(TIMER))) {}
+            if (context.source().customizationSettings().get(instance.getOptionalCustomizationSetting(TIMER))) {
+                // TODO: make timer logic and stuff
+            }
             return AbilityUtils.performActiveAbility(Optional.of(miraculousHolder.value().activeAbility()), Ability.Context.of(context.level(), performer, createProxyData(mimicMiraculousActiveAbilityState.customizationData(), context), miraculousHolder, context.target()));
         }
         return Ability.Result.fail();

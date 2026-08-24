@@ -49,9 +49,9 @@ public class TransformationHistoryData extends SavedData {
             }
         }
         if (!exists) {
-            TransformationEntry transformationEntry = new TransformationEntry(UUID.randomUUID(), ownerUuid, miraculous, optionalCustomizationData);
-            historyIndex.put(ownerUuid, transformationEntry);
-            entryById.put(transformationEntry.transformationId(), transformationEntry);
+            TransformationEntry entry = new TransformationEntry(UUID.randomUUID(), ownerUuid, miraculous, optionalCustomizationData);
+            historyIndex.put(ownerUuid, entry);
+            entryById.put(entry.transformationId(), entry);
             setDirty();
         }
     }
@@ -61,22 +61,19 @@ public class TransformationHistoryData extends SavedData {
         return ImmutableSet.copyOf(historyIndex.get(ownerUuid));
     }
 
-    /**
-     * Gets every unique miraculous holder recorded for this player,
-     * ready to populate your selection screen list.
-     */
-    public Set<Holder<Miraculous>> getRecordedTransformations(UUID ownerUuid) {
+    /// Gets every unique miraculous holder recorded for this player,
+    /// ready to populate your selection screen list.
+    public ImmutableSet<Holder<Miraculous>> getRecordedTransformations(UUID ownerUuid) {
         Set<Holder<Miraculous>> miraculousSet = new ObjectOpenHashSet<>();
         for (TransformationEntry transformationEntry : historyIndex.get(ownerUuid)) {
             miraculousSet.add(transformationEntry.miraculous());
         }
-        return miraculousSet;
+        return ImmutableSet.copyOf(miraculousSet);
     }
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        Map<UUID, TransformationEntry> transformationEntryMap = new Object2ObjectOpenHashMap<>(entryById);
-        tag.put("Entries", MAP_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), transformationEntryMap).getOrThrow());
+        tag.put("Entries", MAP_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), entryById).getOrThrow());
         return tag;
     }
 

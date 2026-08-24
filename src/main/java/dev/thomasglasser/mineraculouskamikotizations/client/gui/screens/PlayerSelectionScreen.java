@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 /// Selects a player UUID based on their historical transformation entries.
 public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> {
-    private static final String ID = "player_selection";
+    public static final String ID = "player_selection";
     public static final Component TITLE = MineraculousClientUtils.translatableGui(ID, "title");
 
     public PlayerSelectionScreen(@Nullable Screen parent, boolean allowNone, @Nullable TransformationEntry initialValue, Collection<TransformationEntry> entries, UUID targetPlayerUuid, Consumer<@Nullable TransformationEntry> onApply) {
@@ -45,9 +45,9 @@ public class PlayerSelectionScreen extends SelectionScreen<TransformationEntry> 
         if (optionalData.isPresent() && optionalData.get().nameSetting().isPresent()) {
             CustomizationData customizationData = optionalData.get();
             CustomizationSetting<String> nameSetting = customizationData.nameSetting().get();
-            String transformedName = customizationData.settings().get(nameSetting);
-            if (transformedName != null && !transformedName.isEmpty()) {
-                return Component.literal(transformedName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
+            String actualName = customizationData.settings().get(nameSetting);
+            if (actualName != null && !actualName.isEmpty()) {
+                return Component.literal(actualName).withStyle(style -> style.withColor(entry.miraculous().value().color()));
             }
         }
         return null;
