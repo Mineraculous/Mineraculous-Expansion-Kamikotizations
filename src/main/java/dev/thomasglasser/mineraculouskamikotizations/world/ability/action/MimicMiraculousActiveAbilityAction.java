@@ -17,6 +17,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import java.util.Optional;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 
 public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousAbilityAction {
     public static final CustomizationSettingAbilityProperty<Holder<Miraculous>> MIRACULOUS = MineraculousKamikotizationsAbilityProperties.MIRACULOUS;
@@ -31,7 +32,8 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         CustomizationSettings customizationSettings = context.source().customizationSettings();
-        ActiveMiraculousMimicAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.ACTIVE_MIRACULOUS_MIMIC);
+        LivingEntity performer = context.performer();
+        ActiveMiraculousMimicAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(performer, MineraculousKamikotizationsAbilityStates.ACTIVE_MIRACULOUS_MIMIC);
         if (mimicMiraculousActiveAbilityState != null) {
             if (customizationSettings.get(instance.getRequiredCustomizationSetting(TIMER))) {
                 // TODO: make timer logic and stuff

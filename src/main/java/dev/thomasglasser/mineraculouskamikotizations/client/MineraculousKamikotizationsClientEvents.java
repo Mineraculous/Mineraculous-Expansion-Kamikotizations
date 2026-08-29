@@ -48,7 +48,7 @@ public class MineraculousKamikotizationsClientEvents {
                     (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
                         button.active = false;
                         button.setMessage(MineraculousKamikotizationsClientUtils.GUI_LOADING);
-                        screen.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry));
+                        screen.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry, button));
                         TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
                     }).size(width, height).build());
         });

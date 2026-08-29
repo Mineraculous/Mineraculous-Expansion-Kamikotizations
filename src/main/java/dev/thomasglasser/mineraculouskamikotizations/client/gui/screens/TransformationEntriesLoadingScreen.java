@@ -5,9 +5,11 @@ import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
+import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -15,11 +17,13 @@ import net.minecraft.network.chat.Component;
 public class TransformationEntriesLoadingScreen extends LoadingScreen implements TransformationEntriesSyncListener {
     protected final Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer;
     protected final TransformationHistoryData.TransformationEntry transformationEntry;
+    protected final Button widgetButton;
 
-    public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry) {
+    public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry, Button widgetButton) {
         super(parent);
         this.transformationHistoryDataConsumer = transformationHistoryDataConsumer;
         this.transformationEntry = transformationEntry;
+        this.widgetButton = widgetButton;
     }
 
     @Override
@@ -40,6 +44,8 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
                 IconRenderers.MIRACULOUS.map(TransformationEntriesLoadingScreen::getTransformationEntryMiraculousHolder),
                 transformationHistoryDataConsumer);
         getMinecraft().setScreen(holder.screen);
+        widgetButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+        widgetButton.active = true;
     }
 
     private static Component getTransformationEntryDisplayName(TransformationHistoryData.TransformationEntry entry) {
