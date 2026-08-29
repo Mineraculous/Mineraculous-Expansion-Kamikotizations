@@ -38,6 +38,7 @@ public class MineraculousKamikotizationsKamikotizations {
                 ImmutableList.of(),
                 CustomizationSettings.EMPTY,
                 Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE))),
-                ImmutableList.of(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES)))));
+                ImmutableList.of(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES)),
+                        AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_VISUALS)))));
     }
 }

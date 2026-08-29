@@ -32,15 +32,18 @@
   ],
   "mineraculous:ability": [
     "mineraculouskamikotizations:mimic_miraculous_active",
-    "mineraculouskamikotizations:mimic_miraculous_passives"
+    "mineraculouskamikotizations:mimic_miraculous_passives",
+    "mineraculouskamikotizations:mimic_miraculous_visuals"
   ],
   "mineraculous:ability_action": [
     "mineraculouskamikotizations:mimic_miraculous_active",
-    "mineraculouskamikotizations:mimic_miraculous_passives"
+    "mineraculouskamikotizations:mimic_miraculous_passives",
+    "mineraculouskamikotizations:mimic_miraculous_visuals"
   ],
   "mineraculous:ability_state": [
     "mineraculouskamikotizations:active_miraculous_mimic",
-    "mineraculouskamikotizations:passive_miraculous_mimic"
+    "mineraculouskamikotizations:passive_miraculous_mimic",
+    "mineraculouskamikotizations:visual_miraculous_mimic"
   ],
   "mineraculous:customization_setting_type": [
     "mineraculouskamikotizations:boolean",

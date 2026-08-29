@@ -1,0 +1,27 @@
+{
+  "branches": [
+    {
+      "actions": [
+        {
+          "type": "mineraculouskamikotizations:mimic_miraculous_visuals",
+          "miraculous": "miraculous_visuals",
+          "timer": "looks"
+        }
+      ]
+    }
+  ],
+  "customization_settings": {
+    "looks": {
+      "type": "mineraculouskamikotizations:boolean",
+      "default_value": true,
+      "optional": true
+    },
+    "miraculous_visuals": {
+      "type": "mineraculouskamikotizations:miraculous"
+    },
+    "target": {
+      "type": "mineraculouskamikotizations:transformation_entry",
+      "optional": true
+    }
+  }
+}

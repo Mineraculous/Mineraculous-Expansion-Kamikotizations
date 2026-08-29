@@ -44,6 +44,12 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
     }
 
     @Override
+    public void detransform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
+        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.ACTIVE_MIRACULOUS_MIMIC.get());
+        super.detransform(instance, context);
+    }
+
+    @Override
     public ImmutableSet<AbilityProperty<?>> getRequiredProperties() {
         return REQUIRED_PROPERTIES;
     }

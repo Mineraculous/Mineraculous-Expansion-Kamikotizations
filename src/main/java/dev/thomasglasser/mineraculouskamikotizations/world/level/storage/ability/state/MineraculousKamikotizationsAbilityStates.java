@@ -13,5 +13,7 @@ public class MineraculousKamikotizationsAbilityStates {
 
     public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<PassiveMiraculousMimicAbilityState>> PASSIVE_MIRACULOUS_MIMIC = ABILITY_STATES.register("passive_miraculous_mimic", () -> PassiveMiraculousMimicAbilityState.TYPE);
 
+    public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<VisualMiraculousMimicAbilityState>> VISUAL_MIRACULOUS_MIMIC = ABILITY_STATES.register("visual_miraculous_mimic", () -> VisualMiraculousMimicAbilityState.TYPE);
+
     public static void init() {}
 }

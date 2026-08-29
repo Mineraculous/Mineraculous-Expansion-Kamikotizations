@@ -1,6 +1,7 @@
 {
   "ability.mineraculouskamikotizations.mimic_miraculous_active": "Mimic Miraculous Active",
   "ability.mineraculouskamikotizations.mimic_miraculous_passives": "Mimic Miraculous Passives",
+  "ability.mineraculouskamikotizations.mimic_miraculous_visuals": "Mimic Miraculous Visuals",
   "advancement.mineraculouskamikotizations.kamikotization.root.desc": "Canon kamikotizations",
   "advancement.mineraculouskamikotizations.kamikotization.root.title": "Kamikotizations",
   "advancement.mineraculouskamikotizations.kamikotization.transform_weather_control.desc": "Show the world who the best weather player really is...",
@@ -24,6 +25,9 @@
   "customization_setting.mineraculouskamikotizations.miraculous_mimicry.mimic_miraculous_active.timer": "Timer",
   "customization_setting.mineraculouskamikotizations.miraculous_mimicry.mimic_miraculous_passives.miraculous_passives": "Miraculous Passives",
   "customization_setting.mineraculouskamikotizations.miraculous_mimicry.mimic_miraculous_passives.target": "Target",
+  "customization_setting.mineraculouskamikotizations.miraculous_mimicry.mimic_miraculous_visuals.looks": "Looks",
+  "customization_setting.mineraculouskamikotizations.miraculous_mimicry.mimic_miraculous_visuals.miraculous_visuals": "Miraculous Visuals",
+  "customization_setting.mineraculouskamikotizations.miraculous_mimicry.mimic_miraculous_visuals.target": "Target",
   "entity.mineraculouskamikotizations.ice_charge": "Ice Charge",
   "entity.mineraculouskamikotizations.reverting_ice_charge": "Ice Charge",
   "entity.mineraculouskamikotizations.reverting_lightning_bolt": "Lightning Bolt",

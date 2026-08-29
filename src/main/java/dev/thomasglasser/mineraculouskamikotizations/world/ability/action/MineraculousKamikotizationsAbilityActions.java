@@ -11,6 +11,7 @@ public class MineraculousKamikotizationsAbilityActions {
 
     public static final DeferredHolder<AbilityAction, MimicMiraculousActiveAbilityAction> MIMIC_MIRACULOUS_ACTIVE = ACTIONS.register("mimic_miraculous_active", MimicMiraculousActiveAbilityAction::new);
     public static final DeferredHolder<AbilityAction, MimicMiraculousPassivesAbilityAction> MIMIC_MIRACULOUS_PASSIVES = ACTIONS.register("mimic_miraculous_passives", MimicMiraculousPassivesAbilityAction::new);
+    public static final DeferredHolder<AbilityAction, MimicMiraculousVisualsAbilityAction> MIMIC_MIRACULOUS_VISUALS = ACTIONS.register("mimic_miraculous_visuals", MimicMiraculousVisualsAbilityAction::new);
 
     public static void init() {}
 }
