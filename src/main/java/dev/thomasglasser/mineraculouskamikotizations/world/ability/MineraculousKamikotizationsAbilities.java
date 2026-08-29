@@ -21,10 +21,6 @@ public class MineraculousKamikotizationsAbilities {
     public static final ResourceKey<Ability> MIMIC_MIRACULOUS_PASSIVES = create("mimic_miraculous_passives");
     public static final ResourceKey<Ability> MIMIC_MIRACULOUS_VISUALS = create("mimic_miraculous_visuals");
 
-    private static ResourceKey<Ability> create(String name) {
-        return ResourceKey.create(MineraculousRegistries.ABILITY, MineraculousKamikotizations.modLoc(name));
-    }
-
     public static void bootstrap(BootstrapContext<Ability> context) {
         HolderGetter<AbilityAction> abilityActions = context.lookup(MineraculousRegistries.ABILITY_ACTION);
 
@@ -59,5 +55,9 @@ public class MineraculousKamikotizationsAbilities {
                 .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY, Optional.empty(), true)
                 .customizationSetting("looks", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), true)
                 .build());
+    }
+
+    private static ResourceKey<Ability> create(String name) {
+        return ResourceKey.create(MineraculousRegistries.ABILITY, MineraculousKamikotizations.modLoc(name));
     }
 }

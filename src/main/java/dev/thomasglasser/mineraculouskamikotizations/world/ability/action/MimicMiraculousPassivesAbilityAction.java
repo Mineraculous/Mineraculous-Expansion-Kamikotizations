@@ -12,11 +12,6 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability
 
 public class MimicMiraculousPassivesAbilityAction extends AbstractMimicMiraculousAbilityAction {
     @Override
-    protected AbilityState createState(CustomizationData customizationData) {
-        return new PassiveMiraculousMimicAbilityState(customizationData);
-    }
-
-    @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         PassiveMiraculousMimicAbilityState passiveMiraculousMimicAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.PASSIVE_MIRACULOUS_MIMIC);
         if (passiveMiraculousMimicAbilityState != null) {
@@ -29,5 +24,10 @@ public class MimicMiraculousPassivesAbilityAction extends AbstractMimicMiraculou
     public void detransform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.PASSIVE_MIRACULOUS_MIMIC.get());
         super.detransform(instance, context);
+    }
+
+    @Override
+    protected AbilityState createState(CustomizationData customizationData) {
+        return new PassiveMiraculousMimicAbilityState(customizationData);
     }
 }

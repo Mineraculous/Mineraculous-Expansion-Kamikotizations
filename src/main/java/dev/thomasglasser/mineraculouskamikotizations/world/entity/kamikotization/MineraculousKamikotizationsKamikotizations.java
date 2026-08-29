@@ -21,10 +21,6 @@ public class MineraculousKamikotizationsKamikotizations {
     public static final ResourceKey<Kamikotization> WEATHER_CONTROL = create("weather_control");
     public static final ResourceKey<Kamikotization> MIRACULOUS_MIMICRY = create("miraculous_mimicry");
 
-    private static ResourceKey<Kamikotization> create(String name) {
-        return ResourceKey.create(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizations.modLoc(name));
-    }
-
     public static void bootstrap(BootstrapContext<Kamikotization> context) {
         HolderGetter<Ability> abilities = context.lookup(MineraculousRegistries.ABILITY);
 
@@ -40,5 +36,9 @@ public class MineraculousKamikotizationsKamikotizations {
                 Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE))),
                 ImmutableList.of(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES)),
                         AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_VISUALS)))));
+    }
+
+    private static ResourceKey<Kamikotization> create(String name) {
+        return ResourceKey.create(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizations.modLoc(name));
     }
 }

@@ -63,27 +63,7 @@ public class TransformationHistoryData extends SavedData {
         return data;
     }
 
-    public record TransformationEntry(Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData, Component name) {
-        public TransformationEntry(Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData, Component name) {
-            this.miraculous = miraculous;
-            this.customizationData = customizationData;
-            this.name = name != null ? name : resolveName(miraculous, customizationData);
-        }
-
-        public TransformationEntry(Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData) {
-            this(miraculous, customizationData, null);
-        }
-
-        private static Component resolveName(Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData) {
-            return customizationData
-                    .flatMap(CustomizationData::nameSetting)
-                    .map(customizationData.get().settings()::get)
-                    .filter(name -> !name.isEmpty())
-                    .map(name -> Component.literal(name).withStyle(style -> style.withColor(miraculous.value().color())))
-                    .orElseGet(() -> Miraculous.createMiraculousStack(miraculous).getHoverName().copy()
-                            .withStyle(style -> style.withColor(miraculous.value().color()).withObfuscated(true)));
-        }
-
+    public record TransformationEntry(Holder<Miraculous> miraculous, Optional<CustomizationData> customizationData) {
         public static final Codec<TransformationEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Miraculous.CODEC.fieldOf("miraculous").forGetter(TransformationEntry::miraculous),
                 CustomizationData.CODEC.optionalFieldOf("customization_data").forGetter(TransformationEntry::customizationData)).apply(instance, TransformationEntry::new));
@@ -94,5 +74,12 @@ public class TransformationHistoryData extends SavedData {
                 ByteBufCodecs.optional(CustomizationData.STREAM_CODEC),
                 TransformationEntry::customizationData,
                 TransformationEntry::new);
+
+        public Component getName() {
+            return customizationData.flatMap(CustomizationData::nameSetting).map(customizationData.get().settings()::get)
+                    .filter(name -> !name.isEmpty())
+                    .map(name -> Component.literal(name).withStyle(style -> style.withColor(miraculous.value().color())))
+                    .orElseGet(() -> Miraculous.createMiraculousStack(miraculous).getHoverName().copy().withStyle(style -> style.withColor(miraculous.value().color()).withObfuscated(true)));
+        }
     }
 }

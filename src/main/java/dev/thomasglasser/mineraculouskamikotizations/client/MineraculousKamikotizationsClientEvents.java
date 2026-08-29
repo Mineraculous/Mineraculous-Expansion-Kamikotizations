@@ -44,17 +44,17 @@ public class MineraculousKamikotizationsClientEvents {
                     MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY.get(),
                     (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
                         button.active = false;
-                        button.setMessage(transformationEntry != null ? transformationEntry.name() : MineraculousClientUtils.GUI_CHOOSE);
+                        button.setMessage(transformationEntry != null ? transformationEntry.getName() : MineraculousClientUtils.GUI_CHOOSE);
                         screen.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry, button));
                         TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
                     }).size(width, height).build());
-        });
 
-        CustomizationSettingWidgetRegistry.register(
-                MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(),
-                (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null ? currentValue : false)
-                        .displayOnlyValue()
-                        .create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
+            CustomizationSettingWidgetRegistry.register(
+                    MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(),
+                    (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null ? currentValue : false)
+                            .displayOnlyValue()
+                            .create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
+        });
     }
 
     // Items

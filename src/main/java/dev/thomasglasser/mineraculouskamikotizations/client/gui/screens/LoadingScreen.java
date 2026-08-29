@@ -30,9 +30,9 @@ public class LoadingScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        long i = Util.getMillis();
-        if (i - this.lastNarration > 2000L) {
-            this.lastNarration = i;
+        long currentTimeMs = Util.getMillis();
+        if (currentTimeMs - this.lastNarration > 2000L) {
+            this.lastNarration = currentTimeMs;
             this.triggerImmediateNarration(true);
         }
     }

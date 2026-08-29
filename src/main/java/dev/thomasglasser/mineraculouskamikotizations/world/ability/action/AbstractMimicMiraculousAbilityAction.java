@@ -21,17 +21,10 @@ public abstract class AbstractMimicMiraculousAbilityAction implements AbilityAct
     private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(MIRACULOUS);
     private static final ImmutableSet<AbilityProperty<?>> OPTIONAL_PROPERTIES = ImmutableSet.of(TARGET);
 
-    protected abstract AbilityState createState(CustomizationData customizationData);
-
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().get(instance.getOptionalCustomizationSetting(TARGET));
         PerformerAbilityData.add(context.performer(), createState(entry != null ? entry.customizationData().orElse(CustomizationData.EMPTY) : CustomizationData.EMPTY));
-    }
-
-    protected Ability.Context createProxyContext(CustomizationData customizationData, Ability.Context context) {
-        AbilitySource source = context.source();
-        return new Ability.Context(context.level(), context.performer(), new AbilitySource(source.key(), customizationData.settings(), source.powerLevel(), source.nameColor(), source.powerActive(), source.storedEntities(), source.tool()), context.target());
     }
 
     @Override
@@ -42,5 +35,12 @@ public abstract class AbstractMimicMiraculousAbilityAction implements AbilityAct
     @Override
     public ImmutableSet<AbilityProperty<?>> getOptionalProperties() {
         return OPTIONAL_PROPERTIES;
+    }
+
+    protected abstract AbilityState createState(CustomizationData customizationData);
+
+    protected Ability.Context createProxyContext(CustomizationData customizationData, Ability.Context context) {
+        AbilitySource source = context.source();
+        return new Ability.Context(context.level(), context.performer(), new AbilitySource(source.key(), customizationData.settings(), source.powerLevel(), source.nameColor(), source.powerActive(), source.storedEntities(), source.tool()), context.target());
     }
 }

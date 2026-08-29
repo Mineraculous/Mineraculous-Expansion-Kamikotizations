@@ -34,20 +34,10 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
         super.onClose();
     }
 
-    private void resetButton() {
-        widgetButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
-        widgetButton.active = true;
-    }
-
     @Override
     public void onTransformationEntrySync(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
         if (cancelled || getMinecraft().player == null) return;
-        class TransformationEntrySelectionScreenHolder {
-            SelectionScreen<TransformationHistoryData.TransformationEntry> screen;
-        }
-
-        TransformationEntrySelectionScreenHolder holder = new TransformationEntrySelectionScreenHolder();
-        holder.screen = new SelectionScreen<>(
+        getMinecraft().setScreen(new SelectionScreen<>(
                 MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE,
                 parent,
                 false,
@@ -58,21 +48,25 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
                 selectedEntry -> {
                     transformationHistoryDataConsumer.accept(selectedEntry);
                     if (selectedEntry != null) {
-                        widgetButton.setMessage(selectedEntry.name());
+                        widgetButton.setMessage(selectedEntry.getName());
                         widgetButton.active = true;
                     } else {
                         resetButton();
                     }
                     getMinecraft().setScreen(parent);
-                });
-        getMinecraft().setScreen(holder.screen);
+                }));
     }
 
     private static Component getTransformationEntryDisplayName(TransformationHistoryData.TransformationEntry entry) {
-        return entry.name();
+        return entry.getName();
     }
 
     private static Holder<Miraculous> getTransformationEntryMiraculousHolder(TransformationHistoryData.TransformationEntry entry) {
         return entry.miraculous();
+    }
+
+    private void resetButton() {
+        widgetButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+        widgetButton.active = true;
     }
 }
