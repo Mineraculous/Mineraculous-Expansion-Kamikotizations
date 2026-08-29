@@ -7,20 +7,17 @@ import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
-import dev.thomasglasser.tommylib.api.registration.DeferredItem;
-import java.util.List;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -81,11 +78,6 @@ public class MineraculousKamikotizationsClientEvents {
     }
 
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
-        List<DeferredItem<ParasolItem>> values = MineraculousKamikotizationsItems.PARASOLS.values().stream().toList();
-        Item[] parasols = new Item[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            parasols[i] = values.get(i).get();
-        }
         event.registerItem(new IClientItemExtensions() {
             @Override
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
@@ -93,7 +85,7 @@ public class MineraculousKamikotizationsClientEvents {
                     return HumanoidModel.ArmPose.SPYGLASS;
                 return IClientItemExtensions.super.getArmPose(entityLiving, hand, itemStack);
             }
-        }, parasols);
+        }, MineraculousKamikotizationsItems.PARASOLS.values().toArray(Holder[]::new));
         event.registerItem(new KamikotizationToolClientExtensions<KamikotizationToolLookGeoItemRenderer<WeatherControlParasolItem>>() {
             @Override
             public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
