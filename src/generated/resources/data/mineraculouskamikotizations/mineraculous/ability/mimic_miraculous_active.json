@@ -16,13 +16,12 @@
       "type": "mineraculouskamikotizations:miraculous"
     },
     "target": {
-      "type": "mineraculouskamikotizations:player",
+      "type": "mineraculouskamikotizations:transformation_entry",
       "optional": true
     },
     "timer": {
-      "type": "mineraculouskamikotizations:timer",
-      "default_value": false,
-      "optional": true
+      "type": "mineraculouskamikotizations:boolean",
+      "default_value": false
     }
   }
 }

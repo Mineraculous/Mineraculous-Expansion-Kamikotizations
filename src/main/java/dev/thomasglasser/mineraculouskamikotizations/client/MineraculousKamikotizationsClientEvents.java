@@ -6,9 +6,10 @@ import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToo
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.TransformationEntriesLoadingScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
-import dev.thomasglasser.mineraculouskamikotizations.network.ServerBoundRequestTransformationHistoryPayload;
+import dev.thomasglasser.mineraculouskamikotizations.network.ServerboundRequestTransformationHistoryPayload;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.ParasolItem;
@@ -16,12 +17,13 @@ import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlPa
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import dev.thomasglasser.tommylib.api.registration.DeferredItem;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -38,15 +40,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class MineraculousKamikotizationsClientEvents {
     // Init
-    public static void onFMLClientSetup(FMLClientSetupEvent event) {
+    static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
         event.enqueueWork(() -> {
             CustomizationSettingWidgetRegistry.register(
-                    MineraculousKamikotizationsCustomizationSettingTypes.PLAYER.get(),
-                    (rawProperty, screen, font, width, height, uuid, uuidConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
-                        TommyLibServices.NETWORK.sendToServer(new ServerBoundRequestTransformationHistoryPayload(Optional.ofNullable(uuid)));
+                    MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY.get(),
+                    (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
+                        button.active = false;
+                        button.setMessage(MineraculousKamikotizationsClientUtils.GUI_LOADING);
+                        screen.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry));
+                        TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
                     }).size(width, height).build());
         });
+
+        CustomizationSettingWidgetRegistry.register(
+                MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(),
+                (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null ? currentValue : false)
+                        .displayOnlyValue()
+                        .create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
     }
 
     // Items

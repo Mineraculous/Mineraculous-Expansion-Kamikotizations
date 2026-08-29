@@ -27,22 +27,24 @@ public class MineraculousKamikotizationsAbilities {
         HolderGetter<AbilityAction> abilityActions = context.lookup(MineraculousRegistries.ABILITY_ACTION);
 
         context.register(MIMIC_MIRACULOUS_ACTIVE, Ability.builder()
-                .branch(AbilityBranch.builder().action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_MIRACULOUS_ACTIVE.getKey()), AbilityProperties.builder()
-                        .add(MimicMiraculousActiveAbilityAction.MIRACULOUS, "miraculous_active")
-                        .add(MimicMiraculousActiveAbilityAction.TARGET, "target")
-                        .add(MimicMiraculousActiveAbilityAction.TIMER, "timer")))
+                .branch(AbilityBranch.builder()
+                        .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_MIRACULOUS_ACTIVE.getKey()), AbilityProperties.builder()
+                                .add(MimicMiraculousActiveAbilityAction.MIRACULOUS, "miraculous_active")
+                                .add(MimicMiraculousActiveAbilityAction.TARGET, "target")
+                                .add(MimicMiraculousActiveAbilityAction.TIMER, "timer")))
                 .customizationSetting("miraculous_active", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
-                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER, Optional.empty(), true)
-                .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.TIMER, Optional.of(false), false)
+                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY, Optional.empty(), true)
+                .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(false), false)
 
                 .build());
 
         context.register(MIMIC_MIRACULOUS_PASSIVES, Ability.builder()
-                .branch(AbilityBranch.builder().action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_MIRACULOUS_PASSIVES.getKey()), AbilityProperties.builder()
-                        .add(MimicMiraculousPassivesAbilityAction.MIRACULOUS, "miraculous_passives")
-                        .add(MimicMiraculousPassivesAbilityAction.TARGET, "target")))
+                .branch(AbilityBranch.builder()
+                        .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_MIRACULOUS_PASSIVES.getKey()), AbilityProperties.builder()
+                                .add(MimicMiraculousPassivesAbilityAction.MIRACULOUS, "miraculous_passives")
+                                .add(MimicMiraculousPassivesAbilityAction.TARGET, "target")))
                 .customizationSetting("miraculous_passives", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
-                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.PLAYER, Optional.empty(), true)
+                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY, Optional.empty(), true)
                 .build());
     }
 }

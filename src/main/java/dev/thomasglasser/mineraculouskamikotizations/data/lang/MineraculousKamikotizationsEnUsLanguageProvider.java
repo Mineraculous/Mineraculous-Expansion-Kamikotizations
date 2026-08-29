@@ -3,7 +3,7 @@ package dev.thomasglasser.mineraculouskamikotizations.data.lang;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
 import dev.thomasglasser.mineraculous.impl.data.lang.MineraculousEnUsLanguageProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
-import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.PlayerSelectionScreen;
+import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
@@ -70,7 +70,8 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
     }
 
     private void addGuis() {
-        // Player Selection Screen
-        add(PlayerSelectionScreen.TITLE, "Select Player");
+        add(MineraculousKamikotizationsClientUtils.GUI_LOADING, "Loading..");
+
+        add(MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE, "Transformation Entry Selection");
     }
 }

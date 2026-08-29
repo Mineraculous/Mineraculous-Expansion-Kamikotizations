@@ -39,13 +39,13 @@
     "mineraculouskamikotizations:mimic_miraculous_passives"
   ],
   "mineraculous:ability_state": [
-    "mineraculouskamikotizations:mimic_miraculous_active",
-    "mineraculouskamikotizations:mimic_miraculous_passives"
+    "mineraculouskamikotizations:active_miraculous_mimic",
+    "mineraculouskamikotizations:passive_miraculous_mimic"
   ],
   "mineraculous:customization_setting_type": [
+    "mineraculouskamikotizations:boolean",
     "mineraculouskamikotizations:miraculous",
-    "mineraculouskamikotizations:player",
-    "mineraculouskamikotizations:timer"
+    "mineraculouskamikotizations:transformation_entry"
   ],
   "mineraculous:kamikotization": [
     "mineraculouskamikotizations:miraculous_mimicry",

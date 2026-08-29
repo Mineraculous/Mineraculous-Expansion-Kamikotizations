@@ -15,7 +15,7 @@
       "type": "mineraculouskamikotizations:miraculous"
     },
     "target": {
-      "type": "mineraculouskamikotizations:player",
+      "type": "mineraculouskamikotizations:transformation_entry",
       "optional": true
     }
   }

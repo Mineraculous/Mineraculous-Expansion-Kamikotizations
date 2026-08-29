@@ -12,10 +12,10 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public class MineraculousKamikotizationsPayloads {
     public static List<PayloadInfo<?>> PAYLOADS = ImmutableList.<PayloadInfo<?>>of(
             // Serverbound
-            new PayloadInfo<>(ServerBoundRequestTransformationHistoryPayload.TYPE, ExtendedPacketPayload.Direction.CLIENT_TO_SERVER, ServerBoundRequestTransformationHistoryPayload.CODEC),
+            new PayloadInfo<>(ServerboundRequestTransformationHistoryPayload.TYPE, ExtendedPacketPayload.Direction.CLIENT_TO_SERVER, ServerboundRequestTransformationHistoryPayload.CODEC),
 
             // Clientbound
-            new PayloadInfo<>(ClientBoundOpenTransformationHistoryScreenPayload.TYPE, ExtendedPacketPayload.Direction.SERVER_TO_CLIENT, ClientBoundOpenTransformationHistoryScreenPayload.CODEC)
+            new PayloadInfo<>(ClientboundOpenTransformationHistoryScreenPayload.TYPE, ExtendedPacketPayload.Direction.SERVER_TO_CLIENT, ClientboundOpenTransformationHistoryScreenPayload.CODEC)
 
     );
 
