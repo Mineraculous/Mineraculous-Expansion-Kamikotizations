@@ -18,6 +18,7 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
     protected final Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer;
     protected final TransformationHistoryData.TransformationEntry transformationEntry;
     protected final Button widgetButton;
+    private boolean cancelled = false;
 
     public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry, Button widgetButton) {
         super(parent);
@@ -27,8 +28,20 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
     }
 
     @Override
+    public void onClose() {
+        this.cancelled = true;
+        resetButton();
+        super.onClose();
+    }
+
+    private void resetButton() {
+        widgetButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+        widgetButton.active = true;
+    }
+
+    @Override
     public void onTransformationEntrySync(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
-        if (getMinecraft().player == null) return;
+        if (cancelled || getMinecraft().player == null) return;
         class TransformationEntrySelectionScreenHolder {
             SelectionScreen<TransformationHistoryData.TransformationEntry> screen;
         }
@@ -42,10 +55,17 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
                 ImmutableList.copyOf(transformationEntries),
                 TransformationEntriesLoadingScreen::getTransformationEntryDisplayName,
                 IconRenderers.MIRACULOUS.map(TransformationEntriesLoadingScreen::getTransformationEntryMiraculousHolder),
-                transformationHistoryDataConsumer);
+                selectedEntry -> {
+                    transformationHistoryDataConsumer.accept(selectedEntry);
+                    if (selectedEntry != null) {
+                        widgetButton.setMessage(selectedEntry.name());
+                        widgetButton.active = true;
+                    } else {
+                        resetButton();
+                    }
+                    getMinecraft().setScreen(parent);
+                });
         getMinecraft().setScreen(holder.screen);
-        widgetButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
-        widgetButton.active = true;
     }
 
     private static Component getTransformationEntryDisplayName(TransformationHistoryData.TransformationEntry entry) {
