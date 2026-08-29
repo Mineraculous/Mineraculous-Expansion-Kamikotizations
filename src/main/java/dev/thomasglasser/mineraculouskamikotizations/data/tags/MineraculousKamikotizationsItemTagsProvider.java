@@ -25,7 +25,7 @@ public class MineraculousKamikotizationsItemTagsProvider extends ExtendedItemTag
 
         // Mod Specific
         tag(MineraculousKamikotizationsItemTags.PARASOLS)
-                .add(MineraculousKamikotizationsItems.PARASOLS.values().toArray(new DeferredItem[0]));
+                .add(MineraculousKamikotizationsItems.PARASOLS.values().toArray(DeferredItem[]::new));
 
         // Common
         tag(MineraculousKamikotizationsItemTags.UMBRELLA_TOOLS)
