@@ -20,7 +20,7 @@ public class RevertingWindCharge extends WindCharge {
     public RevertingWindCharge(@Nullable Entity owner, Level level, double x, double y, double z) {
         super(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), level);
         setOwner(owner);
-        this.moveTo(x, y, z, this.getYRot(), this.getXRot());
+        moveTo(x, y, z, getYRot(), getXRot());
         if (level instanceof ServerLevel serverLevel && owner != null)
             EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
     }
@@ -28,10 +28,10 @@ public class RevertingWindCharge extends WindCharge {
     public RevertingWindCharge(Level level, double x, double y, double z, Vec3 movement) {
         super(MineraculousKamikotizationsEntityTypes.REVERTING_WIND_CHARGE.get(), level);
         setPos(x, y, z);
-        this.moveTo(x, y, z, this.getYRot(), this.getXRot());
-        this.reapplyPosition();
-        this.setDeltaMovement(movement.normalize().scale(accelerationPower));
-        this.hasImpulse = true;
+        moveTo(x, y, z, getYRot(), getXRot());
+        reapplyPosition();
+        setDeltaMovement(movement.normalize().scale(accelerationPower));
+        hasImpulse = true;
     }
 
     @Override

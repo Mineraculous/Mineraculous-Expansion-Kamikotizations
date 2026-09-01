@@ -32,13 +32,13 @@ import org.jetbrains.annotations.Nullable;
 public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier {
     public IceCharge(EntityType<? extends IceCharge> entityType, Level level) {
         super(entityType, level);
-        this.accelerationPower = 0.0;
+        accelerationPower = 0.0;
     }
 
     public IceCharge(EntityType<? extends IceCharge> entityType, @Nullable Entity owner, double x, double y, double z, Level level) {
         super(entityType, x, y, z, level);
-        this.setOwner(owner);
-        this.accelerationPower = 0.0;
+        setOwner(owner);
+        accelerationPower = 0.0;
     }
 
     public IceCharge(@Nullable Entity owner, double x, double y, double z, Level level) {
@@ -47,20 +47,20 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     public IceCharge(double x, double y, double z, Vec3 movement, Level level) {
         super(MineraculousKamikotizationsEntityTypes.ICE_CHARGE.get(), x, y, z, movement, level);
-        this.accelerationPower = 0.0;
+        accelerationPower = 0.0;
     }
 
     @Override
     protected AABB makeBoundingBox() {
-        float f = this.getType().getDimensions().width() / 2.0F;
-        float f1 = this.getType().getDimensions().height();
+        float f = getType().getDimensions().width() / 2.0F;
+        float f1 = getType().getDimensions().height();
         return new AABB(
-                this.position().x - (double) f,
-                this.position().y - 0.15F,
-                this.position().z - (double) f,
-                this.position().x + (double) f,
-                this.position().y - 0.15F + (double) f1,
-                this.position().z + (double) f);
+                position().x - (double) f,
+                position().y - 0.15F,
+                position().z - (double) f,
+                position().x + (double) f,
+                position().y - 0.15F + (double) f1,
+                position().z + (double) f);
     }
 
     @Override
@@ -80,16 +80,16 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if (!this.level().isClientSide) {
-            LivingEntity livingentity = this.getOwner() instanceof LivingEntity livingentity1 ? livingentity1 : null;
+        if (!level().isClientSide) {
+            LivingEntity livingentity = getOwner() instanceof LivingEntity livingentity1 ? livingentity1 : null;
             Entity entity = result.getEntity();
             if (livingentity != null) {
                 livingentity.setLastHurtMob(entity);
             }
 
-            DamageSource damagesource = this.damageSources().windCharge(this, livingentity);
+            DamageSource damagesource = damageSources().windCharge(this, livingentity);
             if (entity.hurt(damagesource, 1.0F) && entity instanceof LivingEntity livingentity2) {
-                EnchantmentHelper.doPostAttackEffects((ServerLevel) this.level(), livingentity2, damagesource);
+                EnchantmentHelper.doPostAttackEffects((ServerLevel) level(), livingentity2, damagesource);
             }
 
             entity.setTicksFrozen(Integer.MAX_VALUE);
@@ -130,7 +130,7 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if (!this.level().isClientSide) {
+        if (!level().isClientSide) {
             BlockPos pos = result.getBlockPos();
             for (int i = -1; i <= 1; i++) {
                 for (int k = -1; k <= 1; k++) {
@@ -142,15 +142,15 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
                     }
                 }
             }
-            this.discard();
+            discard();
         }
     }
 
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level().isClientSide) {
-            this.discard();
+        if (!level().isClientSide) {
+            discard();
         }
     }
 
@@ -166,7 +166,7 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     @Override
     protected float getLiquidInertia() {
-        return this.getInertia();
+        return getInertia();
     }
 
     @Nullable
@@ -177,8 +177,8 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     @Override
     public void tick() {
-        if (!this.level().isClientSide && this.getBlockY() > this.level().getMaxBuildHeight() + 30) {
-            this.discard();
+        if (!level().isClientSide && getBlockY() > level().getMaxBuildHeight() + 30) {
+            discard();
         } else {
             super.tick();
         }
