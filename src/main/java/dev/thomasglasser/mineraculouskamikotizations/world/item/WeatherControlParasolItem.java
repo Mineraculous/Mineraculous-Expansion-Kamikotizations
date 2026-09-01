@@ -164,7 +164,7 @@ public class WeatherControlParasolItem extends ParasolItem implements GeoItem, K
         private final ResourceLocation icon;
 
         Mode(ResourceLocation icon) {
-            this.displayName = Suppliers.memoize(() -> MineraculousItemUtils.translatableItemComponent(MineraculousKamikotizationsDataComponents.WEATHER_CONTROL_PARASOL_MODE, getSerializedName()));
+            displayName = Suppliers.memoize(() -> MineraculousItemUtils.translatableItemComponent(MineraculousKamikotizationsDataComponents.WEATHER_CONTROL_PARASOL_MODE, getSerializedName()));
             this.icon = icon;
         }
 
