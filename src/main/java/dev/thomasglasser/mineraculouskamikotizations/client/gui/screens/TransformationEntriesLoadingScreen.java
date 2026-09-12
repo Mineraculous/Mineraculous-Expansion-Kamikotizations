@@ -15,7 +15,7 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
     protected final Consumer<TransformationHistoryData.TransformationEntry> onSelected;
     protected final TransformationHistoryData.TransformationEntry current;
     protected final Button entryButton;
-    private boolean cancelled = false;
+    private boolean canceled;
 
     public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry, Button widgetButton) {
         super(parent);
@@ -26,14 +26,14 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
 
     @Override
     public void onClose() {
-        this.cancelled = true;
+        this.canceled = true;
         resetButton();
         super.onClose();
     }
 
     @Override
     public void onTransformationEntriesSync(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
-        if (cancelled || minecraft == null || minecraft.player == null)
+        if (canceled || minecraft == null || minecraft.player == null)
             return;
         minecraft.setScreen(new SelectionScreen<>(
                 MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE,

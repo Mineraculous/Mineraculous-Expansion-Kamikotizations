@@ -45,7 +45,7 @@ public class LoadingScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.getMinecraft().setScreen(this.parent);
+        getMinecraft().setScreen(parent);
     }
 
     @Override
