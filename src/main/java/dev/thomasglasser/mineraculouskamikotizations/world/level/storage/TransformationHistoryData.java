@@ -36,7 +36,8 @@ public class TransformationHistoryData extends SavedData {
 
     /// Records a transformation event if an identical one doesn't already exist.
     public void recordTransformation(Holder<Miraculous> miraculous, @Nullable CustomizationData customizationData) {
-        if (entries.add(new TransformationEntry(miraculous, Optional.ofNullable(customizationData)))) {
+        if (entries.add(new TransformationEntry(miraculous, Optional.ofNullable(customizationData))))
+            setDirty();
             setDirty();
         }
     }
