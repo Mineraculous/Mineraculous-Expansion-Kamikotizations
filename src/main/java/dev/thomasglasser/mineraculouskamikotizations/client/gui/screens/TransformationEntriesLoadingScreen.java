@@ -33,7 +33,8 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
 
     @Override
     public void onTransformationEntriesSync(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
-        if (cancelled || minecraft == null || minecraft.player == null) return;
+        if (cancelled || minecraft == null || minecraft.player == null)
+            return;
         minecraft.setScreen(new SelectionScreen<>(
                 MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE,
                 parent,
