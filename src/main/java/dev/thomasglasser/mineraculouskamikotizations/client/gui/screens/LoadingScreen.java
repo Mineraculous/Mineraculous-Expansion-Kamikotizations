@@ -1,6 +1,7 @@
 package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
+import net.minecraft.Util;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -30,8 +31,8 @@ public class LoadingScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        long currentTimeMs = LevelLoadingScreen.NARRATION_DELAY_MS;
-        if (currentTimeMs - this.lastNarration > 2000L) {
+        long currentTimeMs = Util.getMillis();
+        if (currentTimeMs - lastNarration > LevelLoadingScreen.NARRATION_DELAY_MS) {
             this.lastNarration = currentTimeMs;
             this.triggerImmediateNarration(true);
         }
