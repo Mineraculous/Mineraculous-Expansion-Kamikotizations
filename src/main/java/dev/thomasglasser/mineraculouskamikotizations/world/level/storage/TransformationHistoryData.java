@@ -36,7 +36,8 @@ public class TransformationHistoryData extends SavedData {
 
     /// Records a transformation event if an identical one doesn't already exist.
     public void recordTransformation(Holder<Miraculous> miraculous, @Nullable CustomizationData customizationData) {
-        if (entries.add(new TransformationEntry(miraculous, Optional.ofNullable(customizationData)))) {
+        if (entries.add(new TransformationEntry(miraculous, Optional.ofNullable(customizationData))))
+            setDirty();
             setDirty();
         }
     }
@@ -55,7 +56,10 @@ public class TransformationHistoryData extends SavedData {
 
     private static TransformationHistoryData load(CompoundTag tag, HolderLookup.Provider registries) {
         TransformationHistoryData data = new TransformationHistoryData();
-        if (tag.contains("Entries")) {
+        if (tag.contains("Entries"))
+            SET_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("Entries"))
+                    .resultOrPartial(MineraculousKamikotizations.LOGGER::error)
+                    .ifPresent(data.entries::addAll);
             SET_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("Entries"))
                     .resultOrPartial(MineraculousKamikotizations.LOGGER::error)
                     .ifPresent(data.entries::addAll);
