@@ -30,7 +30,7 @@ public class KamikotizationReversionData extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putBoolean("WeatherModified", this.weatherModified);
+        tag.putBoolean("WeatherModified", weatherModified);
         return tag;
     }
 
