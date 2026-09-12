@@ -72,7 +72,7 @@ public class TransformationHistoryData extends SavedData {
                 TransformationEntry::new);
 
         public Component getName() {
-            return customizationData.flatMap(CustomizationData::nameSetting).map(customizationData.get().settings()::get)
+            return customizationData.flatMap(data -> data.nameSetting().map(data.settings()::get))
                     .filter(name -> !name.isEmpty())
                     .map(name -> Component.literal(name).withStyle(style -> style.withColor(miraculous.value().color())))
                     .orElseGet(() -> Miraculous.createMiraculousStack(miraculous).getHoverName().copy().withStyle(style -> style.withColor(miraculous.value().color()).withObfuscated(true)));
