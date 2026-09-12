@@ -12,7 +12,8 @@ public class MineraculousKamikotizationsClientUtils {
     public static final Component TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE = MineraculousClientUtils.translatableGui("transformation_entry_selection", "title");
 
     public static void triggerTransformationEntriesSyncListener(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
-        if (Minecraft.getInstance().screen instanceof TransformationEntriesSyncListener tracker) {
+        if (Minecraft.getInstance().screen instanceof TransformationEntriesSyncListener tracker)
+            tracker.onTransformationEntriesSync(transformationEntries);
             tracker.onTransformationEntriesSync(transformationEntries);
         }
     }
