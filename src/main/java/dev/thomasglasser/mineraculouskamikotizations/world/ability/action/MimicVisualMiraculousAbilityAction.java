@@ -36,8 +36,6 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
         TransformationHistoryData.TransformationEntry transformationEntry = customizationSettings.get(instance.getOptionalCustomizationSetting(TRANSFORMATION_ENTRY));
         if (customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)) && transformationEntry != null)
             PerformerAbilityData.add(context.performer(), new MimicMiraculousNameColorAbilityState(transformationEntry.miraculous().value().color().getValue()));
-            PerformerAbilityData.add(context.performer(), new MimicMiraculousNameColorAbilityState(transformationEntry.miraculous().value().color().getValue()));
-        }
         // TODO: Looks logic
     }
 

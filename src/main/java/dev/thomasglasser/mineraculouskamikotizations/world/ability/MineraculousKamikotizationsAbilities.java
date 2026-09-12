@@ -35,7 +35,6 @@ public class MineraculousKamikotizationsAbilities {
                 .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(false), false)
                 .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(false), false)
                 .build());
-                .build());
 
         context.register(MIMIC_PASSIVE_MIRACULOUS, Ability.builder()
                 .branch(AbilityBranch.builder()

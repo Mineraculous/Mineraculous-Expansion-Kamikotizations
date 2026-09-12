@@ -14,7 +14,5 @@ public class MineraculousKamikotizationsClientUtils {
     public static void triggerTransformationEntriesSyncListener(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
         if (Minecraft.getInstance().screen instanceof TransformationEntriesSyncListener tracker)
             tracker.onTransformationEntriesSync(transformationEntries);
-            tracker.onTransformationEntriesSync(transformationEntries);
-        }
     }
 }

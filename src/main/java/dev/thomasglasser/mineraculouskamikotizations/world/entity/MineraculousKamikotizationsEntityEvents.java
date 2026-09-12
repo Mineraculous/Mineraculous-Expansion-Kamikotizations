@@ -18,8 +18,6 @@ public class MineraculousKamikotizationsEntityEvents {
             MimicMiraculousNameColorAbilityState nameColorAbilityState = PerformerAbilityData.get(player, MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_NAME_COLOR);
             if (name != null && nameColorAbilityState != null)
                 event.setDisplayname(Entity.removeAction(Component.literal(name).setStyle(event.getDisplayname().getStyle().withColor(nameColorAbilityState.nameColor()).withHoverEvent(null))));
-                event.setDisplayname(Entity.removeAction(Component.literal(name).setStyle(event.getDisplayname().getStyle().withColor(nameColorAbilityState.nameColor()).withHoverEvent(null))));
-            }
         }));
     }
 }

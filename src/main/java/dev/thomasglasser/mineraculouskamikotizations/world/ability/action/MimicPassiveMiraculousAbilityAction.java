@@ -16,8 +16,6 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
         MimicPassiveMiraculousAbilityState passiveMiraculousMimicAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_PASSIVE_MIRACULOUS);
         if (passiveMiraculousMimicAbilityState != null)
             return AbilityUtils.performPassiveAbilities(context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(MIRACULOUS)).value().passiveAbilities(), createProxyContext(passiveMiraculousMimicAbilityState.customizationData(), context));
-            return AbilityUtils.performPassiveAbilities(context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(MIRACULOUS)).value().passiveAbilities(), createProxyContext(passiveMiraculousMimicAbilityState.customizationData(), context));
-        }
         return Ability.Result.fail();
     }
 

@@ -11,7 +11,5 @@ public class MineraculousKamikotizationsMiraculousEvents {
         LivingEntity entity = event.getEntity();
         if (MiraculousEvents.isPowered(entity) && entity.level() instanceof ServerLevel level)
             TransformationHistoryData.get(level).recordTransformation(event.getMiraculous(), event.getMiraculousData().customizationData());
-            TransformationHistoryData.get(level).recordTransformation(event.getMiraculous(), event.getMiraculousData().customizationData());
-        }
     }
 }
