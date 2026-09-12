@@ -60,19 +60,19 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     private void addCustomizationSettings() {
         // Abilities
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE, "miraculous_active", "target", "timer");
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES, "miraculous_passives", "target");
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_VISUALS, "miraculous_visuals", "target", "looks");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS, "miraculous", "target", "timer");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS, "miraculous", "target");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS, "miraculous", "target", "looks", "copy_name_color");
     }
 
     private void addAbilities() {
-        add(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE, "Mimic Miraculous Active");
-        add(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES, "Mimic Miraculous Passives");
-        add(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_VISUALS, "Mimic Miraculous Visuals");
+        add(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS, "Mimic Miraculous Active");
+        add(MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS, "Mimic Miraculous Passives");
+        add(MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS, "Mimic Miraculous Visuals");
     }
 
     private void addGuis() {
-        add(MineraculousKamikotizationsClientUtils.GUI_LOADING, "Loading..");
+        add(MineraculousKamikotizationsClientUtils.GUI_LOADING, "Loading...");
 
         add(MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE, "Transformation Entry Selection");
     }

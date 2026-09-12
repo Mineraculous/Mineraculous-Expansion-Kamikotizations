@@ -12,22 +12,23 @@ import dev.thomasglasser.mineraculous.api.world.ability.property.CustomizationSe
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.PerformerAbilityData;
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.state.AbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.property.MineraculousKamikotizationsAbilityProperties;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.ActiveMiraculousMimicAbilityState;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicActiveMiraculousAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import java.util.Optional;
 
-public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousAbilityAction {
-    public static final CustomizationSettingAbilityProperty<Boolean> TIMER = MineraculousKamikotizationsAbilityProperties.TIMER;
-    private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(MIRACULOUS, TIMER);
+public class MimicActiveMiraculousAbilityAction extends AbstractMimicMiraculousAbilityAction {
+    public static final CustomizationSettingAbilityProperty<Boolean> ENABLE_TIMER = MineraculousKamikotizationsAbilityProperties.ENABLE_TIMER;
+    private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(MIRACULOUS, ENABLE_TIMER);
 
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         CustomizationSettings customizationSettings = context.source().customizationSettings();
-        ActiveMiraculousMimicAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.ACTIVE_MIRACULOUS_MIMIC);
+        MimicActiveMiraculousAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_ACTIVE_MIRACULOUS);
         if (mimicMiraculousActiveAbilityState != null) {
-            if (customizationSettings.get(instance.getRequiredCustomizationSetting(TIMER))) {
+            if (customizationSettings.get(instance.getRequiredCustomizationSetting(ENABLE_TIMER))) {
                 // TODO: make timer logic and stuff
             }
+            // TODO: Tommy explain to me why this stopped working
             return AbilityUtils.performActiveAbility(Optional.of(customizationSettings.get(instance.getRequiredCustomizationSetting(MIRACULOUS)).value().activeAbility()), createProxyContext(mimicMiraculousActiveAbilityState.customizationData(), context));
         }
         return Ability.Result.fail();
@@ -35,7 +36,7 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
 
     @Override
     public void detransform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.ACTIVE_MIRACULOUS_MIMIC.get());
+        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_ACTIVE_MIRACULOUS.get());
         super.detransform(instance, context);
     }
 
@@ -46,6 +47,6 @@ public class MimicMiraculousActiveAbilityAction extends AbstractMimicMiraculousA
 
     @Override
     protected AbilityState createState(CustomizationData customizationData) {
-        return new ActiveMiraculousMimicAbilityState(customizationData);
+        return new MimicActiveMiraculousAbilityState(customizationData);
     }
 }

@@ -9,9 +9,9 @@ import dev.thomasglasser.tommylib.api.registration.DeferredRegister;
 public class MineraculousKamikotizationsAbilityActions {
     private static final DeferredRegister<AbilityAction> ACTIONS = DeferredRegister.create(MineraculousRegistries.ABILITY_ACTION, MineraculousKamikotizations.MOD_ID);
 
-    public static final DeferredHolder<AbilityAction, MimicMiraculousActiveAbilityAction> MIMIC_MIRACULOUS_ACTIVE = ACTIONS.register("mimic_miraculous_active", MimicMiraculousActiveAbilityAction::new);
-    public static final DeferredHolder<AbilityAction, MimicMiraculousPassivesAbilityAction> MIMIC_MIRACULOUS_PASSIVES = ACTIONS.register("mimic_miraculous_passives", MimicMiraculousPassivesAbilityAction::new);
-    public static final DeferredHolder<AbilityAction, MimicMiraculousVisualsAbilityAction> MIMIC_MIRACULOUS_VISUALS = ACTIONS.register("mimic_miraculous_visuals", MimicMiraculousVisualsAbilityAction::new);
+    public static final DeferredHolder<AbilityAction, MimicActiveMiraculousAbilityAction> MIMIC_ACTIVE_MIRACULOUS = ACTIONS.register("mimic_active_miraculous", MimicActiveMiraculousAbilityAction::new);
+    public static final DeferredHolder<AbilityAction, MimicPassiveMiraculousAbilityAction> MIMIC_PASSIVE_MIRACULOUS = ACTIONS.register("mimic_passive_miraculous", MimicPassiveMiraculousAbilityAction::new);
+    public static final DeferredHolder<AbilityAction, MimicVisualMiraculousAbilityAction> MIMIC_VISUAL_MIRACULOUS = ACTIONS.register("mimic_visual_miraculous", MimicVisualMiraculousAbilityAction::new);
 
     public static void init() {}
 }

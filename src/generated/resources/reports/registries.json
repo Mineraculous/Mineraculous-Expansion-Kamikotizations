@@ -31,19 +31,20 @@
     "mineraculouskamikotizations:yellow_parasol"
   ],
   "mineraculous:ability": [
-    "mineraculouskamikotizations:mimic_miraculous_active",
-    "mineraculouskamikotizations:mimic_miraculous_passives",
-    "mineraculouskamikotizations:mimic_miraculous_visuals"
+    "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_passive_miraculous",
+    "mineraculouskamikotizations:mimic_visual_miraculous"
   ],
   "mineraculous:ability_action": [
-    "mineraculouskamikotizations:mimic_miraculous_active",
-    "mineraculouskamikotizations:mimic_miraculous_passives",
-    "mineraculouskamikotizations:mimic_miraculous_visuals"
+    "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_passive_miraculous",
+    "mineraculouskamikotizations:mimic_visual_miraculous"
   ],
   "mineraculous:ability_state": [
-    "mineraculouskamikotizations:active_miraculous_mimic",
-    "mineraculouskamikotizations:passive_miraculous_mimic",
-    "mineraculouskamikotizations:visual_miraculous_mimic"
+    "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_miraculous_name_color",
+    "mineraculouskamikotizations:mimic_passive_miraculous",
+    "mineraculouskamikotizations:mimic_visual_miraculous"
   ],
   "mineraculous:customization_setting_type": [
     "mineraculouskamikotizations:boolean",

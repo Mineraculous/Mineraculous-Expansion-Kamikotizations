@@ -2,6 +2,7 @@ package dev.thomasglasser.mineraculouskamikotizations.world.ability.action;
 
 import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
+import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.ability.AbilitySource;
 import dev.thomasglasser.mineraculous.api.world.ability.action.AbilityAction;
@@ -17,14 +18,16 @@ import net.minecraft.core.Holder;
 
 public abstract class AbstractMimicMiraculousAbilityAction implements AbilityAction {
     public static final CustomizationSettingAbilityProperty<Holder<Miraculous>> MIRACULOUS = MineraculousKamikotizationsAbilityProperties.MIRACULOUS;
-    public static final CustomizationSettingAbilityProperty<TransformationHistoryData.TransformationEntry> TARGET = MineraculousKamikotizationsAbilityProperties.TARGET;
+    public static final CustomizationSettingAbilityProperty<TransformationHistoryData.TransformationEntry> TRANSFORMATION_ENTRY = MineraculousKamikotizationsAbilityProperties.TARGET;
     private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(MIRACULOUS);
-    private static final ImmutableSet<AbilityProperty<?>> OPTIONAL_PROPERTIES = ImmutableSet.of(TARGET);
+    private static final ImmutableSet<AbilityProperty<?>> OPTIONAL_PROPERTIES = ImmutableSet.of(TRANSFORMATION_ENTRY);
 
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().get(instance.getOptionalCustomizationSetting(TARGET));
-        PerformerAbilityData.add(context.performer(), createState(entry != null ? entry.customizationData().orElse(CustomizationData.EMPTY) : CustomizationData.EMPTY));
+        AbilitySource source = context.source();
+        CustomizationSettings customizationSettings = source.customizationSettings();
+        TransformationHistoryData.TransformationEntry transformationEntry = customizationSettings.get(instance.getOptionalCustomizationSetting(TRANSFORMATION_ENTRY));
+        PerformerAbilityData.add(context.performer(), createState(transformationEntry != null ? transformationEntry.customizationData().orElse(CustomizationData.EMPTY) : CustomizationData.EMPTY));
     }
 
     @Override

@@ -14,6 +14,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKa
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.model.HumanoidModel;
@@ -38,14 +39,13 @@ import org.jetbrains.annotations.Nullable;
 public class MineraculousKamikotizationsClientEvents {
     // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
         event.enqueueWork(() -> {
+            // TODO: Tommy explain why it wont save (the video i sent) and how to solve
+            MineraculousKamikotizationsItemProperties.init();
             CustomizationSettingWidgetRegistry.register(
                     MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY.get(),
                     (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
-                        button.active = false;
-                        button.setMessage(transformationEntry != null ? transformationEntry.getName() : MineraculousClientUtils.GUI_CHOOSE);
-                        screen.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry, button));
+                        Minecraft.getInstance().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry, button));
                         TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
                     }).size(width, height).build());
 

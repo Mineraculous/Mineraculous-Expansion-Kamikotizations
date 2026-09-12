@@ -69,10 +69,8 @@ public class TransformationHistoryData extends SavedData {
                 CustomizationData.CODEC.optionalFieldOf("customization_data").forGetter(TransformationEntry::customizationData)).apply(instance, TransformationEntry::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, TransformationEntry> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.holderRegistry(MineraculousRegistries.MIRACULOUS),
-                TransformationEntry::miraculous,
-                ByteBufCodecs.optional(CustomizationData.STREAM_CODEC),
-                TransformationEntry::customizationData,
+                ByteBufCodecs.holderRegistry(MineraculousRegistries.MIRACULOUS), TransformationEntry::miraculous,
+                ByteBufCodecs.optional(CustomizationData.STREAM_CODEC), TransformationEntry::customizationData,
                 TransformationEntry::new);
 
         public Component getName() {

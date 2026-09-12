@@ -1,12 +1,12 @@
 package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
-import net.minecraft.Util;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class LoadingScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        long currentTimeMs = Util.getMillis();
+        long currentTimeMs = LevelLoadingScreen.NARRATION_DELAY_MS;
         if (currentTimeMs - this.lastNarration > 2000L) {
             this.lastNarration = currentTimeMs;
             this.triggerImmediateNarration(true);
@@ -39,11 +39,7 @@ public class LoadingScreen extends Screen {
 
     @Override
     protected void updateNarratedWidget(NarrationElementOutput narrationElementOutput) {
-        if (this.done) {
-            narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("narrator.loading.done"));
-        } else {
-            narrationElementOutput.add(NarratedElementType.TITLE, MineraculousKamikotizationsClientUtils.GUI_LOADING);
-        }
+        narrationElementOutput.add(NarratedElementType.TITLE, this.done ? Component.translatable("narrator.loading.done") : MineraculousKamikotizationsClientUtils.GUI_LOADING);
     }
 
     @Override

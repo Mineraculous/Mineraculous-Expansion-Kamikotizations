@@ -33,9 +33,9 @@ public class MineraculousKamikotizationsKamikotizations {
         context.register(MIRACULOUS_MIMICRY, new Kamikotization(
                 ImmutableList.of(),
                 CustomizationSettings.EMPTY,
-                Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_ACTIVE))),
-                ImmutableList.of(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_PASSIVES)),
-                        AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_MIRACULOUS_VISUALS)))));
+                Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS))),
+                ImmutableList.of(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS)),
+                        AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS)))));
     }
 
     private static ResourceKey<Kamikotization> create(String name) {

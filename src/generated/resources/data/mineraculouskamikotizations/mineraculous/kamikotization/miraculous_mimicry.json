@@ -1,7 +1,7 @@
 {
   "passive_abilities": [
-    "mineraculouskamikotizations:mimic_miraculous_passives",
-    "mineraculouskamikotizations:mimic_miraculous_visuals"
+    "mineraculouskamikotizations:mimic_passive_miraculous",
+    "mineraculouskamikotizations:mimic_visual_miraculous"
   ],
-  "power_source": "mineraculouskamikotizations:mimic_miraculous_active"
+  "power_source": "mineraculouskamikotizations:mimic_active_miraculous"
 }

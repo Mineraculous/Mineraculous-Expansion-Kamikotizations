@@ -15,7 +15,7 @@ public class MineraculousKamikotizationsPayloads {
             new PayloadInfo<>(ServerboundRequestTransformationHistoryPayload.TYPE, ExtendedPacketPayload.Direction.CLIENT_TO_SERVER, ServerboundRequestTransformationHistoryPayload.CODEC),
 
             // Clientbound
-            new PayloadInfo<>(ClientboundOpenTransformationHistoryScreenPayload.TYPE, ExtendedPacketPayload.Direction.SERVER_TO_CLIENT, ClientboundOpenTransformationHistoryScreenPayload.CODEC)
+            new PayloadInfo<>(ClientboundTransformationEntriesSyncPayload.TYPE, ExtendedPacketPayload.Direction.SERVER_TO_CLIENT, ClientboundTransformationEntriesSyncPayload.CODEC)
 
     );
 

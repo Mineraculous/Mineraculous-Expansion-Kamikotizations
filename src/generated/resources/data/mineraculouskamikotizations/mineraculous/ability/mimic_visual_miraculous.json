@@ -3,20 +3,24 @@
     {
       "actions": [
         {
-          "type": "mineraculouskamikotizations:mimic_miraculous_visuals",
-          "miraculous": "miraculous_visuals",
-          "timer": "looks"
+          "type": "mineraculouskamikotizations:mimic_visual_miraculous",
+          "copy_looks": "looks",
+          "copy_name_color": "copy_name_color"
         }
       ]
     }
   ],
   "customization_settings": {
+    "copy_name_color": {
+      "type": "mineraculouskamikotizations:boolean",
+      "default_value": true
+    },
     "looks": {
       "type": "mineraculouskamikotizations:boolean",
       "default_value": true,
       "optional": true
     },
-    "miraculous_visuals": {
+    "miraculous": {
       "type": "mineraculouskamikotizations:miraculous"
     },
     "target": {

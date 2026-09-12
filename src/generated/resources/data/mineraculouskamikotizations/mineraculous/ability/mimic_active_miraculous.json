@@ -3,16 +3,16 @@
     {
       "actions": [
         {
-          "type": "mineraculouskamikotizations:mimic_miraculous_active",
-          "miraculous": "miraculous_active",
-          "target": "target",
-          "timer": "timer"
+          "type": "mineraculouskamikotizations:mimic_active_miraculous",
+          "enable_timer": "timer",
+          "miraculous": "miraculous",
+          "target": "target"
         }
       ]
     }
   ],
   "customization_settings": {
-    "miraculous_active": {
+    "miraculous": {
       "type": "mineraculouskamikotizations:miraculous"
     },
     "target": {

@@ -3,15 +3,15 @@
     {
       "actions": [
         {
-          "type": "mineraculouskamikotizations:mimic_miraculous_passives",
-          "miraculous": "miraculous_passives",
+          "type": "mineraculouskamikotizations:mimic_passive_miraculous",
+          "miraculous": "miraculous",
           "target": "target"
         }
       ]
     }
   ],
   "customization_settings": {
-    "miraculous_passives": {
+    "miraculous": {
       "type": "mineraculouskamikotizations:miraculous"
     },
     "target": {

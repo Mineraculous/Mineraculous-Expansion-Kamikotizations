@@ -14,10 +14,12 @@ public class ServerboundRequestTransformationHistoryPayload implements ExtendedP
     public static final Type<ServerboundRequestTransformationHistoryPayload> TYPE = new Type<>(MineraculousKamikotizations.modLoc("serverbound_request_transformation_history"));
     public static final StreamCodec<ByteBuf, ServerboundRequestTransformationHistoryPayload> CODEC = StreamCodec.unit(INSTANCE);
 
+    private ServerboundRequestTransformationHistoryPayload() {}
+
     @Override
     public void handle(Player player) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
-        TommyLibServices.NETWORK.sendToClient(new ClientboundOpenTransformationHistoryScreenPayload(TransformationHistoryData.get(serverPlayer.serverLevel()).getAllEntries()), serverPlayer);
+        TommyLibServices.NETWORK.sendToClient(new ClientboundTransformationEntriesSyncPayload(TransformationHistoryData.get(serverPlayer.serverLevel()).getAllEntries()), serverPlayer);
     }
 
     @Override
