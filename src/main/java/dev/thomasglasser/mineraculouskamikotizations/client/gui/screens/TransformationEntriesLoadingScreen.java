@@ -51,7 +51,7 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
                     } else {
                         resetButton();
                     }
-                    getMinecraft().setScreen(parent);
+                    minecraft.setScreen(parent);
                 }));
     }
 

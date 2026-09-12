@@ -44,7 +44,7 @@ public class MineraculousKamikotizationsClientEvents {
             MineraculousKamikotizationsItemProperties.init();
             CustomizationSettingWidgetRegistry.register(
                     MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY.get(),
-                    (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(MineraculousClientUtils.GUI_CHOOSE, button -> {
+                    (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(transformationEntry != null ? transformationEntry.getName() : MineraculousClientUtils.GUI_CHOOSE, button -> {
                         Minecraft.getInstance().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry, button));
                         TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
                     }).size(width, height).build());

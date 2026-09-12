@@ -5,7 +5,7 @@ import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.state.AbilityState;
 
 public record MimicPassiveMiraculousAbilityState(CustomizationData customizationData) implements AbilityState {
-    private static final MapCodec<MimicPassiveMiraculousAbilityState> CODEC = CustomizationData.CODEC.fieldOf("customizationData").xmap(MimicPassiveMiraculousAbilityState::new, MimicPassiveMiraculousAbilityState::customizationData);
+    private static final MapCodec<MimicPassiveMiraculousAbilityState> CODEC = CustomizationData.CODEC.fieldOf("customization_data").xmap(MimicPassiveMiraculousAbilityState::new, MimicPassiveMiraculousAbilityState::customizationData);
     public static final Type<MimicPassiveMiraculousAbilityState> TYPE = Type.persistent(CODEC);
 
     @Override

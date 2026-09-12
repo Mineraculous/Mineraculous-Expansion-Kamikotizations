@@ -20,8 +20,8 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability
 public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousAbilityAction {
     public static final CustomizationSettingAbilityProperty<Boolean> LOOKS = MineraculousKamikotizationsAbilityProperties.COPY_LOOKS;
     public static final CustomizationSettingAbilityProperty<Boolean> COPY_NAME_COLOR = MineraculousKamikotizationsAbilityProperties.COPY_NAME_COLOR;
-    private static final ImmutableSet<AbilityProperty<?>> OPTIONAL_PROPERTIES = ImmutableSet.of(LOOKS);
-    private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(COPY_NAME_COLOR);
+    private static final ImmutableSet<AbilityProperty<?>> OPTIONAL_PROPERTIES = ImmutableSet.of(TRANSFORMATION_ENTRY, LOOKS);
+    private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(MIRACULOUS, COPY_NAME_COLOR);
 
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
@@ -34,8 +34,9 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
         AbilitySource source = context.source();
         CustomizationSettings customizationSettings = source.customizationSettings();
         TransformationHistoryData.TransformationEntry transformationEntry = customizationSettings.get(instance.getOptionalCustomizationSetting(TRANSFORMATION_ENTRY));
-        if (customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)) && transformationEntry != null)
-            PerformerAbilityData.add(context.performer(), new MimicMiraculousNameColorAbilityState(transformationEntry.miraculous().value().color().getValue()));
+        if (customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR))) {
+            PerformerAbilityData.add(context.performer(), new MimicMiraculousNameColorAbilityState(transformationEntry != null ? transformationEntry.miraculous().value().color().getValue() : customizationSettings.get(instance.getRequiredCustomizationSetting(MIRACULOUS)).value().color().getValue()));
+        }
         // TODO: Looks logic
     }
 

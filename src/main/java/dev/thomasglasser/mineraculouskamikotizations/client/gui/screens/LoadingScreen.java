@@ -25,16 +25,17 @@ public class LoadingScreen extends Screen {
     @Override
     public void removed() {
         this.done = true;
-        this.triggerImmediateNarration(true);
+        triggerImmediateNarration(true);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         long currentTimeMs = Util.getMillis();
         if (currentTimeMs - lastNarration > LevelLoadingScreen.NARRATION_DELAY_MS) {
             this.lastNarration = currentTimeMs;
-            this.triggerImmediateNarration(true);
+            triggerImmediateNarration(true);
         }
     }
 
@@ -51,7 +52,6 @@ public class LoadingScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> onClose()).bounds(this.width / 2 - 100, this.height - 40, 200, 20).build());
+        addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> onClose()).bounds(this.width / 2 - 100, this.height - 40, 200, 20).build());
     }
 }

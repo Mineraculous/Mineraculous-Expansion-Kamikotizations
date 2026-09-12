@@ -36,7 +36,7 @@ public class MineraculousKamikotizations {
         MineraculousKamikotizationsCreativeModeTabs.init();
         MineraculousKamikotizationsDataComponents.init();
 
-        modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPackets);
+        modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPayloadHandlers);
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onPlayerNameFormat);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsMiraculousEvents::onFinishMiraculousTransform);
