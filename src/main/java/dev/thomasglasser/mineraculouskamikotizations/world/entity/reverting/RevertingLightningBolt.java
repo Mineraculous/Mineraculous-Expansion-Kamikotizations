@@ -38,7 +38,7 @@ public class RevertingLightningBolt extends LightningBolt {
                 List<Entity> hit = level
                         .getEntities(
                                 this,
-                                new AABB(this.getX() - 3.0, this.getY() - 3.0, this.getZ() - 3.0, this.getX() + 3.0, this.getY() + 6.0 + 3.0, this.getZ() + 3.0),
+                                new AABB(getX() - 3.0, getY() - 3.0, getZ() - 3.0, getX() + 3.0, getY() + 6.0 + 3.0, getZ() + 3.0),
                                 Entity::isAlive);
                 for (Entity entity : hit) {
                     entityReversionData.putRevertible(causeId, entity);
@@ -51,27 +51,27 @@ public class RevertingLightningBolt extends LightningBolt {
     @Override
     protected void spawnFire(int extraIgnitions) {
         ServerPlayer cause = getCause();
-        if (!this.visualOnly && level() instanceof ServerLevel level && cause != null && level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+        if (!visualOnly && level() instanceof ServerLevel level && cause != null && level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             BlockReversionData blockReversionData = BlockReversionData.get(level);
             UUID causeId = cause.getUUID();
             ResourceKey<Level> dimension = level.dimension();
-            BlockPos pos = this.blockPosition();
+            BlockPos pos = blockPosition();
             BlockState oldState = level.getBlockState(pos);
             BlockState newState = BaseFireBlock.getState(level, pos);
             if (oldState.isAir() && newState.canSurvive(level, pos)) {
                 level.setBlockAndUpdate(pos, newState);
-                this.blocksSetOnFire++;
+                blocksSetOnFire++;
                 blockReversionData.putRevertible(causeId, dimension, pos, oldState);
             }
 
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             for (int i = 0; i < extraIgnitions; i++) {
-                mutable.setWithOffset(pos, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1);
+                mutable.setWithOffset(pos, random.nextInt(3) - 1, random.nextInt(3) - 1, random.nextInt(3) - 1);
                 oldState = level.getBlockState(mutable);
                 newState = BaseFireBlock.getState(level, mutable);
                 if (oldState.isAir() && newState.canSurvive(level, mutable)) {
                     level.setBlockAndUpdate(mutable, newState);
-                    this.blocksSetOnFire++;
+                    blocksSetOnFire++;
                     blockReversionData.putRevertible(causeId, dimension, mutable, oldState);
                 }
             }
