@@ -12,6 +12,7 @@ import dev.thomasglasser.mineraculous.api.world.ability.property.CustomizationSe
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.PerformerAbilityData;
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.state.AbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.property.MineraculousKamikotizationsAbilityProperties;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicActiveMiraculousAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class MimicActiveMiraculousAbilityAction extends AbstractMimicMiraculousA
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         CustomizationSettings customizationSettings = context.source().customizationSettings();
         MimicActiveMiraculousAbilityState mimicMiraculousActiveAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_ACTIVE_MIRACULOUS);
+        TransformationHistoryData.TransformationEntry transformationEntry = customizationSettings.get(instance.getOptionalCustomizationSetting(TRANSFORMATION_ENTRY));
         if (mimicMiraculousActiveAbilityState != null) {
             if (customizationSettings.get(instance.getRequiredCustomizationSetting(ENABLE_TIMER))) {
                 // TODO: make timer logic and stuff

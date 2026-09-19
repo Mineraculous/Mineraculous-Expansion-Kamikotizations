@@ -5,7 +5,9 @@
         {
           "type": "mineraculouskamikotizations:mimic_visual_miraculous",
           "copy_looks": "looks",
-          "copy_name_color": "copy_name_color"
+          "copy_name_color": "copy_name_color",
+          "miraculous": "miraculous",
+          "target": "target"
         }
       ]
     }
