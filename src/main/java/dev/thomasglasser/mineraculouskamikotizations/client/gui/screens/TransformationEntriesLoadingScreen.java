@@ -56,7 +56,7 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
     }
 
     private void resetButton() {
-        entryButton.setMessage(MineraculousClientUtils.GUI_CHOOSE);
+        entryButton.setMessage(current != null ? current.getName() : MineraculousClientUtils.GUI_CHOOSE);
         entryButton.active = true;
     }
 }
