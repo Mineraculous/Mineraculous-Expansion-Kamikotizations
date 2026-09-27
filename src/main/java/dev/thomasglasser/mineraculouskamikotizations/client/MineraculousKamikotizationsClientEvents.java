@@ -36,7 +36,6 @@ public class MineraculousKamikotizationsClientEvents {
     // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            // TODO: Tommy explain why it wont save (the video i sent) and how to solve
             MineraculousKamikotizationsItemProperties.init();
             CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> VisualTargetSelectionButton.builder(screen, onChanged)
                     .allowNone(property.optional())

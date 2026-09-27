@@ -8,8 +8,6 @@ import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,10 +41,10 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
         if (canceled || minecraft == null || minecraft.player == null)
             return;
 
-        List<TransformationHistoryData.TransformationEntry> filteredEntries = new ObjectArrayList<>();
+        ImmutableList.Builder<TransformationHistoryData.TransformationEntry> builder = ImmutableList.builderWithExpectedSize(transformationEntries.size());
         for (TransformationHistoryData.TransformationEntry entry : transformationEntries) {
-            if (miraculous != null && miraculous.equals(entry.miraculous())) {
-                filteredEntries.add(entry);
+            if (miraculous == null || miraculous.equals(entry.miraculous())) {
+                builder.add(entry);
             }
         }
 
@@ -55,7 +53,7 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
                 parent,
                 false,
                 current,
-                ImmutableList.copyOf(filteredEntries),
+                builder.build(),
                 TransformationHistoryData.TransformationEntry::getName,
                 IconRenderers.MIRACULOUS.map(TransformationHistoryData.TransformationEntry::miraculous),
                 selectedEntry -> {
