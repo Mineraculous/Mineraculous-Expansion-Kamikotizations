@@ -25,18 +25,15 @@ public class PlayerSelectionScreen extends SelectionScreen<UUID> {
             return ImmutableList.of();
         }
         Collection<PlayerInfo> onlinePlayers = minecraft.getConnection().getOnlinePlayers();
-        return ImmutableList.copyOf(onlinePlayers.stream().map(info -> info.getProfile().getId()).toList());
+        ImmutableList.Builder<UUID> builder = ImmutableList.builderWithExpectedSize(onlinePlayers.size());
+        for (PlayerInfo info : onlinePlayers) {
+            builder.add(info.getProfile().getId());
+        }
+        return builder.build();
     }
 
     private static Component getPlayerName(UUID uuid) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.getConnection() != null) {
-            PlayerInfo info = minecraft.getConnection().getPlayerInfo(uuid);
-            if (info != null && info.getProfile().getName() != null) {
-                return Component.literal(info.getProfile().getName());
-            }
-        }
-        return Component.literal(uuid.toString());
+        return Component.literal(getGameProfile(uuid).getName());
     }
 
     private static GameProfile getGameProfile(UUID uuid) {

@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Pair;
 import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
 import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
-import dev.thomasglasser.mineraculous.api.world.ability.AbilitySource;
 import dev.thomasglasser.mineraculous.api.world.ability.action.AbilityAction;
 import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityProperty;
 import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityPropertyInstance;
@@ -19,7 +18,6 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.Transfo
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousNameAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousNameColorAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
-import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -42,22 +40,19 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         super.transform(instance, context);
-        AbilitySource source = context.source();
         LivingEntity performer = context.performer();
-        CustomizationSettings customizationSettings = source.customizationSettings();
-        Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getOptionalCustomizationSetting(VISUAL_TARGET));
-        if (either != null) {
-            Optional<TransformationHistoryData.TransformationEntry> transformationEntry = either.right();
-            Optional<Pair<Holder<Miraculous>, UUID>> miraculousHolderUUIDPair = either.left();
-            if (transformationEntry != null && transformationEntry.isPresent()) {
+        CustomizationSettings customizationSettings = context.source().customizationSettings();
+        Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getRequiredCustomizationSetting(VISUAL_TARGET));
+        if (either != null && either.right().isPresent() || either.left().isPresent()) {
+            either.ifRight(entry -> {
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
-                    PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(transformationEntry.get().miraculous().value().color().getValue()));
+                    PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(entry.miraculous().value().color().getValue()));
                 }
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME)))) {
-                    PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(transformationEntry.get().getName()));
+                    PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(entry.getName()));
                 }
-            } else if (miraculousHolderUUIDPair.isPresent()) {
-                Pair<Holder<Miraculous>, UUID> pair = miraculousHolderUUIDPair.get();
+            });
+            either.ifLeft(pair -> {
                 LivingEntity entity = context.level().getPlayerByUUID(pair.getSecond());
                 Holder<Miraculous> miraculous = pair.getFirst();
                 if (entity != null) {
@@ -70,7 +65,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                         PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(Component.literal(name)));
                     }
                 }
-            }
+            });
             if (performer instanceof Player player) {
                 player.refreshDisplayName();
             }
