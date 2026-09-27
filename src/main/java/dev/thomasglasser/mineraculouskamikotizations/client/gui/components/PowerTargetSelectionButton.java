@@ -49,7 +49,6 @@ public class PowerTargetSelectionButton extends Button {
 
     @Override
     public void onPress() {
-        // Opens the Identity Type Selection screen (Player vs Transformation entry)
         Minecraft.getInstance().setScreen(new HolderSelectionScreen<>(
                 parentScreen,
                 allowNone,
@@ -75,15 +74,6 @@ public class PowerTargetSelectionButton extends Button {
                         TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
                     }
                 }));
-    }
-
-    public @Nullable TransformationHistoryData.TransformationEntry getInitialValue() {
-        return initialValue;
-    }
-
-    public void setInitialValue(@Nullable TransformationHistoryData.TransformationEntry initialValue) {
-        this.initialValue = initialValue;
-        setMessage(getDisplayLabel(initialValue));
     }
 
     public static Component getDisplayLabel(@Nullable TransformationHistoryData.TransformationEntry transformationEntry) {
@@ -122,12 +112,6 @@ public class PowerTargetSelectionButton extends Button {
 
         public Builder initialValue(@Nullable TransformationHistoryData.TransformationEntry initialValue) {
             this.initialValue = initialValue;
-            return this;
-        }
-
-        public Builder pos(int x, int y) {
-            this.x = x;
-            this.y = y;
             return this;
         }
 

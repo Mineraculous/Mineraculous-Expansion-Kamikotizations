@@ -43,7 +43,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
         LivingEntity performer = context.performer();
         CustomizationSettings customizationSettings = context.source().customizationSettings();
         Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getRequiredCustomizationSetting(VISUAL_TARGET));
-        if (either != null && either.right().isPresent() || either.left().isPresent()) {
+        if (either != null) {
             either.ifRight(entry -> {
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
                     PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(entry.miraculous().value().color().getValue()));
