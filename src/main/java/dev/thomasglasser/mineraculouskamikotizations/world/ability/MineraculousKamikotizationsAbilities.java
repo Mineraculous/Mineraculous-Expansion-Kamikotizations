@@ -27,34 +27,28 @@ public class MineraculousKamikotizationsAbilities {
         context.register(MIMIC_ACTIVE_MIRACULOUS, Ability.builder()
                 .branch(AbilityBranch.builder()
                         .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_ACTIVE_MIRACULOUS.getKey()), AbilityProperties.builder()
-                                .add(MimicActiveMiraculousAbilityAction.MIRACULOUS, "miraculous")
-                                .add(MimicActiveMiraculousAbilityAction.TRANSFORMATION_ENTRY, "target")
-                                .add(MimicActiveMiraculousAbilityAction.ENABLE_TIMER, "timer")))
-                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
-                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY, Optional.empty(), true)
-                .customizationSetting("timer", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(false), false)
+                                .add(MimicActiveMiraculousAbilityAction.POWER_TARGET, "power_target")))
+                .customizationSetting("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET, Optional.empty(), false)
                 .build());
 
         context.register(MIMIC_PASSIVE_MIRACULOUS, Ability.builder()
                 .branch(AbilityBranch.builder()
                         .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_PASSIVE_MIRACULOUS.getKey()), AbilityProperties.builder()
-                                .add(MimicPassiveMiraculousAbilityAction.MIRACULOUS, "miraculous")
-                                .add(MimicPassiveMiraculousAbilityAction.TRANSFORMATION_ENTRY, "target")))
-                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
-                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY, Optional.empty(), true)
+                                .add(MimicPassiveMiraculousAbilityAction.POWER_TARGET, "power_target")))
+                .customizationSetting("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET, Optional.empty(), false)
                 .build());
 
         context.register(MIMIC_VISUAL_MIRACULOUS, Ability.builder()
                 .branch(AbilityBranch.builder()
                         .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_VISUAL_MIRACULOUS.getKey()), AbilityProperties.builder()
-                                .add(MimicVisualMiraculousAbilityAction.MIRACULOUS, "miraculous")
-                                .add(MimicVisualMiraculousAbilityAction.TRANSFORMATION_ENTRY, "target")
+                                .add(MimicVisualMiraculousAbilityAction.VISUAL_TARGET, "visual_target")
                                 .add(MimicVisualMiraculousAbilityAction.LOOKS, "looks")
-                                .add(MimicVisualMiraculousAbilityAction.COPY_NAME_COLOR, "copy_name_color")))
-                .customizationSetting("miraculous", MineraculousKamikotizationsCustomizationSettingTypes.MIRACULOUS, Optional.empty(), false)
-                .customizationSetting("target", MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY, Optional.empty(), true)
+                                .add(MimicVisualMiraculousAbilityAction.COPY_NAME_COLOR, "copy_name_color")
+                                .add(MimicVisualMiraculousAbilityAction.COPY_NAME, "copy_name")))
+                .customizationSetting("visual_target", MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET, Optional.empty(), false)
                 .customizationSetting("looks", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), true)
                 .customizationSetting("copy_name_color", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), false)
+                .customizationSetting("copy_name", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), false)
                 .build());
     }
 

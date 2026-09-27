@@ -60,9 +60,9 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     private void addCustomizationSettings() {
         // Abilities
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS, "miraculous", "target", "timer");
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS, "miraculous", "target");
-        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS, "miraculous", "target", "looks", "copy_name_color");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS, "power_target", "timer");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS, "power_target");
+        addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS, "visual_target", "looks", "copy_name_color", "copy_name");
     }
 
     private void addAbilities() {
@@ -72,8 +72,18 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
     }
 
     private void addGuis() {
+        // Loading Screen
         add(MineraculousKamikotizationsClientUtils.GUI_LOADING, "Loading...");
 
+        // Identity Type Selection Screen
+        add(MineraculousKamikotizationsClientUtils.IDENTITY_TYPE_SELECTION_SCREEN_TITLE, "Select Identity Type");
+        add(MineraculousKamikotizationsClientUtils.IDENTITY_TYPE_SELECTION_SCREEN_PLAYER, "Player");
+        add(MineraculousKamikotizationsClientUtils.IDENTITY_TYPE_SELECTION_SCREEN_TRANSFORMATION_ENTRY, "Transformation Entry");
+
+        // Transformation Entries Screen
         add(MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE, "Transformation Entry Selection");
+
+        // Player Selection Screen
+        add(MineraculousKamikotizationsClientUtils.PLAYER_SELECTION_SCREEN_TITLE, "Select Player");
     }
 }

@@ -4,18 +4,14 @@ import dev.thomasglasser.mineraculous.api.client.gui.components.CustomizationSet
 import dev.thomasglasser.mineraculous.api.client.look.util.KamikotizationToolClientExtensions;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToolLookGeoItemRenderer;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
-import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
-import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.TransformationEntriesLoadingScreen;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.components.PowerTargetSelectionButton;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.components.VisualTargetSelectionButton;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
-import dev.thomasglasser.mineraculouskamikotizations.network.ServerboundRequestTransformationHistoryPayload;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
-import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
@@ -39,15 +35,20 @@ import org.jetbrains.annotations.Nullable;
 public class MineraculousKamikotizationsClientEvents {
     // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork( () -> {
+        event.enqueueWork(() -> {
             // TODO: Tommy explain why it wont save (the video i sent) and how to solve
             MineraculousKamikotizationsItemProperties.init();
-            CustomizationSettingWidgetRegistry.register(
-                    MineraculousKamikotizationsCustomizationSettingTypes.TRANSFORMATION_ENTRY.get(),
-                    (setting, screen, font, width, height, transformationEntry, transformationEntryConsumer) -> Button.builder(transformationEntry != null ? transformationEntry.getName() : MineraculousClientUtils.GUI_CHOOSE, button -> {
-                        Minecraft.getInstance().setScreen(new TransformationEntriesLoadingScreen(screen, transformationEntryConsumer, transformationEntry, button));
-                        TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
-                    }).size(width, height).build());
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> VisualTargetSelectionButton.builder(screen, onChanged)
+                    .allowNone(property.optional())
+                    .initialValue(currentValue)
+                    .size(width, height)
+                    .build());
+
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> PowerTargetSelectionButton.builder(screen, onChanged)
+                    .allowNone(property.optional())
+                    .initialValue(currentValue)
+                    .size(width, height)
+                    .build());
 
             CustomizationSettingWidgetRegistry.register(
                     MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(),

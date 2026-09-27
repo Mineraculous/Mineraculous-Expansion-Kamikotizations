@@ -1,12 +1,11 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.ability.action;
 
-import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.ability.AbilityUtils;
 import dev.thomasglasser.mineraculous.api.world.ability.action.AbilityAction;
 import dev.thomasglasser.mineraculous.api.world.ability.property.AbilityPropertyInstance;
 import dev.thomasglasser.mineraculous.api.world.level.storage.ability.PerformerAbilityData;
-import dev.thomasglasser.mineraculous.api.world.level.storage.ability.state.AbilityState;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicPassiveMiraculousAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 
@@ -14,8 +13,10 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         MimicPassiveMiraculousAbilityState passiveMiraculousMimicAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_PASSIVE_MIRACULOUS);
-        if (passiveMiraculousMimicAbilityState != null)
-            return AbilityUtils.performPassiveAbilities(context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(MIRACULOUS)).value().passiveAbilities(), createProxyContext(passiveMiraculousMimicAbilityState.customizationData(), context));
+        TransformationHistoryData.TransformationEntry transformationEntry = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET));
+        if (passiveMiraculousMimicAbilityState != null && transformationEntry != null) {
+            return AbilityUtils.performPassiveAbilities(transformationEntry.miraculous().value().passiveAbilities(), createProxyContext(passiveMiraculousMimicAbilityState.customizationData(), context));
+        }
         return Ability.Result.fail();
     }
 
@@ -26,7 +27,7 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
     }
 
     @Override
-    protected AbilityState createState(CustomizationData customizationData) {
-        return new MimicPassiveMiraculousAbilityState(customizationData);
+    public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
+        PerformerAbilityData.add(context.performer(), new MimicPassiveMiraculousAbilityState(context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET)).customizationData().get()));
     }
 }

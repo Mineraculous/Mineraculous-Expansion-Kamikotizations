@@ -4,19 +4,14 @@
       "actions": [
         {
           "type": "mineraculouskamikotizations:mimic_passive_miraculous",
-          "miraculous": "miraculous",
-          "target": "target"
+          "power_target": "power_target"
         }
       ]
     }
   ],
   "customization_settings": {
-    "miraculous": {
-      "type": "mineraculouskamikotizations:miraculous"
-    },
-    "target": {
-      "type": "mineraculouskamikotizations:transformation_entry",
-      "optional": true
+    "power_target": {
+      "type": "mineraculouskamikotizations:power_target"
     }
   }
 }

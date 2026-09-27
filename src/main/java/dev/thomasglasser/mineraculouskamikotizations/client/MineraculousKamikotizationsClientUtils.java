@@ -10,6 +10,10 @@ import net.minecraft.network.chat.Component;
 public class MineraculousKamikotizationsClientUtils {
     public static final Component GUI_LOADING = Component.translatable("gui.loading");
     public static final Component TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE = MineraculousClientUtils.translatableGui("transformation_entry_selection", "title");
+    public static final Component IDENTITY_TYPE_SELECTION_SCREEN_TITLE = MineraculousClientUtils.translatableGui("identity_type_selection", "title");
+    public static final Component IDENTITY_TYPE_SELECTION_SCREEN_PLAYER = MineraculousClientUtils.translatableGui("identity_type_selection", "player");
+    public static final Component IDENTITY_TYPE_SELECTION_SCREEN_TRANSFORMATION_ENTRY = MineraculousClientUtils.translatableGui("identity_type_selection", "transformation_entry");
+    public static final Component PLAYER_SELECTION_SCREEN_TITLE = MineraculousClientUtils.translatableGui("player_selection", "title");
 
     public static void triggerTransformationEntriesSyncListener(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
         if (Minecraft.getInstance().screen instanceof TransformationEntriesSyncListener tracker)

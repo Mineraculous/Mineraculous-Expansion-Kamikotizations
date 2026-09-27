@@ -4,6 +4,7 @@
   "package": "dev.thomasglasser.mineraculouskamikotizations.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "mineraculous.api.world.entity.MineraculousEntityUtilsMixin"
   ],
   "client": [
   ],

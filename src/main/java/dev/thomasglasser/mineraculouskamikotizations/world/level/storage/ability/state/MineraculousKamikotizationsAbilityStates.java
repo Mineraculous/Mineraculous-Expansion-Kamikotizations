@@ -17,5 +17,7 @@ public class MineraculousKamikotizationsAbilityStates {
 
     public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicMiraculousNameColorAbilityState>> MIMIC_MIRACULOUS_NAME_COLOR = ABILITY_STATES.register("mimic_miraculous_name_color", () -> MimicMiraculousNameColorAbilityState.TYPE);
 
+    public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicMiraculousNameAbilityState>> MIMIC_MIRACULOUS_NAME = ABILITY_STATES.register("mimic_miraculous_name", () -> MimicMiraculousNameAbilityState.TYPE);
+
     public static void init() {}
 }

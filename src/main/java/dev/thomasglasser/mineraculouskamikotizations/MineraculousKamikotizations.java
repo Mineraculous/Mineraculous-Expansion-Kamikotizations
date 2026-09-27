@@ -6,7 +6,6 @@ import dev.thomasglasser.mineraculouskamikotizations.data.MineraculousKamikotiza
 import dev.thomasglasser.mineraculouskamikotizations.event.MineraculousKamikotizationsMiraculousEvents;
 import dev.thomasglasser.mineraculouskamikotizations.network.MineraculousKamikotizationsPayloads;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.action.MineraculousKamikotizationsAbilityActions;
-import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityEvents;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
@@ -38,7 +37,6 @@ public class MineraculousKamikotizations {
 
         modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPayloadHandlers);
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
-        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onPlayerNameFormat);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsMiraculousEvents::onFinishMiraculousTransform);
     }
 

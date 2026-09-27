@@ -4,23 +4,30 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
+import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
+import org.jetbrains.annotations.Nullable;
 
 public class TransformationEntriesLoadingScreen extends LoadingScreen implements TransformationEntriesSyncListener {
     protected final Consumer<TransformationHistoryData.TransformationEntry> onSelected;
     protected final TransformationHistoryData.TransformationEntry current;
+    protected final @Nullable Holder<Miraculous> miraculous;
     protected final Button entryButton;
     private boolean canceled;
 
-    public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry, Button widgetButton) {
+    public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry, @Nullable Holder<Miraculous> miraculous, Button widgetButton) {
         super(parent);
         this.onSelected = transformationHistoryDataConsumer;
         this.current = transformationEntry;
+        this.miraculous = miraculous;
         this.entryButton = widgetButton;
     }
 
@@ -35,12 +42,20 @@ public class TransformationEntriesLoadingScreen extends LoadingScreen implements
     public void onTransformationEntriesSync(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
         if (canceled || minecraft == null || minecraft.player == null)
             return;
+
+        List<TransformationHistoryData.TransformationEntry> filteredEntries = new ObjectArrayList<>();
+        for (TransformationHistoryData.TransformationEntry entry : transformationEntries) {
+            if (miraculous != null && miraculous.equals(entry.miraculous())) {
+                filteredEntries.add(entry);
+            }
+        }
+
         minecraft.setScreen(new SelectionScreen<>(
                 MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE,
                 parent,
                 false,
                 current,
-                ImmutableList.copyOf(transformationEntries),
+                ImmutableList.copyOf(filteredEntries),
                 TransformationHistoryData.TransformationEntry::getName,
                 IconRenderers.MIRACULOUS.map(TransformationHistoryData.TransformationEntry::miraculous),
                 selectedEntry -> {

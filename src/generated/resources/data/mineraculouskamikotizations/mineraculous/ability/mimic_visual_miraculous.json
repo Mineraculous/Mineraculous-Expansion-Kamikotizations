@@ -5,14 +5,18 @@
         {
           "type": "mineraculouskamikotizations:mimic_visual_miraculous",
           "copy_looks": "looks",
+          "copy_name": "copy_name",
           "copy_name_color": "copy_name_color",
-          "miraculous": "miraculous",
-          "target": "target"
+          "visual_target": "visual_target"
         }
       ]
     }
   ],
   "customization_settings": {
+    "copy_name": {
+      "type": "mineraculouskamikotizations:boolean",
+      "default_value": true
+    },
     "copy_name_color": {
       "type": "mineraculouskamikotizations:boolean",
       "default_value": true
@@ -22,12 +26,8 @@
       "default_value": true,
       "optional": true
     },
-    "miraculous": {
-      "type": "mineraculouskamikotizations:miraculous"
-    },
-    "target": {
-      "type": "mineraculouskamikotizations:transformation_entry",
-      "optional": true
+    "visual_target": {
+      "type": "mineraculouskamikotizations:visual_target"
     }
   }
 }
