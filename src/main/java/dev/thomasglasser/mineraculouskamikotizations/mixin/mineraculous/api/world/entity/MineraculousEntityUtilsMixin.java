@@ -33,6 +33,6 @@ public class MineraculousEntityUtilsMixin {
         if (name == null || name.isEmpty()) {
             name = original.getString();
         }
-        cir.setReturnValue(Entity.removeAction((nameAbilityState != null ? nameAbilityState.name() : Component.literal(name)).copy().setStyle(Style.EMPTY.withColor(nameColorAbilityState != null ? nameColorAbilityState.nameColor() : data.nameColor()))));
+        cir.setReturnValue(Entity.removeAction((nameAbilityState != null ? nameAbilityState.name() : Component.literal(name)).copy().setStyle((nameAbilityState != null ? nameAbilityState.name().getStyle() : Style.EMPTY).withColor(nameColorAbilityState != null ? nameColorAbilityState.nameColor() : data.nameColor()))));
     }
 }
