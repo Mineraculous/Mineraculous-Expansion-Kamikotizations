@@ -15,7 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-/// A button that displays the selected {@link UUID} or {@link TransformationHistoryData.TransformationEntry} and opens the identity type selection flow when clicked.
+/** A button that displays the selected {@link UUID} or {@link TransformationHistoryData.TransformationEntry} and opens the identity type selection flow when clicked. */
 public class VisualTargetSelectionButton extends Button {
     private final Screen parentScreen;
     private final boolean allowNone;

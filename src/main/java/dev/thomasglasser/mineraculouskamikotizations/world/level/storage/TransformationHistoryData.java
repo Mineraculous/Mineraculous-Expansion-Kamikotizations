@@ -34,7 +34,7 @@ public class TransformationHistoryData extends SavedData {
         return level.getServer().overworld().getDataStorage().computeIfAbsent(new Factory<>(TransformationHistoryData::new, TransformationHistoryData::load, DataFixTypes.LEVEL), FILE_ID);
     }
 
-    /// Records a transformation event if an identical one doesn't already exist.
+    /** Records a transformation event if an identical one doesn't already exist. */
     public void recordTransformation(Holder<Miraculous> miraculous, @Nullable CustomizationData customizationData) {
         if (entries.add(new TransformationEntry(miraculous, Optional.ofNullable(customizationData))))
             setDirty();

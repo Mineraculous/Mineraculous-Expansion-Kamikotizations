@@ -20,6 +20,6 @@ public class MineraculousKamikotizationsPayloads {
 
     public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MineraculousKamikotizations.MOD_ID);
-        PAYLOADS.forEach((info) -> NeoForgeNetworkUtils.register(registrar, info));
+        PAYLOADS.forEach(info -> NeoForgeNetworkUtils.register(registrar, info));
     }
 }

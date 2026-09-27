@@ -1,5 +1,6 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.ability.action;
 
+import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.ability.AbilityUtils;
 import dev.thomasglasser.mineraculous.api.world.ability.action.AbilityAction;
@@ -28,6 +29,10 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
 
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        PerformerAbilityData.add(context.performer(), new MimicPassiveMiraculousAbilityState(context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET)).customizationData().get()));
+        super.transform(instance, context);
+        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET));
+        if (entry != null) {
+            PerformerAbilityData.add(context.performer(), new MimicPassiveMiraculousAbilityState(entry.customizationData().orElse(CustomizationData.EMPTY)));
+        }
     }
 }
