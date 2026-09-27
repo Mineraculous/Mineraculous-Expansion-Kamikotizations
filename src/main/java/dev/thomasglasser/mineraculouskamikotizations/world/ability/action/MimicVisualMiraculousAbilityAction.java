@@ -53,10 +53,11 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                 }
             });
             either.ifLeft(pair -> {
-                LivingEntity entity = context.level().getPlayerByUUID(pair.getSecond());
+                UUID uuid = pair.getSecond();
+                Player player = context.level().getServer().getPlayerList().getPlayer(uuid);
                 Holder<Miraculous> miraculous = pair.getFirst();
-                if (entity != null) {
-                    CustomizationData customizationData = entity.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculous).customizationData();
+                if (player != null) {
+                    CustomizationData customizationData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculous).customizationData();
                     String name = customizationData.nameSetting().map(customizationData.settings()::get).orElse(null);
                     if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
                         PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(miraculous.value().color().getValue()));
