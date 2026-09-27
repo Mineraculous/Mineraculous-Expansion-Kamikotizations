@@ -9,7 +9,6 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.Transfo
 import java.util.UUID;
 import net.minecraft.core.Holder;
 
-// TODO: move to main mod
 public class MineraculousKamikotizationsAbilityProperties {
     public static final CustomizationSettingAbilityProperty<Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry>> VISUAL_TARGET = new CustomizationSettingAbilityProperty<>("visual_target", MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET);
     public static final CustomizationSettingAbilityProperty<TransformationHistoryData.TransformationEntry> POWER_TARGET = new CustomizationSettingAbilityProperty<>("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET);
