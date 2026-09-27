@@ -58,20 +58,20 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
         add(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, "Miraculous Mimicry");
     }
 
-    private void addCustomizationSettings() {
+    protected void addCustomizationSettings() {
         // Abilities
         addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS, "power_target", "timer");
         addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS, "power_target");
         addCapitalizedCustomizationSettings(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS, "visual_target", "looks", "copy_name_color", "copy_name");
     }
 
-    private void addAbilities() {
+    protected void addAbilities() {
         add(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS, "Mimic Miraculous Active");
         add(MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS, "Mimic Miraculous Passives");
         add(MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS, "Mimic Miraculous Visuals");
     }
 
-    private void addGuis() {
+    protected void addGuis() {
         // Loading Screen
         add(MineraculousKamikotizationsClientUtils.GUI_LOADING, "Loading...");
 

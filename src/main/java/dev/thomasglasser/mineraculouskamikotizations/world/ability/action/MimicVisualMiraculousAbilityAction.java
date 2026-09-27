@@ -48,6 +48,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
         Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getOptionalCustomizationSetting(VISUAL_TARGET));
         if (either != null) {
             Optional<TransformationHistoryData.TransformationEntry> transformationEntry = either.right();
+            Optional<Pair<Holder<Miraculous>, UUID>> miraculousHolderUUIDPair = either.left();
             if (transformationEntry != null && transformationEntry.isPresent()) {
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
                     PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(transformationEntry.get().miraculous().value().color().getValue()));
@@ -55,8 +56,8 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME)))) {
                     PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(transformationEntry.get().getName()));
                 }
-            } else if (either.left().isPresent()) {
-                Pair<Holder<Miraculous>, UUID> pair = either.left().get();
+            } else if (miraculousHolderUUIDPair.isPresent()) {
+                Pair<Holder<Miraculous>, UUID> pair = miraculousHolderUUIDPair.get();
                 LivingEntity entity = context.level().getPlayerByUUID(pair.getSecond());
                 Holder<Miraculous> miraculous = pair.getFirst();
                 if (entity != null) {
