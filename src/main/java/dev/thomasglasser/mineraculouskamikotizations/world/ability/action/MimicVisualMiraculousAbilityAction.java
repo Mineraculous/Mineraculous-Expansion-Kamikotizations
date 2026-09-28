@@ -2,7 +2,6 @@ package dev.thomasglasser.mineraculouskamikotizations.world.ability.action;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
 import dev.thomasglasser.mineraculous.api.core.customization.CustomizationData;
 import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
@@ -18,6 +17,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.Transfo
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousNameAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousNameColorAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
+import dev.thomasglasser.mineraculouskamikotizations.world.targetvisual.VisualTarget;
 import java.util.UUID;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
     public static final CustomizationSettingAbilityProperty<Boolean> LOOKS = MineraculousKamikotizationsAbilityProperties.COPY_LOOKS;
     public static final CustomizationSettingAbilityProperty<Boolean> COPY_NAME_COLOR = MineraculousKamikotizationsAbilityProperties.COPY_NAME_COLOR;
     public static final CustomizationSettingAbilityProperty<Boolean> COPY_NAME = MineraculousKamikotizationsAbilityProperties.COPY_NAME;
-    public static final CustomizationSettingAbilityProperty<Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry>> VISUAL_TARGET = MineraculousKamikotizationsAbilityProperties.VISUAL_TARGET;
+    public static final CustomizationSettingAbilityProperty<Either<VisualTarget, TransformationHistoryData.TransformationEntry>> VISUAL_TARGET = MineraculousKamikotizationsAbilityProperties.VISUAL_TARGET;
     private static final ImmutableSet<AbilityProperty<?>> OPTIONAL_PROPERTIES = ImmutableSet.of(LOOKS);
     private static final ImmutableSet<AbilityProperty<?>> REQUIRED_PROPERTIES = ImmutableSet.of(VISUAL_TARGET, COPY_NAME_COLOR, COPY_NAME);
 
@@ -42,7 +42,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
         super.transform(instance, context);
         LivingEntity performer = context.performer();
         CustomizationSettings customizationSettings = context.source().customizationSettings();
-        Either<Pair<Holder<Miraculous>, UUID>, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getRequiredCustomizationSetting(VISUAL_TARGET));
+        Either<VisualTarget, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getRequiredCustomizationSetting(VISUAL_TARGET));
         if (either != null) {
             either.ifRight(entry -> {
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
@@ -52,10 +52,10 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                     PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(entry.getName()));
                 }
             });
-            either.ifLeft(pair -> {
-                UUID uuid = pair.getSecond();
+            either.ifLeft(target -> {
+                UUID uuid = target.uuid();
                 Player player = context.level().getServer().getPlayerList().getPlayer(uuid);
-                Holder<Miraculous> miraculous = pair.getFirst();
+                Holder<Miraculous> miraculous = target.miraculous();
                 if (player != null) {
                     CustomizationData customizationData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculous).customizationData();
                     String name = customizationData.nameSetting().map(customizationData.settings()::get).orElse(null);

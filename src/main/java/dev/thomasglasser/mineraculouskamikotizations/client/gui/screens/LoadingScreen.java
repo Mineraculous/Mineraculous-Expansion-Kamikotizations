@@ -1,6 +1,5 @@
 package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
-import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import net.minecraft.Util;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,6 +12,8 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 public class LoadingScreen extends Screen {
+    public static final Component NARRATOR_LOADING_DONE = Component.translatable("narrator.loading.done");
+    public static final Component GUI_LOADING = Component.translatable("gui.loading");
     protected final Screen parent;
     private long lastNarration = -1L;
     private boolean done;
@@ -41,7 +42,7 @@ public class LoadingScreen extends Screen {
 
     @Override
     protected void updateNarratedWidget(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE, this.done ? Component.translatable("narrator.loading.done") : MineraculousKamikotizationsClientUtils.GUI_LOADING);
+        narrationElementOutput.add(NarratedElementType.TITLE, done ? NARRATOR_LOADING_DONE : GUI_LOADING);
     }
 
     @Override

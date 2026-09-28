@@ -9,7 +9,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class MineraculousKamikotizationsPayloads {
-    public static final ImmutableList<PayloadInfo<?>> PAYLOADS = ImmutableList.of(
+    private static final ImmutableList<PayloadInfo<?>> PAYLOADS = ImmutableList.of(
             // Serverbound
             new PayloadInfo<>(ServerboundRequestTransformationHistoryPayload.TYPE, ExtendedPacketPayload.Direction.CLIENT_TO_SERVER, ServerboundRequestTransformationHistoryPayload.CODEC),
 

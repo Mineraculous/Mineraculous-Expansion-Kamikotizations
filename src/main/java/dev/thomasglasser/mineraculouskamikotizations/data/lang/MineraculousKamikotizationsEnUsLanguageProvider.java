@@ -4,6 +4,9 @@ import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCon
 import dev.thomasglasser.mineraculous.impl.data.lang.MineraculousEnUsLanguageProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.IdentityTypeSelectionScreen;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.LoadingScreen;
+import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.TransformationEntriesLoadingScreen;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
@@ -73,15 +76,16 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     protected void addGuis() {
         // Loading Screen
-        add(MineraculousKamikotizationsClientUtils.GUI_LOADING, "Loading...");
+        add(LoadingScreen.GUI_LOADING, "Loading...");
+        add(LoadingScreen.NARRATOR_LOADING_DONE, "Done!");
 
         // Identity Type Selection Screen
-        add(MineraculousKamikotizationsClientUtils.IDENTITY_TYPE_SELECTION_SCREEN_TITLE, "Select Identity Type");
-        add(MineraculousKamikotizationsClientUtils.IDENTITY_TYPE_SELECTION_SCREEN_PLAYER, "Player");
-        add(MineraculousKamikotizationsClientUtils.IDENTITY_TYPE_SELECTION_SCREEN_TRANSFORMATION_ENTRY, "Transformation Entry");
+        add(IdentityTypeSelectionScreen.IDENTITY_TYPE_SELECTION_SCREEN_TITLE, "Select Identity Type");
+        add(IdentityTypeSelectionScreen.IDENTITY_TYPE_SELECTION_SCREEN_PLAYER, "Player");
+        add(IdentityTypeSelectionScreen.IDENTITY_TYPE_SELECTION_SCREEN_TRANSFORMATION_ENTRY, "Transformation Entry");
 
         // Transformation Entries Screen
-        add(MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE, "Transformation Entry Selection");
+        add(TransformationEntriesLoadingScreen.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE, "Transformation Entry Selection");
 
         // Player Selection Screen
         add(MineraculousKamikotizationsClientUtils.PLAYER_SELECTION_SCREEN_TITLE, "Select Player");

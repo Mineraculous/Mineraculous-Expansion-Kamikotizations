@@ -16,6 +16,7 @@ public class ServerboundRequestTransformationHistoryPayload implements ExtendedP
 
     private ServerboundRequestTransformationHistoryPayload() {}
 
+    // ON SERVER
     @Override
     public void handle(Player player) {
         ServerPlayer serverPlayer = (ServerPlayer) player;

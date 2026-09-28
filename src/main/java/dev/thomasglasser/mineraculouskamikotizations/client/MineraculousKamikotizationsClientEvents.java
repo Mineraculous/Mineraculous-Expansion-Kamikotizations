@@ -1,29 +1,16 @@
 package dev.thomasglasser.mineraculouskamikotizations.client;
 
-import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.components.CustomizationSettingWidgetRegistry;
-import dev.thomasglasser.mineraculous.api.client.gui.screens.HolderSelectionScreen;
 import dev.thomasglasser.mineraculous.api.client.look.util.KamikotizationToolClientExtensions;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToolLookGeoItemRenderer;
-import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
-import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
-import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
-import dev.thomasglasser.mineraculouskamikotizations.client.gui.components.VisualTargetSelectionButton;
-import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.TransformationEntriesLoadingScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
 import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
-import dev.thomasglasser.mineraculouskamikotizations.network.ServerboundRequestTransformationHistoryPayload;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
-import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -43,58 +30,19 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-
 public class MineraculousKamikotizationsClientEvents {
     // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MineraculousKamikotizationsItemProperties.init();
-            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> VisualTargetSelectionButton.builder(screen, onChanged)
-                    .allowNone(property.optional())
-                    .initialValue(currentValue)
-                    .size(width, height)
-                    .build());
 
-            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) ->
-                    createPowerTargetButton(screen, false, currentValue, 150, 40, onChanged));
+            // Customization Setting Widgets
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createVisualTargetButton(screen, property.optional(), null, currentValue, width, height, onChanged));
 
-            CustomizationSettingWidgetRegistry.register(
-                    MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(),
-                    (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null ? currentValue : false)
-                            .displayOnlyValue()
-                            .create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createPowerTargetButton(screen, false, currentValue, 150, 40, onChanged));
+
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(), (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null && currentValue).displayOnlyValue().create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
         });
-    }
-
-    public static Button createPowerTargetButton(Screen parent, boolean allowNone, @Nullable TransformationHistoryData.TransformationEntry currentValue, int width, int height, Consumer<? super TransformationHistoryData.@Nullable TransformationEntry> onChanged) {
-        return Button.builder(currentValue != null ? currentValue.getName() : MineraculousClientUtils.GUI_CHOOSE, button -> parent.getMinecraft().setScreen(new HolderSelectionScreen<>(
-                parent,
-                allowNone,
-                currentValue != null ? currentValue.miraculous() : null,
-                MineraculousRegistries.MIRACULOUS,
-                null, // Uses default registry component rendering
-                IconRenderers.MIRACULOUS,
-                selectedMiraculous -> {
-                    if (selectedMiraculous == null) {
-                        if (allowNone) {
-                            onChanged.accept(null);
-                        }
-                        parent.getMinecraft().setScreen(parent);
-                    } else {
-                        parent.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(
-                                parent,
-                                entry -> {
-                                    onChanged.accept(entry);
-                                    parent.getMinecraft().setScreen(parent);
-                                },
-                                currentValue,
-                                selectedMiraculous,
-                                button));
-                        TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
-                    }
-                }
-        ))).bounds(0, 0, width, height).build();
     }
 
     // Items

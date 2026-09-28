@@ -6,70 +6,62 @@ import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
-import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class TransformationEntriesLoadingScreen extends LoadingScreen implements TransformationEntriesSyncListener {
+    public static final Component TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE = MineraculousClientUtils.translatableGui("transformation_entry_selection", "title");
     protected final Consumer<TransformationHistoryData.TransformationEntry> onSelected;
-    protected final TransformationHistoryData.TransformationEntry current;
+    protected final @Nullable TransformationHistoryData.TransformationEntry initialEntry;
     protected final @Nullable Holder<Miraculous> miraculous;
     protected final Button entryButton;
     private boolean canceled;
 
-    public TransformationEntriesLoadingScreen(Screen parent, Consumer<TransformationHistoryData.TransformationEntry> transformationHistoryDataConsumer, TransformationHistoryData.TransformationEntry transformationEntry, @Nullable Holder<Miraculous> miraculous, Button widgetButton) {
-        super(parent);
-        this.onSelected = transformationHistoryDataConsumer;
-        this.current = transformationEntry;
+    public TransformationEntriesLoadingScreen(Screen parentScreen, Consumer<TransformationHistoryData.TransformationEntry> onSelected, @Nullable TransformationHistoryData.TransformationEntry initialEntry, @Nullable Holder<Miraculous> miraculous, Button entryButton) {
+        super(parentScreen);
+        this.onSelected = onSelected;
+        this.initialEntry = initialEntry;
         this.miraculous = miraculous;
-        this.entryButton = widgetButton;
+        this.entryButton = entryButton;
     }
 
     @Override
     public void onClose() {
         this.canceled = true;
-        resetButton();
+        this.resetButton();
         super.onClose();
     }
 
     @Override
-    public void onTransformationEntriesSync(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
-        if (canceled || minecraft == null || minecraft.player == null)
+    public void onTransformationEntriesSynced(ImmutableSet<TransformationHistoryData.TransformationEntry> transformationEntries) {
+        if (this.canceled || this.minecraft == null || this.minecraft.player == null)
             return;
 
         ImmutableList.Builder<TransformationHistoryData.TransformationEntry> builder = ImmutableList.builderWithExpectedSize(transformationEntries.size());
-        for (TransformationHistoryData.TransformationEntry entry : transformationEntries) {
-            if (miraculous == null || miraculous.equals(entry.miraculous())) {
+        for (TransformationHistoryData.TransformationEntry entry : transformationEntries)
+            if (this.miraculous == null || this.miraculous.equals(entry.miraculous()))
                 builder.add(entry);
+        this.minecraft.setScreen(new SelectionScreen<>(TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE, this.parent, false, this.initialEntry, builder.build(), TransformationHistoryData.TransformationEntry::getName, IconRenderers.MIRACULOUS.map(TransformationHistoryData.TransformationEntry::miraculous), selectedEntry -> {
+            this.onSelected.accept(selectedEntry);
+            if (selectedEntry != null) {
+                this.entryButton.setMessage(selectedEntry.getName());
+                this.entryButton.active = true;
+            } else {
+                this.resetButton();
             }
-        }
-
-        minecraft.setScreen(new SelectionScreen<>(
-                MineraculousKamikotizationsClientUtils.TRANSFORMATION_ENTRY_SELECTION_SCREEN_TITLE,
-                parent,
-                false,
-                current,
-                builder.build(),
-                TransformationHistoryData.TransformationEntry::getName,
-                IconRenderers.MIRACULOUS.map(TransformationHistoryData.TransformationEntry::miraculous),
-                selectedEntry -> {
-                    onSelected.accept(selectedEntry);
-                    if (selectedEntry != null) {
-                        entryButton.setMessage(selectedEntry.getName());
-                        entryButton.active = true;
-                    } else {
-                        resetButton();
-                    }
-                    minecraft.setScreen(parent);
-                }));
+            if (this.minecraft != null) {
+                this.minecraft.setScreen(this.parent);
+            }
+        }));
     }
 
     private void resetButton() {
-        entryButton.setMessage(current != null ? current.getName() : MineraculousClientUtils.GUI_CHOOSE);
-        entryButton.active = true;
+        this.entryButton.setMessage(this.initialEntry != null ? this.initialEntry.getName() : MineraculousClientUtils.GUI_CHOOSE);
+        this.entryButton.active = true;
     }
 }
