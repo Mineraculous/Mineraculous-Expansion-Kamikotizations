@@ -13,6 +13,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKami
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
 import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -39,7 +40,7 @@ public class MineraculousKamikotizations {
         modBus.addListener(MineraculousKamikotizationsPayloads::onRegisterPayloadHandlers);
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
         NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsMiraculousEvents::onFinishMiraculousTransform);
-        NeoForge.EVENT_BUS.addListener(MineraculousKamikotizationsEntityEvents::onPlayerNameFormat);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, MineraculousKamikotizationsEntityEvents::onPlayerNameFormat);
     }
 
     public static ResourceLocation modLoc(String path) {

@@ -21,6 +21,7 @@ import dev.thomasglasser.mineraculouskamikotizations.world.targetvisual.VisualTa
 import java.util.UUID;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
@@ -67,7 +68,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                     }
                 }
             });
-            if (performer instanceof Player player) {
+            if (performer instanceof ServerPlayer player) {
                 player.refreshDisplayName();
             }
         }

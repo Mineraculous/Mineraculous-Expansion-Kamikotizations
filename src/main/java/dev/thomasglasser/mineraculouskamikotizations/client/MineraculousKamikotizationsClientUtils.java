@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -44,22 +43,7 @@ public class MineraculousKamikotizationsClientUtils {
                     onChanged.accept(selected);
                 })))
                 .bounds(0, 0, width, height)
-                .build(builder -> new Button(builder) {
-                    @Override
-                    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-                        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-                        if (currentValue != null) {
-                            currentValue.map(
-                                    target -> {
-                                        GameProfile profile = getGameProfile(target.uuid());
-                                        int iconX = this.getX() + 4;
-                                        int iconY = this.getY() + (this.height - 16) / 2;
-                                        return IconRenderers.PLAYER_FACE.render(guiGraphics, profile, iconX, iconY);
-                                    },
-                                    entry -> false);
-                        }
-                    }
-                });
+                .build();
     }
 
     public static Component getVisualTargetLabel(@Nullable Either<VisualTarget, TransformationHistoryData.TransformationEntry> value) {
@@ -86,32 +70,25 @@ public class MineraculousKamikotizationsClientUtils {
     }
 
     public static Button createPowerTargetButton(Screen parent, boolean allowNone, @Nullable TransformationHistoryData.TransformationEntry currentValue, int width, int height, Consumer<? super TransformationHistoryData.@Nullable TransformationEntry> onChanged) {
-        return Button.builder(currentValue != null ? currentValue.getName() : MineraculousClientUtils.GUI_CHOOSE, button -> parent.getMinecraft().setScreen(new HolderSelectionScreen<>(
-                parent,
-                allowNone,
-                currentValue != null ? currentValue.miraculous() : null,
-                MineraculousRegistries.MIRACULOUS,
-                null,
-                IconRenderers.MIRACULOUS,
-                selectedMiraculous -> {
-                    if (selectedMiraculous == null) {
-                        if (allowNone) {
-                            onChanged.accept(null);
-                        }
-                        parent.getMinecraft().setScreen(parent);
-                    } else {
-                        parent.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(
-                                parent,
-                                entry -> {
-                                    onChanged.accept(entry);
-                                    parent.getMinecraft().setScreen(parent);
-                                },
-                                currentValue,
-                                selectedMiraculous,
-                                button));
-                        TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
-                    }
-                }))).bounds(0, 0, width, height).build();
+        return Button.builder(currentValue != null ? currentValue.getName() : MineraculousClientUtils.GUI_CHOOSE, button -> parent.getMinecraft().setScreen(new HolderSelectionScreen<>(parent, allowNone, currentValue != null ? currentValue.miraculous() : null, MineraculousRegistries.MIRACULOUS, null, IconRenderers.MIRACULOUS, selectedMiraculous -> {
+            if (selectedMiraculous == null) {
+                if (allowNone) {
+                    onChanged.accept(null);
+                }
+                parent.getMinecraft().setScreen(parent);
+            } else {
+                parent.getMinecraft().setScreen(new TransformationEntriesLoadingScreen(
+                        parent,
+                        entry -> {
+                            onChanged.accept(entry);
+                            parent.getMinecraft().setScreen(parent);
+                        },
+                        currentValue,
+                        selectedMiraculous,
+                        button));
+                TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
+            }
+        }))).bounds(0, 0, width, height).build();
     }
 
     public static void openMiraculousSelection(Screen parentScreen, boolean allowNone, @Nullable Holder<Miraculous> miraculous, Consumer<@Nullable Either<VisualTarget, TransformationHistoryData.TransformationEntry>> consumer, Consumer<Holder<Miraculous>> onMiraculousSelected) {

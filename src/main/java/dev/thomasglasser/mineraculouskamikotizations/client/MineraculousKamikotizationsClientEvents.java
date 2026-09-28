@@ -39,7 +39,7 @@ public class MineraculousKamikotizationsClientEvents {
             // Customization Setting Widgets
             CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createVisualTargetButton(screen, property.optional(), null, currentValue, width, height, onChanged));
 
-            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createPowerTargetButton(screen, false, currentValue, 150, 40, onChanged));
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createPowerTargetButton(screen, false, currentValue, width, height, onChanged));
 
             CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(), (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null && currentValue).displayOnlyValue().create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
         });
