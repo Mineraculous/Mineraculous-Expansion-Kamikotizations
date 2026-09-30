@@ -42,10 +42,10 @@
   ],
   "mineraculous:ability_state": [
     "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_miraculous_looks",
     "mineraculouskamikotizations:mimic_miraculous_name",
     "mineraculouskamikotizations:mimic_miraculous_name_color",
-    "mineraculouskamikotizations:mimic_passive_miraculous",
-    "mineraculouskamikotizations:mimic_visual_miraculous"
+    "mineraculouskamikotizations:mimic_passive_miraculous"
   ],
   "mineraculous:customization_setting_type": [
     "mineraculouskamikotizations:boolean",
