@@ -5,7 +5,6 @@ import dev.thomasglasser.mineraculouskamikotizations.data.MineraculousKamikotiza
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -19,8 +18,6 @@ public class MineraculousKamikotizations {
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
     public MineraculousKamikotizations(IEventBus modBus) {
-        LOGGER.info("Initializing {} for {} in a {} environment...", MOD_NAME, TommyLibServices.PLATFORM.getPlatformName(), TommyLibServices.PLATFORM.getEnvironmentName());
-
         MineraculousKamikotizationsEntityTypes.init();
         MineraculousKamikotizationsItems.init();
         MineraculousKamikotizationsCreativeModeTabs.init();

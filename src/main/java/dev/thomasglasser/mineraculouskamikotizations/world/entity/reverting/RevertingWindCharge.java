@@ -1,10 +1,14 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting;
 
-import dev.thomasglasser.mineraculous.api.world.level.storage.EntityReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.ReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.CleanseEntityReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.DiscardEntityReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.ReviveEntityReversionEntry;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.WindCharge;
 import net.minecraft.world.level.Level;
@@ -22,7 +26,7 @@ public class RevertingWindCharge extends WindCharge {
         setOwner(owner);
         moveTo(x, y, z, getYRot(), getXRot());
         if (level instanceof ServerLevel serverLevel && owner != null)
-            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
+            ReversionData.get(serverLevel).putEntry(DiscardEntityReversionEntry.of(owner.getUUID(), this));
     }
 
     public RevertingWindCharge(Level level, double x, double y, double z, Vec3 movement) {
@@ -38,7 +42,11 @@ public class RevertingWindCharge extends WindCharge {
     protected void onHitEntity(EntityHitResult result) {
         Entity owner = getOwner();
         if (level() instanceof ServerLevel level && owner != null) {
-            EntityReversionData.get(level).putRevertible(owner.getUUID(), result.getEntity());
+            Entity entity = result.getEntity();
+            if (entity instanceof LivingEntity livingEntity)
+                ReversionData.get(level).putEntry(CleanseEntityReversionEntry.of(owner.getUUID(), livingEntity, true));
+            else
+                ReversionData.get(level).putEntry(ReviveEntityReversionEntry.of(owner.getUUID(), entity));
         }
         super.onHitEntity(result);
     }

@@ -1,9 +1,9 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.models;
 
 import dev.thomasglasser.mineraculous.api.client.renderer.item.MineraculousItemProperties;
+import dev.thomasglasser.mineraculous.api.data.models.MineraculousItemModelProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import dev.thomasglasser.tommylib.api.data.models.ExtendedItemModelProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemModelProvider {
+public class MineraculousKamikotizationsItemModelProvider extends MineraculousItemModelProvider {
     public MineraculousKamikotizationsItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MineraculousKamikotizations.MOD_ID, existingFileHelper);
     }
@@ -26,7 +26,7 @@ public class MineraculousKamikotizationsItemModelProvider extends ExtendedItemMo
         withEntityModel(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL);
 
         for (DyeColor color : DyeColor.values()) {
-            ResourceLocation parasolLoc = MineraculousKamikotizationsItems.PARASOLS.get(color).getId();
+            ResourceLocation parasolLoc = MineraculousKamikotizationsItems.PARASOLS.get(color).id();
             ResourceLocation openLoc = parasolLoc.withSuffix("_open");
             parasol(parasolLoc, modLoc("item/parasol_closed"), modItemLoc(parasolLoc.getPath() + "_in_hand"))
                     .override()

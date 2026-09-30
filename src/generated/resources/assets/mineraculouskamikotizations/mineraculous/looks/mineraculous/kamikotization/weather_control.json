@@ -46,6 +46,9 @@
     }
   },
   "metadata": {
+    "mineraculous:name": {
+      "translate": "look.mineraculous.default"
+    },
     "mineraculous:valid_kamikotizations": [
       "mineraculouskamikotizations:weather_control"
     ]

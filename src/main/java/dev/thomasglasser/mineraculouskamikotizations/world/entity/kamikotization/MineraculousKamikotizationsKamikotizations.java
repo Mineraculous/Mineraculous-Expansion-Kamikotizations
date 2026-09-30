@@ -1,8 +1,5 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Either;
-import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
@@ -21,11 +18,8 @@ public class MineraculousKamikotizationsKamikotizations {
     }
 
     public static void bootstrap(BootstrapContext<Kamikotization> context) {
-        context.register(WEATHER_CONTROL, new Kamikotization(
-                ImmutableList.of(
-                        new ItemCondition(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
-                CustomizationSettings.EMPTY,
-                Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
-                ImmutableList.of()));
+        context.register(WEATHER_CONTROL, Kamikotization.builder(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack())
+                .condition(new ItemCondition(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1))))
+                .build());
     }
 }

@@ -1,7 +1,10 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting;
 
-import dev.thomasglasser.mineraculous.api.world.level.storage.BlockReversionData;
-import dev.thomasglasser.mineraculous.api.world.level.storage.EntityReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.ReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.CleanseEntityReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.DiscardEntityReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.RestoreBlockReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.ReviveEntityReversionEntry;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
@@ -11,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -28,11 +32,11 @@ public class RevertingLightningBolt extends LightningBolt {
     public void tick() {
         ServerPlayer cause = getCause();
         if (level() instanceof ServerLevel level && cause != null) {
-            EntityReversionData entityReversionData = EntityReversionData.get(level);
+            ReversionData reversionData = ReversionData.get(level);
             UUID causeId = cause.getUUID();
             if (!markedRemovable) {
                 markedRemovable = true;
-                entityReversionData.putRemovable(causeId, this);
+                reversionData.putEntry(DiscardEntityReversionEntry.of(causeId, this));
             }
             if (!visualOnly) {
                 List<Entity> hit = level
@@ -41,7 +45,10 @@ public class RevertingLightningBolt extends LightningBolt {
                                 new AABB(getX() - 3.0, getY() - 3.0, getZ() - 3.0, getX() + 3.0, getY() + 6.0 + 3.0, getZ() + 3.0),
                                 Entity::isAlive);
                 for (Entity entity : hit) {
-                    entityReversionData.putRevertible(causeId, entity);
+                    if (entity instanceof LivingEntity livingEntity)
+                        reversionData.putEntry(CleanseEntityReversionEntry.of(causeId, livingEntity));
+                    else
+                        reversionData.putEntry(ReviveEntityReversionEntry.of(causeId, entity));
                 }
             }
         }
@@ -52,7 +59,7 @@ public class RevertingLightningBolt extends LightningBolt {
     protected void spawnFire(int extraIgnitions) {
         ServerPlayer cause = getCause();
         if (!visualOnly && level() instanceof ServerLevel level && cause != null && level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
-            BlockReversionData blockReversionData = BlockReversionData.get(level);
+            ReversionData reversionData = ReversionData.get(level);
             UUID causeId = cause.getUUID();
             ResourceKey<Level> dimension = level.dimension();
             BlockPos pos = blockPosition();
@@ -61,7 +68,7 @@ public class RevertingLightningBolt extends LightningBolt {
             if (oldState.isAir() && newState.canSurvive(level, pos)) {
                 level.setBlockAndUpdate(pos, newState);
                 blocksSetOnFire++;
-                blockReversionData.putRevertible(causeId, dimension, pos, oldState);
+                reversionData.putEntry(RestoreBlockReversionEntry.of(causeId, dimension, pos, oldState));
             }
 
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
@@ -72,7 +79,7 @@ public class RevertingLightningBolt extends LightningBolt {
                 if (oldState.isAir() && newState.canSurvive(level, mutable)) {
                     level.setBlockAndUpdate(mutable, newState);
                     blocksSetOnFire++;
-                    blockReversionData.putRevertible(causeId, dimension, mutable, oldState);
+                    reversionData.putEntry(RestoreBlockReversionEntry.of(causeId, dimension, mutable, oldState));
                 }
             }
         }

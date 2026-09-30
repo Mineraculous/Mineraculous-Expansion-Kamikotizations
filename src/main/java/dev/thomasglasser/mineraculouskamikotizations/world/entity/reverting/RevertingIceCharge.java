@@ -1,7 +1,10 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting;
 
-import dev.thomasglasser.mineraculous.api.world.level.storage.BlockReversionData;
-import dev.thomasglasser.mineraculous.api.world.level.storage.EntityReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.ReversionData;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.CleanseEntityReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.DiscardEntityReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.RestoreBlockReversionEntry;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.entry.ReviveEntityReversionEntry;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.projectile.IceCharge;
 import java.util.Set;
@@ -12,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,13 +32,13 @@ public class RevertingIceCharge extends IceCharge {
     public RevertingIceCharge(EntityType<? extends IceCharge> entityType, @Nullable Entity owner, double x, double y, double z, Level level) {
         super(entityType, owner, x, y, z, level);
         if (level instanceof ServerLevel serverLevel && owner != null)
-            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
+            ReversionData.get(serverLevel).putEntry(DiscardEntityReversionEntry.of(owner.getUUID(), this));
     }
 
     public RevertingIceCharge(@Nullable Entity owner, double x, double y, double z, Level level) {
         super(MineraculousKamikotizationsEntityTypes.REVERTING_ICE_CHARGE.get(), owner, x, y, z, level);
         if (level instanceof ServerLevel serverLevel && owner != null)
-            EntityReversionData.get(serverLevel).putRemovable(owner.getUUID(), this);
+            ReversionData.get(serverLevel).putEntry(DiscardEntityReversionEntry.of(owner.getUUID(), this));
     }
 
     @Override
@@ -43,11 +47,14 @@ public class RevertingIceCharge extends IceCharge {
         if (level() instanceof ServerLevel level && owner != null) {
             UUID cause = owner.getUUID();
             Entity entity = result.getEntity();
-            EntityReversionData.get(level).putRevertible(cause, entity);
+            ReversionData reversionData = ReversionData.get(level);
+            if (entity instanceof LivingEntity livingEntity)
+                reversionData.putEntry(CleanseEntityReversionEntry.of(cause, livingEntity));
+            else
+                reversionData.putEntry(ReviveEntityReversionEntry.of(cause, entity));
             Set<BlockPos> inside = getInsidePos(entity);
             int blocksWide = Mth.ceil(entity.getBbWidth());
             int blocksHigh = Mth.ceil(entity.getBbHeight());
-            BlockReversionData blockReversionData = BlockReversionData.get(level);
             ResourceKey<Level> dimension = level.dimension();
             BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
             for (int i = -blocksWide; i <= blocksWide; i++) {
@@ -56,7 +63,7 @@ public class RevertingIceCharge extends IceCharge {
                         pos.setWithOffset(entity.blockPosition(), i, j, k);
                         BlockState state = level().getBlockState(pos);
                         if (!inside.contains(pos) && state.canBeReplaced()) {
-                            blockReversionData.putRevertible(cause, dimension, pos, state);
+                            reversionData.putEntry(RestoreBlockReversionEntry.of(cause, dimension, pos, state));
                         }
                     }
                 }
@@ -69,7 +76,7 @@ public class RevertingIceCharge extends IceCharge {
     protected void onHitBlock(BlockHitResult result) {
         Entity owner = getOwner();
         if (level() instanceof ServerLevel level && owner != null) {
-            BlockReversionData blockReversionData = BlockReversionData.get(level);
+            ReversionData reversionData = ReversionData.get(level);
             UUID cause = owner.getUUID();
             ResourceKey<Level> dimension = level().dimension();
             BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -80,7 +87,7 @@ public class RevertingIceCharge extends IceCharge {
                         pos.setY(level().getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()));
                     BlockState state = level().getBlockState(pos);
                     if (state.canBeReplaced() && !level().getBlockState(pos.below()).is(Blocks.ICE)) {
-                        blockReversionData.putRevertible(cause, dimension, pos, state);
+                        reversionData.putEntry(RestoreBlockReversionEntry.of(cause, dimension, pos, state));
                     }
                 }
             }
