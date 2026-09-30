@@ -27,18 +27,16 @@ public class MineraculousKamikotizationsKamikotizationEvents {
         LivingEntity livingEntity = event.getEntity();
         MimicMiraculousLooksAbilityState looksAbilityState = PerformerAbilityData.get(livingEntity, MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_LOOKS);
         if (looksAbilityState != null) {
-            CustomizationData customizationData = looksAbilityState.customizationData();
-            KamikotizationData kamikotizationData = updateKamikotizationLooks(livingEntity.getData(MineraculousAttachmentTypes.KAMIKOTIZATIONS), ImmutableMap.copyOf(new Object2ObjectOpenHashMap<>(customizationData.looks()))).get();
-            CustomizationData newCustomizationData = kamikotizationData.customizationData();
-            for (EquipmentSlot slot : new EquipmentSlot[] { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET }) {
-                ItemStack newStack = livingEntity.getItemBySlot(slot).copy();
-                newStack.set(MineraculousDataComponents.CUSTOMIZATION_DATA, newCustomizationData);
-                livingEntity.setItemSlot(slot, newStack);
-            }
+            KamikotizationData kamikotizationData = updateKamikotizationLooks(livingEntity.getData(MineraculousAttachmentTypes.KAMIKOTIZATIONS), ImmutableMap.copyOf(new Object2ObjectOpenHashMap<>(looksAbilityState.customizationData().looks()))).get();
             kamikotizationData.save(livingEntity);
             if (livingEntity instanceof ServerPlayer player) {
                 player.getData(MineraculousAttachmentTypes.KAMIKOTIZATIONS).getCurrent().ifPresent(data -> ServerLookManager.requestMissingLooks(data.customizationData(), player));
                 ServerLookManager.sendServerLooks(player);
+            }
+            for (EquipmentSlot slot : new EquipmentSlot[] { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET }) {
+                ItemStack newStack = livingEntity.getItemBySlot(slot).copy();
+                newStack.set(MineraculousDataComponents.CUSTOMIZATION_DATA, kamikotizationData.customizationData());
+                livingEntity.setItemSlot(slot, newStack);
             }
         }
     }
