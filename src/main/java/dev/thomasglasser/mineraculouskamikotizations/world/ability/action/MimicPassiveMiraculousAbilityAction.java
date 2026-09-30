@@ -18,7 +18,7 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
         if (passiveMiraculousMimicAbilityState != null && transformationEntry != null) {
             return AbilityUtils.performPassiveAbilities(transformationEntry.miraculous().value().passiveAbilities(), createProxyContext(passiveMiraculousMimicAbilityState.customizationData(), context));
         }
-        return Ability.Result.fail();
+        return Ability.Result.pass();
     }
 
     @Override

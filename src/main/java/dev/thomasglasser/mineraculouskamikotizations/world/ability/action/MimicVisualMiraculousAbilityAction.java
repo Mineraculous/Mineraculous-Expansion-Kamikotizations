@@ -14,6 +14,7 @@ import dev.thomasglasser.mineraculous.api.world.level.storage.ability.PerformerA
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.property.MineraculousKamikotizationsAbilityProperties;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousLooksAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousNameAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MimicMiraculousNameColorAbilityState;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.ability.state.MineraculousKamikotizationsAbilityStates;
@@ -35,7 +36,7 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
 
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        return Ability.Result.fail();
+        return Ability.Result.pass();
     }
 
     @Override
@@ -52,6 +53,9 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                 if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME)))) {
                     PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(entry.getName()));
                 }
+                if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(LOOKS)))) {
+                    PerformerAbilityData.add(performer, new MimicMiraculousLooksAbilityState(entry.customizationData().orElseThrow()));
+                }
             });
             either.ifLeft(target -> {
                 UUID uuid = target.uuid();
@@ -66,6 +70,9 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
                     if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME))) && name != null) {
                         PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(Component.literal(name)));
                     }
+                    if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(LOOKS)))) {
+                        PerformerAbilityData.add(performer, new MimicMiraculousLooksAbilityState(customizationData));
+                    }
                 }
             });
             if (performer instanceof ServerPlayer player) {
@@ -77,9 +84,9 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
 
     @Override
     public void detransform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
-        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_VISUAL_MIRACULOUS.get());
         PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_NAME_COLOR.get());
         PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_NAME.get());
+        PerformerAbilityData.remove(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_MIRACULOUS_LOOKS.get());
         super.detransform(instance, context);
     }
 

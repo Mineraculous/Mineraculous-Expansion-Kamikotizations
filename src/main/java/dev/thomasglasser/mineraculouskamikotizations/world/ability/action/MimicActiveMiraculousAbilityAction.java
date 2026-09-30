@@ -19,7 +19,7 @@ public class MimicActiveMiraculousAbilityAction extends AbstractMimicMiraculousA
         if (state != null && entry != null) {
             return AbilityUtils.performActiveAbility(Optional.of(entry.miraculous().value().activeAbility()), createProxyContext(state.customizationData(), context));
         }
-        return Ability.Result.fail();
+        return Ability.Result.pass();
     }
 
     @Override

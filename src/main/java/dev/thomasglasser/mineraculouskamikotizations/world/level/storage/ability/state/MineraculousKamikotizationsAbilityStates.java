@@ -13,11 +13,11 @@ public class MineraculousKamikotizationsAbilityStates {
 
     public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicPassiveMiraculousAbilityState>> MIMIC_PASSIVE_MIRACULOUS = ABILITY_STATES.register("mimic_passive_miraculous", () -> MimicPassiveMiraculousAbilityState.TYPE);
 
-    public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicVisualMiraculousAbilityState>> MIMIC_VISUAL_MIRACULOUS = ABILITY_STATES.register("mimic_visual_miraculous", () -> MimicVisualMiraculousAbilityState.TYPE);
-
     public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicMiraculousNameColorAbilityState>> MIMIC_MIRACULOUS_NAME_COLOR = ABILITY_STATES.register("mimic_miraculous_name_color", () -> MimicMiraculousNameColorAbilityState.TYPE);
 
     public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicMiraculousNameAbilityState>> MIMIC_MIRACULOUS_NAME = ABILITY_STATES.register("mimic_miraculous_name", () -> MimicMiraculousNameAbilityState.TYPE);
+
+    public static final DeferredHolder<AbilityState.Type<?>, AbilityState.Type<MimicMiraculousLooksAbilityState>> MIMIC_MIRACULOUS_LOOKS = ABILITY_STATES.register("mimic_miraculous_looks", () -> MimicMiraculousLooksAbilityState.TYPE);
 
     public static void init() {}
 }
