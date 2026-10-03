@@ -2,6 +2,7 @@ package dev.thomasglasser.mineraculouskamikotizations.data.look;
 
 import dev.thomasglasser.mineraculous.api.client.look.asset.LookAssetTypes;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.MineraculousItemProperties;
+import dev.thomasglasser.mineraculous.api.core.look.LookUtils;
 import dev.thomasglasser.mineraculous.api.core.look.context.LookContexts;
 import dev.thomasglasser.mineraculous.impl.data.looks.MineraculousLookProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
@@ -21,7 +22,7 @@ public class MineraculousKamikotizationsLookProvider extends MineraculousLookPro
         String closedTexture = modString("textures/item/geo/weather_control_parasol.png");
         String closedGuiTexture = modString("textures/item/weather_control_parasol.png");
 
-        kamikotizationLook(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL)
+        kamikotizationLook(MineraculousKamikotizationsKamikotizations.WEATHER_CONTROL, LookUtils.DEFAULT_NAME)
                 .context(LookContexts.KAMIKOTIZATION_TOOL)
                 .assets()
                 .add(LookAssetTypes.TEXTURE, closedTexture)
@@ -52,6 +53,6 @@ public class MineraculousKamikotizationsLookProvider extends MineraculousLookPro
                 .add(LookAssetTypes.FLAT_TEXTURE, modString("textures/item/weather_control_parasol_open.png"));
 
         // TODO: Lookless kamikotizations
-        kamikotizationLook(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY);
+        kamikotizationLook(MineraculousKamikotizationsKamikotizations.MIRACULOUS_MIMICRY, LookUtils.DEFAULT_NAME);
     }
 }

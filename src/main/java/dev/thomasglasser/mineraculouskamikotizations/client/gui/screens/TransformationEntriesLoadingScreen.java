@@ -2,10 +2,10 @@ package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import dev.thomasglasser.mineraculous.api.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
-import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.Button;

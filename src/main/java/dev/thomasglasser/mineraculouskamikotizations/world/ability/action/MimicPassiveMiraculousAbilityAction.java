@@ -14,8 +14,8 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         MimicPassiveMiraculousAbilityState passiveMiraculousMimicAbilityState = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_PASSIVE_MIRACULOUS);
-        TransformationHistoryData.TransformationEntry transformationEntry = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET));
-        if (passiveMiraculousMimicAbilityState != null && transformationEntry != null) {
+        TransformationHistoryData.TransformationEntry transformationEntry = context.source().customizationSettings().getOrDefault(instance.getRequiredCustomizationSetting(POWER_TARGET));
+        if (passiveMiraculousMimicAbilityState != null) {
             return AbilityUtils.performPassiveAbilities(transformationEntry.miraculous().value().passiveAbilities(), createProxyContext(passiveMiraculousMimicAbilityState.customizationData(), context));
         }
         return Ability.Result.pass();
@@ -30,9 +30,7 @@ public class MimicPassiveMiraculousAbilityAction extends AbstractMimicMiraculous
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         super.transform(instance, context);
-        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET));
-        if (entry != null) {
-            PerformerAbilityData.add(context.performer(), new MimicPassiveMiraculousAbilityState(entry.customizationData().orElse(CustomizationData.EMPTY)));
-        }
+        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().getOrDefault(instance.getRequiredCustomizationSetting(POWER_TARGET));
+        PerformerAbilityData.add(context.performer(), new MimicPassiveMiraculousAbilityState(entry.customizationData().orElse(CustomizationData.EMPTY)));
     }
 }

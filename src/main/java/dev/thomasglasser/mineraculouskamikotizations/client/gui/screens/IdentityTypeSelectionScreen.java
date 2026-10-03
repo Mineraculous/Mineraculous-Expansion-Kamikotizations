@@ -1,8 +1,8 @@
 package dev.thomasglasser.mineraculouskamikotizations.client.gui.screens;
 
 import com.mojang.datafixers.util.Either;
+import dev.thomasglasser.mineraculous.api.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
-import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import dev.thomasglasser.mineraculouskamikotizations.world.targetvisual.VisualTarget;

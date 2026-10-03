@@ -44,40 +44,38 @@ public class MimicVisualMiraculousAbilityAction extends AbstractMimicMiraculousA
         super.transform(instance, context);
         LivingEntity performer = context.performer();
         CustomizationSettings customizationSettings = context.source().customizationSettings();
-        Either<VisualTarget, TransformationHistoryData.TransformationEntry> either = customizationSettings.get(instance.getRequiredCustomizationSetting(VISUAL_TARGET));
-        if (either != null) {
-            either.ifRight(entry -> {
-                if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
-                    PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(entry.miraculous().value().color().getValue()));
-                }
-                if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME)))) {
-                    PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(entry.getName()));
-                }
-                if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(LOOKS)))) {
-                    PerformerAbilityData.add(performer, new MimicMiraculousLooksAbilityState(entry.customizationData().orElseThrow()));
-                }
-            });
-            either.ifLeft(target -> {
-                UUID uuid = target.uuid();
-                Player player = context.level().getServer().getPlayerList().getPlayer(uuid);
-                Holder<Miraculous> miraculous = target.miraculous();
-                if (player != null) {
-                    CustomizationData customizationData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculous).customizationData();
-                    String name = customizationData.nameSetting().map(customizationData.settings()::get).orElse(null);
-                    if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR)))) {
-                        PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(miraculous.value().color().getValue()));
-                    }
-                    if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(COPY_NAME))) && name != null) {
-                        PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(Component.literal(name)));
-                    }
-                    if (Boolean.TRUE.equals(customizationSettings.get(instance.getRequiredCustomizationSetting(LOOKS)))) {
-                        PerformerAbilityData.add(performer, new MimicMiraculousLooksAbilityState(customizationData));
-                    }
-                }
-            });
-            if (performer instanceof ServerPlayer player) {
-                player.refreshDisplayName();
+        Either<VisualTarget, TransformationHistoryData.TransformationEntry> either = customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(VISUAL_TARGET));
+        either.ifRight(entry -> {
+            if (customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR))) {
+                PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(entry.miraculous().value().color().getValue()));
             }
+            if (customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(COPY_NAME))) {
+                PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(entry.getName()));
+            }
+            if (customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(LOOKS))) {
+                PerformerAbilityData.add(performer, new MimicMiraculousLooksAbilityState(entry.customizationData().orElseThrow()));
+            }
+        });
+        either.ifLeft(target -> {
+            UUID uuid = target.uuid();
+            Player player = context.level().getServer().getPlayerList().getPlayer(uuid);
+            Holder<Miraculous> miraculous = target.miraculous();
+            if (player != null) {
+                CustomizationData customizationData = player.getData(MineraculousAttachmentTypes.MIRACULOUSES).get(miraculous).customizationData();
+                String name = customizationData.nameSetting().map(customizationData.settings()::getOrDefault).orElse(null);
+                if (customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(COPY_NAME_COLOR))) {
+                    PerformerAbilityData.add(performer, new MimicMiraculousNameColorAbilityState(miraculous.value().color().getValue()));
+                }
+                if (customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(COPY_NAME)) && name != null) {
+                    PerformerAbilityData.add(performer, new MimicMiraculousNameAbilityState(Component.literal(name)));
+                }
+                if (customizationSettings.getOrDefault(instance.getRequiredCustomizationSetting(LOOKS))) {
+                    PerformerAbilityData.add(performer, new MimicMiraculousLooksAbilityState(customizationData));
+                }
+            }
+        });
+        if (performer instanceof ServerPlayer player) {
+            player.refreshDisplayName();
         }
         // TODO: Looks logic
     }

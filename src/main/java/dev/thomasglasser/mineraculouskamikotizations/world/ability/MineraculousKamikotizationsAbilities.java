@@ -28,14 +28,14 @@ public class MineraculousKamikotizationsAbilities {
                 .branch(AbilityBranch.builder()
                         .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_ACTIVE_MIRACULOUS.getKey()), AbilityProperties.builder()
                                 .add(MimicActiveMiraculousAbilityAction.POWER_TARGET, "power_target")))
-                .customizationSetting("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET, Optional.empty(), false)
+                .customizationSettingDefinition("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET, Optional.empty(), false)
                 .build());
 
         context.register(MIMIC_PASSIVE_MIRACULOUS, Ability.builder()
                 .branch(AbilityBranch.builder()
                         .action(abilityActions.getOrThrow(MineraculousKamikotizationsAbilityActions.MIMIC_PASSIVE_MIRACULOUS.getKey()), AbilityProperties.builder()
                                 .add(MimicPassiveMiraculousAbilityAction.POWER_TARGET, "power_target")))
-                .customizationSetting("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET, Optional.empty(), false)
+                .customizationSettingDefinition("power_target", MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET, Optional.empty(), false)
                 .build());
 
         context.register(MIMIC_VISUAL_MIRACULOUS, Ability.builder()
@@ -45,10 +45,10 @@ public class MineraculousKamikotizationsAbilities {
                                 .add(MimicVisualMiraculousAbilityAction.LOOKS, "looks")
                                 .add(MimicVisualMiraculousAbilityAction.COPY_NAME_COLOR, "copy_name_color")
                                 .add(MimicVisualMiraculousAbilityAction.COPY_NAME, "copy_name")))
-                .customizationSetting("visual_target", MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET, Optional.empty(), false)
-                .customizationSetting("looks", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), true)
-                .customizationSetting("copy_name_color", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), false)
-                .customizationSetting("copy_name", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), false)
+                .customizationSettingDefinition("visual_target", MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET, Optional.empty(), false)
+                .customizationSettingDefinition("looks", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), true)
+                .customizationSettingDefinition("copy_name_color", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), false)
+                .customizationSettingDefinition("copy_name", MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN, Optional.of(true), false)
                 .build());
     }
 

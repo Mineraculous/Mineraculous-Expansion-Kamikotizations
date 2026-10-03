@@ -2,9 +2,8 @@ package dev.thomasglasser.mineraculouskamikotizations.world.item;
 
 import dev.thomasglasser.mineraculous.impl.world.item.MineraculousCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
-import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
-import dev.thomasglasser.tommylib.api.registration.DeferredHolder;
-import dev.thomasglasser.tommylib.api.registration.DeferredRegister;
+import dev.thomasglasser.tommylib.api.registration.ExtendedHolder;
+import dev.thomasglasser.tommylib.api.registration.Registrar;
 import java.util.Set;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
 
 public class MineraculousKamikotizationsCreativeModeTabs {
-    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MineraculousKamikotizations.MOD_ID);
+    public static final Registrar<CreativeModeTab> TABS = Registrar.create(Registries.CREATIVE_MODE_TAB, MineraculousKamikotizations.MOD_ID);
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MINERACULOUS_KAMIKOTIZATIONS = TABS.register(MineraculousKamikotizations.MOD_ID, () -> TommyLibServices.CLIENT.tabBuilder()
+    public static final ExtendedHolder<CreativeModeTab, CreativeModeTab> MINERACULOUS_KAMIKOTIZATIONS = TABS.register(MineraculousKamikotizations.MOD_ID, () -> CreativeModeTab.builder()
             .title(Component.translatable(MineraculousKamikotizations.modLoc(MineraculousKamikotizations.MOD_ID).toLanguageKey("item_group")))
             .hideTitle()
             .icon(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL::toStack)

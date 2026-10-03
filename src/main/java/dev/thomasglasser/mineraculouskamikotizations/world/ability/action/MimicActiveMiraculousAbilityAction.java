@@ -15,8 +15,8 @@ public class MimicActiveMiraculousAbilityAction extends AbstractMimicMiraculousA
     @Override
     public Ability.Result perform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         MimicActiveMiraculousAbilityState state = PerformerAbilityData.get(context.performer(), MineraculousKamikotizationsAbilityStates.MIMIC_ACTIVE_MIRACULOUS);
-        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET));
-        if (state != null && entry != null) {
+        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().getOrDefault(instance.getRequiredCustomizationSetting(POWER_TARGET));
+        if (state != null) {
             return AbilityUtils.performActiveAbility(Optional.of(entry.miraculous().value().activeAbility()), createProxyContext(state.customizationData(), context));
         }
         return Ability.Result.pass();
@@ -25,10 +25,8 @@ public class MimicActiveMiraculousAbilityAction extends AbstractMimicMiraculousA
     @Override
     public void transform(AbilityPropertyInstance<AbilityAction> instance, Ability.Context context) {
         super.transform(instance, context);
-        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().get(instance.getRequiredCustomizationSetting(POWER_TARGET));
-        if (entry != null) {
-            PerformerAbilityData.add(context.performer(), new MimicActiveMiraculousAbilityState(entry.customizationData().orElse(CustomizationData.EMPTY)));
-        }
+        TransformationHistoryData.TransformationEntry entry = context.source().customizationSettings().getOrDefault(instance.getRequiredCustomizationSetting(POWER_TARGET));
+        PerformerAbilityData.add(context.performer(), new MimicActiveMiraculousAbilityState(entry.customizationData().orElse(CustomizationData.EMPTY)));
     }
 
     @Override

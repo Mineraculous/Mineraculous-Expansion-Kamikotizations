@@ -4,19 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
+import dev.thomasglasser.mineraculous.api.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculous.api.client.gui.IconRenderers;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.HolderSelectionScreen;
 import dev.thomasglasser.mineraculous.api.client.gui.screens.SelectionScreen;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
+import dev.thomasglasser.mineraculous.api.network.MineraculousNetworkUtils;
 import dev.thomasglasser.mineraculous.api.world.miraculous.Miraculous;
-import dev.thomasglasser.mineraculous.impl.client.MineraculousClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.IdentityTypeSelectionScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.TransformationEntriesLoadingScreen;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.TransformationEntriesSyncListener;
 import dev.thomasglasser.mineraculouskamikotizations.network.ServerboundRequestTransformationHistoryPayload;
 import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.TransformationHistoryData;
 import dev.thomasglasser.mineraculouskamikotizations.world.targetvisual.VisualTarget;
-import dev.thomasglasser.tommylib.api.platform.TommyLibServices;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -86,7 +86,7 @@ public class MineraculousKamikotizationsClientUtils {
                         currentValue,
                         selectedMiraculous,
                         button));
-                TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
+                MineraculousNetworkUtils.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
             }
         }))).bounds(0, 0, width, height).build();
     }
@@ -118,7 +118,7 @@ public class MineraculousKamikotizationsClientUtils {
                 consumer.accept(entry != null ? Either.right(entry) : null);
                 parentScreen.getMinecraft().setScreen(parentScreen);
             }, initialEntry, selectedMiraculous, entryButton));
-            TommyLibServices.NETWORK.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
+            MineraculousNetworkUtils.sendToServer(ServerboundRequestTransformationHistoryPayload.INSTANCE);
         });
     }
 

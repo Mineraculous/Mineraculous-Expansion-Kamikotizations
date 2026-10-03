@@ -12,7 +12,7 @@
       ]
     }
   ],
-  "customization_settings": {
+  "customization_setting_definitions": {
     "copy_name": {
       "type": "mineraculouskamikotizations:boolean",
       "default_value": true

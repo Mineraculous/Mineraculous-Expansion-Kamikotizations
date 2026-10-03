@@ -1,6 +1,7 @@
 package dev.thomasglasser.mineraculouskamikotizations.data;
 
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
+import dev.thomasglasser.mineraculous.api.data.MineraculousDataGenerationUtils;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.data.advancements.MineraculousKamikotizationsAdvancementProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.datamaps.MineraculousKamikotizationsDataMapProvider;
@@ -13,8 +14,7 @@ import dev.thomasglasser.mineraculouskamikotizations.data.recipes.MineraculousKa
 import dev.thomasglasser.mineraculouskamikotizations.data.tags.MineraculousKamikotizationsItemTagsProvider;
 import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
-import dev.thomasglasser.tommylib.api.data.DataGenerationUtils;
-import dev.thomasglasser.tommylib.api.data.tags.EmptyBlockTagsProvider;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.RegistrySetBuilder;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -26,17 +26,17 @@ public class MineraculousKamikotizationsDataGenerators {
     public static void onGatherData(GatherDataEvent event) {
         // Server
         event.createDatapackRegistryObjects(BUILDER);
-        DataGenerationUtils.createRegistryDumpReport(event, MineraculousKamikotizations.MOD_ID);
-        DataGenerationUtils.createBlockAndItemTags(event, EmptyBlockTagsProvider::new, MineraculousKamikotizationsItemTagsProvider::new);
+        MineraculousDataGenerationUtils.createRegistryDumpReport(event, MineraculousKamikotizations.MOD_ID);
+        MineraculousDataGenerationUtils.createProvider(event, (packOutput, lookupProvider, existingFileHelper) -> new MineraculousKamikotizationsItemTagsProvider(packOutput, lookupProvider, CompletableFuture.completedFuture(null), existingFileHelper));
         event.createProvider(MineraculousKamikotizationsDataMapProvider::new);
         event.createProvider(MineraculousKamikotizationsLootTables::new);
         event.createProvider(MineraculousKamikotizationsRecipeProvider::new);
 
         // Common
-        DataGenerationUtils.createLangDependent(event, MineraculousKamikotizationsEnUsLanguageProvider::new, MineraculousKamikotizationsAdvancementProvider::new, MineraculousKamikotizationsBookProvider::new);
+        MineraculousDataGenerationUtils.createLangDependent(event, MineraculousKamikotizationsEnUsLanguageProvider::new, MineraculousKamikotizationsAdvancementProvider::new, MineraculousKamikotizationsBookProvider::new);
 
         // Client
-        DataGenerationUtils.createProvider(event, MineraculousKamikotizationsItemModelProvider::new);
+        MineraculousDataGenerationUtils.createProvider(event, MineraculousKamikotizationsItemModelProvider::new);
         event.createProvider(MineraculousKamikotizationsLookProvider::new);
     }
 }

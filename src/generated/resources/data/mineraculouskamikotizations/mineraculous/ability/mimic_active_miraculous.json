@@ -9,7 +9,7 @@
       ]
     }
   ],
-  "customization_settings": {
+  "customization_setting_definitions": {
     "power_target": {
       "type": "mineraculouskamikotizations:power_target"
     }

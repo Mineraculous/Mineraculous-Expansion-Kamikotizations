@@ -1,9 +1,9 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.recipes;
 
+import dev.thomasglasser.mineraculous.api.data.recipes.MineraculousRecipeProvider;
+import dev.thomasglasser.mineraculous.api.tags.MineraculousTagUtils;
 import dev.thomasglasser.mineraculouskamikotizations.tags.MineraculousKamikotizationsItemTags;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import dev.thomasglasser.tommylib.api.data.recipes.ExtendedRecipeProvider;
-import dev.thomasglasser.tommylib.api.tags.ConventionalItemTags;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,8 +18,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.Tags;
 
-public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipeProvider {
+public class MineraculousKamikotizationsRecipeProvider extends MineraculousRecipeProvider {
     public MineraculousKamikotizationsRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider);
     }
@@ -27,7 +28,7 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         for (DyeColor color : DyeColor.values()) {
-            TagKey<Item> dyeTag = ConventionalItemTags.forDyeColor(color);
+            TagKey<Item> dyeTag = MineraculousTagUtils.forDyeColor(color);
 
             parasolFromCarpet(recipeOutput, MineraculousKamikotizationsItems.PARASOLS.get(color).get(), BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace(color.getName() + "_carpet")));
             itemFromDye(recipeOutput, MineraculousKamikotizationsItems.PARASOLS.get(color).get(), MineraculousKamikotizationsItemTags.PARASOLS, dyeTag);
@@ -40,7 +41,7 @@ public class MineraculousKamikotizationsRecipeProvider extends ExtendedRecipePro
                 .pattern("CSC")
                 .pattern(" S ")
                 .define('C', carpet)
-                .define('S', ConventionalItemTags.WOODEN_RODS)
+                .define('S', Tags.Items.RODS_WOODEN)
                 .unlockedBy(getHasName(carpet), has(carpet))
                 .unlockedBy(getHasName(MineraculousKamikotizationsItemTags.PARASOLS), has(MineraculousKamikotizationsItemTags.PARASOLS))
                 .save(recipeOutput);

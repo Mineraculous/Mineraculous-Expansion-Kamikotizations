@@ -1,8 +1,6 @@
 package dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Either;
-import dev.thomasglasser.mineraculous.api.core.customization.setting.CustomizationSettings;
 import dev.thomasglasser.mineraculous.api.core.registries.MineraculousRegistries;
 import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.ability.AbilityInstance;
@@ -24,18 +22,15 @@ public class MineraculousKamikotizationsKamikotizations {
     public static void bootstrap(BootstrapContext<Kamikotization> context) {
         HolderGetter<Ability> abilities = context.lookup(MineraculousRegistries.ABILITY);
 
-        context.register(WEATHER_CONTROL, new Kamikotization(
-                ImmutableList.of(
-                        new ItemCondition(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1)))),
-                CustomizationSettings.EMPTY,
-                Either.left(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack()),
-                ImmutableList.of()));
-        context.register(MIRACULOUS_MIMICRY, new Kamikotization(
-                ImmutableList.of(),
-                CustomizationSettings.EMPTY,
-                Either.right(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS))),
-                ImmutableList.of(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS)),
-                        AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS)))));
+        context.register(WEATHER_CONTROL, Kamikotization.builder(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.toStack())
+                .condition(new ItemCondition(MineraculousKamikotizationsItemTags.WEATHER_CONTROL_KAMIKOTIZABLE, predicate -> predicate.withCount(MinMaxBounds.Ints.exactly(1))))
+                .build());
+
+        context.register(MIRACULOUS_MIMICRY, Kamikotization.builder(AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_ACTIVE_MIRACULOUS)))
+                .passiveAbilities(ImmutableList.of(
+                        AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_PASSIVE_MIRACULOUS)),
+                        AbilityInstance.of(abilities.getOrThrow(MineraculousKamikotizationsAbilities.MIMIC_VISUAL_MIRACULOUS))))
+                .build());
     }
 
     private static ResourceKey<Kamikotization> create(String name) {

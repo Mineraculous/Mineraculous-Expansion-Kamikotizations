@@ -1,16 +1,16 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.advancements.packs;
 
 import dev.thomasglasser.mineraculous.api.advancements.critereon.TransformedKamikotizationTrigger;
+import dev.thomasglasser.mineraculous.api.data.advancements.MineraculousAdvancementGenerator;
 import dev.thomasglasser.mineraculous.api.world.item.armor.MineraculousArmors;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
-import dev.thomasglasser.tommylib.api.data.advancements.ExtendedAdvancementGenerator;
 import java.util.function.BiConsumer;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
 
-public class MineraculousKamikotizationsKamikotizationAdvancements extends ExtendedAdvancementGenerator {
+public class MineraculousKamikotizationsKamikotizationAdvancements extends MineraculousAdvancementGenerator {
     public MineraculousKamikotizationsKamikotizationAdvancements(BiConsumer<String, String> lang) {
         super(MineraculousKamikotizations.MOD_ID, "kamikotization", lang);
     }

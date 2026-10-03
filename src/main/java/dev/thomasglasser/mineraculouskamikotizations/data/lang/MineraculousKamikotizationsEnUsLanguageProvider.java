@@ -1,7 +1,7 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.lang;
 
+import dev.thomasglasser.mineraculous.api.data.lang.MineraculousEnUsLanguageProvider;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.condition.ItemCondition;
-import dev.thomasglasser.mineraculous.impl.data.lang.MineraculousEnUsLanguageProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.client.MineraculousKamikotizationsClientUtils;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.screens.IdentityTypeSelectionScreen;

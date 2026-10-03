@@ -1,9 +1,9 @@
 package dev.thomasglasser.mineraculouskamikotizations.tags;
 
+import dev.thomasglasser.mineraculous.api.tags.MineraculousTagUtils;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
-import dev.thomasglasser.tommylib.api.tags.TagUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -28,6 +28,6 @@ public class MineraculousKamikotizationsItemTags {
     }
 
     private static TagKey<Item> createC(String name) {
-        return TagUtils.createConventional(Registries.ITEM, name);
+        return MineraculousTagUtils.cTag(Registries.ITEM, name);
     }
 }
