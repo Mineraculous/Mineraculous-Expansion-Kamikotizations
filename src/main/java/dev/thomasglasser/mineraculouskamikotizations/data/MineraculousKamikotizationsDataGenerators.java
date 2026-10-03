@@ -12,6 +12,7 @@ import dev.thomasglasser.mineraculouskamikotizations.data.models.MineraculousKam
 import dev.thomasglasser.mineraculouskamikotizations.data.modonomicons.MineraculousKamikotizationsBookProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.recipes.MineraculousKamikotizationsRecipeProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.tags.MineraculousKamikotizationsItemTagsProvider;
+import dev.thomasglasser.mineraculouskamikotizations.world.ability.MineraculousKamikotizationsAbilities;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.RegistrySetBuilder;
@@ -19,6 +20,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class MineraculousKamikotizationsDataGenerators {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
+            .add(MineraculousRegistries.ABILITY, MineraculousKamikotizationsAbilities::bootstrap)
             .add(MineraculousRegistries.KAMIKOTIZATION, MineraculousKamikotizationsKamikotizations::bootstrap);
 
     public static void onGatherData(GatherDataEvent event) {

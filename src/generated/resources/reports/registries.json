@@ -30,7 +30,30 @@
     "mineraculouskamikotizations:white_parasol",
     "mineraculouskamikotizations:yellow_parasol"
   ],
+  "mineraculous:ability": [
+    "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_passive_miraculous",
+    "mineraculouskamikotizations:mimic_visual_miraculous"
+  ],
+  "mineraculous:ability_action": [
+    "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_passive_miraculous",
+    "mineraculouskamikotizations:mimic_visual_miraculous"
+  ],
+  "mineraculous:ability_state": [
+    "mineraculouskamikotizations:mimic_active_miraculous",
+    "mineraculouskamikotizations:mimic_miraculous_looks",
+    "mineraculouskamikotizations:mimic_miraculous_name",
+    "mineraculouskamikotizations:mimic_miraculous_name_color",
+    "mineraculouskamikotizations:mimic_passive_miraculous"
+  ],
+  "mineraculous:customization_setting_type": [
+    "mineraculouskamikotizations:boolean",
+    "mineraculouskamikotizations:power_target",
+    "mineraculouskamikotizations:visual_target"
+  ],
   "mineraculous:kamikotization": [
+    "mineraculouskamikotizations:miraculous_mimicry",
     "mineraculouskamikotizations:weather_control"
   ]
 }

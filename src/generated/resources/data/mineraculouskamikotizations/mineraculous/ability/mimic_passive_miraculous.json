@@ -1,0 +1,17 @@
+{
+  "branches": [
+    {
+      "actions": [
+        {
+          "type": "mineraculouskamikotizations:mimic_passive_miraculous",
+          "power_target": "power_target"
+        }
+      ]
+    }
+  ],
+  "customization_setting_definitions": {
+    "power_target": {
+      "type": "mineraculouskamikotizations:power_target"
+    }
+  }
+}

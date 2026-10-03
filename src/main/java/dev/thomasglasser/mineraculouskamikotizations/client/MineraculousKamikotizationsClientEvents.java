@@ -1,18 +1,22 @@
 package dev.thomasglasser.mineraculouskamikotizations.client;
 
+import dev.thomasglasser.mineraculous.api.client.gui.components.CustomizationSettingWidgetRegistry;
 import dev.thomasglasser.mineraculous.api.client.look.util.KamikotizationToolClientExtensions;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.KamikotizationToolLookGeoItemRenderer;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItems;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculouskamikotizations.client.renderer.item.MineraculousKamikotizationsItemProperties;
+import dev.thomasglasser.mineraculouskamikotizations.core.customization.setting.MineraculousKamikotizationsCustomizationSettingTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.WindChargeRenderer;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -29,7 +33,16 @@ import org.jetbrains.annotations.Nullable;
 public class MineraculousKamikotizationsClientEvents {
     // Init
     static void onFMLClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(MineraculousKamikotizationsItemProperties::init);
+        event.enqueueWork(() -> {
+            MineraculousKamikotizationsItemProperties.init();
+
+            // Customization Setting Widgets
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.VISUAL_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createVisualTargetButton(screen, property.optional(), null, currentValue, width, height, onChanged));
+
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.POWER_TARGET.get(), (property, screen, font, width, height, currentValue, onChanged) -> MineraculousKamikotizationsClientUtils.createPowerTargetButton(screen, false, currentValue, width, height, onChanged));
+
+            CustomizationSettingWidgetRegistry.register(MineraculousKamikotizationsCustomizationSettingTypes.BOOLEAN.get(), (setting, screen, font, width, height, currentValue, onChanged) -> CycleButton.onOffBuilder(currentValue != null && currentValue).displayOnlyValue().create(0, 0, width, height, Component.empty(), (button, value) -> onChanged.accept(value)));
+        });
     }
 
     // Items
