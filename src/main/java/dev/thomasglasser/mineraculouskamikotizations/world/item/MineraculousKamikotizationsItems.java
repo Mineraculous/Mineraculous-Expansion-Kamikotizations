@@ -31,9 +31,8 @@ public class MineraculousKamikotizationsItems {
 
     private static SortedMap<DyeColor, ItemHolder<ParasolItem>> parasols() {
         SortedMap<DyeColor, ItemHolder<ParasolItem>> parasols = new Reference2ObjectLinkedOpenHashMap<>();
-        for (DyeColor color : DyeColor.values()) {
+        for (DyeColor color : DyeColor.values())
             parasols.put(color, ITEMS.register(color.getName() + "_parasol", () -> new ParasolItem(PARASOL_PROPERTIES.get())));
-        }
         return parasols;
     }
 

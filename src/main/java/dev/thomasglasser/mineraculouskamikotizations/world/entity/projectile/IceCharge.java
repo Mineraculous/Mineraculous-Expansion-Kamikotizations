@@ -2,7 +2,7 @@ package dev.thomasglasser.mineraculouskamikotizations.world.entity.projectile;
 
 import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
-import java.util.Set;
+import java.util.function.BiConsumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,15 +52,15 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     @Override
     protected AABB makeBoundingBox() {
-        float f = getType().getDimensions().width() / 2.0F;
-        float f1 = getType().getDimensions().height();
+        float middle = getType().getDimensions().width() / 2.0F;
+        float height = getType().getDimensions().height();
         return new AABB(
-                position().x - (double) f,
+                position().x - (double) middle,
                 position().y - 0.15F,
-                position().z - (double) f,
-                position().x + (double) f,
-                position().y - 0.15F + (double) f1,
-                position().z + (double) f);
+                position().z - (double) middle,
+                position().x + (double) middle,
+                position().y - 0.15F + (double) height,
+                position().z + (double) middle);
     }
 
     @Override
@@ -70,57 +70,54 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        if (target instanceof IceCharge) {
-            return false;
-        } else {
-            return target.getType() != EntityType.END_CRYSTAL && super.canHitEntity(target);
-        }
+        return !(target instanceof IceCharge) && target.getType() != EntityType.END_CRYSTAL && super.canHitEntity(target);
     }
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if (!level().isClientSide) {
-            LivingEntity livingentity = getOwner() instanceof LivingEntity livingentity1 ? livingentity1 : null;
+        if (level() instanceof ServerLevel level) {
+            LivingEntity owner = getOwner() instanceof LivingEntity living ? living : null;
             Entity entity = result.getEntity();
-            if (livingentity != null) {
-                livingentity.setLastHurtMob(entity);
-            }
+            if (owner != null)
+                owner.setLastHurtMob(entity);
 
-            DamageSource damagesource = damageSources().windCharge(this, livingentity);
-            if (entity.hurt(damagesource, 1.0F) && entity instanceof LivingEntity livingentity2) {
-                EnchantmentHelper.doPostAttackEffects((ServerLevel) level(), livingentity2, damagesource);
-            }
+            DamageSource damageSource = damageSources().windCharge(this, owner);
+            if (entity.hurt(damageSource, 1.0F) && entity instanceof LivingEntity livingEntity)
+                EnchantmentHelper.doPostAttackEffects(level, livingEntity, damageSource);
 
             entity.setTicksFrozen(Integer.MAX_VALUE);
             entity.extinguishFire();
             entity.moveTo(entity.blockPosition().getBottomCenter());
             entity.setDeltaMovement(0, 0, 0);
-            Set<BlockPos> inside = getInsidePos(entity);
-            int blocksWide = Mth.ceil(entity.getBbWidth());
-            int blocksHigh = Mth.ceil(entity.getBbHeight());
-            for (int i = -blocksWide; i <= blocksWide; i++) {
-                for (int j = -1; j <= blocksHigh; j++) {
-                    for (int k = -blocksWide; k <= blocksWide; k++) {
-                        BlockPos blockpos = entity.blockPosition().offset(i, j, k);
-                        BlockState oldState = level().getBlockState(blockpos);
-                        if (!inside.contains(blockpos) && oldState.canBeReplaced()) {
-                            level().setBlockAndUpdate(blockpos, Blocks.BLUE_ICE.defaultBlockState());
-                        }
-                    }
+            applyToSurroundingBlocks(entity, level, (pos, state) -> level.setBlockAndUpdate(pos, Blocks.BLUE_ICE.defaultBlockState()));
+        }
+    }
+
+    protected void applyToSurroundingBlocks(Entity entity, Level level, BiConsumer<BlockPos, BlockState> consumer) {
+        ImmutableSet<BlockPos> inside = getInsidePos(entity);
+        int blocksWide = Mth.ceil(entity.getBbWidth());
+        int blocksHigh = Mth.ceil(entity.getBbHeight());
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int i = -blocksWide; i <= blocksWide; i++) {
+            for (int j = -1; j <= blocksHigh; j++) {
+                for (int k = -blocksWide; k <= blocksWide; k++) {
+                    pos.setWithOffset(entity.blockPosition(), i, j, k);
+                    BlockState state = level.getBlockState(pos);
+                    if (!inside.contains(pos) && state.canBeReplaced())
+                        consumer.accept(pos, state);
                 }
             }
         }
     }
 
-    public static Set<BlockPos> getInsidePos(Entity target) {
-        AABB aabb = target.getBoundingBox();
-        BlockPos startPos = BlockPos.containing(aabb.minX + 1.0E-7, aabb.minY + 1.0E-7, aabb.minZ + 1.0E-7);
-        BlockPos endPos = BlockPos.containing(aabb.maxX - 1.0E-7, aabb.maxY - 1.0E-7, aabb.maxZ - 1.0E-7);
+    public static ImmutableSet<BlockPos> getInsidePos(Entity target) {
+        AABB boundingBox = target.getBoundingBox();
+        BlockPos startPos = BlockPos.containing(boundingBox.minX + 1.0E-7, boundingBox.minY + 1.0E-7, boundingBox.minZ + 1.0E-7);
+        BlockPos endPos = BlockPos.containing(boundingBox.maxX - 1.0E-7, boundingBox.maxY - 1.0E-7, boundingBox.maxZ - 1.0E-7);
         ImmutableSet.Builder<BlockPos> inside = new ImmutableSet.Builder<>();
-        for (BlockPos pos : BlockPos.betweenClosed(startPos, endPos)) {
+        for (BlockPos pos : BlockPos.betweenClosed(startPos, endPos))
             inside.add(pos.immutable());
-        }
         return inside.build();
     }
 
@@ -130,28 +127,33 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if (!level().isClientSide) {
-            BlockPos pos = result.getBlockPos();
-            for (int i = -1; i <= 1; i++) {
-                for (int k = -1; k <= 1; k++) {
-                    BlockPos blockpos = pos.offset(i, 0, k).above();
-                    if (level().canSeeSky(blockpos))
-                        blockpos = level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos.offset(i, 0, k));
-                    if (level().getBlockState(blockpos).canBeReplaced() && !level().getBlockState(blockpos.below()).is(BlockTags.ICE)) {
-                        level().setBlockAndUpdate(blockpos, Blocks.BLUE_ICE.defaultBlockState());
-                    }
-                }
-            }
+        Level level = level();
+        if (!level.isClientSide()) {
+            applyToSurroundingBlocks(result.getBlockPos(), level, (pos, state) -> level.setBlockAndUpdate(pos, Blocks.BLUE_ICE.defaultBlockState()));
             discard();
         }
+    }
+
+    protected void applyToSurroundingBlocks(BlockPos center, Level level, BiConsumer<BlockPos, BlockState> consumer) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos abovePos = new BlockPos.MutableBlockPos();
+        for (int i = -1; i <= 1; i++)
+            for (int k = -1; k <= 1; k++) {
+                pos.setWithOffset(center, i, 0, k);
+                abovePos.setWithOffset(pos, 0, 1, 0);
+                if (level.canSeeSky(abovePos))
+                    abovePos.set(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos));
+                BlockState aboveState = level.getBlockState(abovePos);
+                if (aboveState.canBeReplaced() && !level.getBlockState(pos).is(BlockTags.ICE))
+                    consumer.accept(abovePos, aboveState);
+            }
     }
 
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!level().isClientSide) {
+        if (!level().isClientSide)
             discard();
-        }
     }
 
     @Override
@@ -177,11 +179,12 @@ public class IceCharge extends AbstractHurtingProjectile implements ItemSupplier
 
     @Override
     public void tick() {
-        if (!level().isClientSide && getBlockY() > level().getMaxBuildHeight() + 30) {
+        Level level = level();
+        if (!level.isClientSide && getBlockY() > level.getMaxBuildHeight() + 30) {
             discard();
-        } else {
-            super.tick();
+            return;
         }
+        super.tick();
     }
 
     @Override

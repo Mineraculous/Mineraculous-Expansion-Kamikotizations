@@ -1,8 +1,8 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.advancements;
 
+import com.google.common.collect.ImmutableSet;
 import dev.thomasglasser.mineraculous.api.data.advancements.MineraculousAdvancementProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.advancements.packs.MineraculousKamikotizationsKamikotizationAdvancements;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import net.minecraft.core.HolderLookup;
@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class MineraculousKamikotizationsAdvancementProvider extends MineraculousAdvancementProvider {
     public MineraculousKamikotizationsAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, BiConsumer<String, String> lang, ExistingFileHelper existingFileHelper) {
-        super(output, registries, existingFileHelper, ReferenceOpenHashSet.of(
+        super(output, registries, existingFileHelper, ImmutableSet.of(
                 new MineraculousKamikotizationsKamikotizationAdvancements(lang)));
     }
 }

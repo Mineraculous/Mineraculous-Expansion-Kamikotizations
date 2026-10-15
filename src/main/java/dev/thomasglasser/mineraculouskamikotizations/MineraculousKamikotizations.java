@@ -5,6 +5,7 @@ import dev.thomasglasser.mineraculouskamikotizations.data.MineraculousKamikotiza
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.MineraculousKamikotizationsEntityTypes;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsCreativeModeTabs;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.MineraculousKamikotizationsItems;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.reversion.entry.MineraculousKamikotizationsReversionEntryTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -22,6 +23,7 @@ public class MineraculousKamikotizations {
         MineraculousKamikotizationsItems.init();
         MineraculousKamikotizationsCreativeModeTabs.init();
         MineraculousKamikotizationsDataComponents.init();
+        MineraculousKamikotizationsReversionEntryTypes.init();
 
         modBus.addListener(MineraculousKamikotizationsDataGenerators::onGatherData);
     }

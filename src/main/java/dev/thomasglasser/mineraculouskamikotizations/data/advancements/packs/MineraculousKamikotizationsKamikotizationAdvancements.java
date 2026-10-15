@@ -17,7 +17,8 @@ public class MineraculousKamikotizationsKamikotizationAdvancements extends Miner
 
     @Override
     public void generate(HolderLookup.Provider provider) {
-        AdvancementHolder root = builder("root", MineraculousArmors.KAMIKOTIZATION.head().toStack(), "Kamikotizations", "Canon kamikotizations")
+        AdvancementHolder root = builder("root", MineraculousArmors.KAMIKOTIZATION.head().toStack(), "Kamikotizations", "All canon kamikotizations")
+                // TODO: Replace with goo or a more relevant block
                 .background(MineraculousKamikotizations.modLoc("textures/gui/advancements/backgrounds/kamikotization.png"))
                 .toast(false)
                 .announce(false)

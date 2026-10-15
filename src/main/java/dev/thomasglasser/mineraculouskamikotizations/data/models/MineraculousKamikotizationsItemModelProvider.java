@@ -8,9 +8,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class MineraculousKamikotizationsItemModelProvider extends MineraculousItemModelProvider {
@@ -53,25 +51,13 @@ public class MineraculousKamikotizationsItemModelProvider extends MineraculousIt
                 .end();
     }
 
-    private ModelBuilder<ItemModelBuilder>.TransformsBuilder transforms(String name) {
-        return getBuilder(name).transforms();
-    }
-
-    private ModelBuilder<ItemModelBuilder>.TransformsBuilder transforms(ItemLike item) {
-        return transforms(item.asItem().builtInRegistryHolder().key().location().getPath());
-    }
-
-    private ModelBuilder<ItemModelBuilder>.TransformsBuilder transforms(ItemLike item, String suffix) {
-        return transforms(item.asItem().builtInRegistryHolder().key().location().getPath() + "_" + suffix);
-    }
-
-    private ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture, ResourceLocation guiLoc) {
+    protected ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture, ResourceLocation guiLoc) {
         return withSeparateInventoryModel(loc, withExistingParent(inHandTexture.getPath(), parent)
                 .texture("texture", inHandTexture)
                 .texture("particle", inHandTexture), basicItem(guiLoc));
     }
 
-    private ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture) {
+    protected ItemModelBuilder parasol(ResourceLocation loc, ResourceLocation parent, ResourceLocation inHandTexture) {
         return parasol(loc, parent, inHandTexture, loc);
     }
 }

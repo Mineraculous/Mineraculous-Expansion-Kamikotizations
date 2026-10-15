@@ -80,20 +80,24 @@ public class MineraculousKamikotizationsClientEvents {
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new IClientItemExtensions() {
             @Override
-            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                if (entityLiving.getUsedItemHand() == hand && entityLiving.getUseItemRemainingTicks() > 0)
+            public @Nullable HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+                if (shouldHoldParasolUp(entity, hand, stack))
                     return HumanoidModel.ArmPose.SPYGLASS;
-                return IClientItemExtensions.super.getArmPose(entityLiving, hand, itemStack);
+                return IClientItemExtensions.super.getArmPose(entity, hand, stack);
             }
         }, MineraculousKamikotizationsItems.PARASOLS.values().toArray(Holder[]::new));
         event.registerItem(new KamikotizationToolClientExtensions<KamikotizationToolLookGeoItemRenderer<WeatherControlParasolItem>>() {
             @Override
-            public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                if (Active.isActive(itemStack) && entityLiving.getUsedItemHand() == hand && entityLiving.getUseItemRemainingTicks() > 0)
+            public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+                if (shouldHoldParasolUp(entity, hand, stack))
                     return HumanoidModel.ArmPose.SPYGLASS;
-                return super.getArmPose(entityLiving, hand, itemStack);
+                return super.getArmPose(entity, hand, stack);
             }
         }, MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL);
+    }
+
+    private static boolean shouldHoldParasolUp(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+        return Active.isActive(stack) && entity.getUsedItemHand() == hand && entity.getUseItemRemainingTicks() > 0;
     }
 
     // Entities

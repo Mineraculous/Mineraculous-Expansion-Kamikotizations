@@ -5,12 +5,10 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import dev.thomasglasser.mineraculous.api.client.gui.selection.HotbarMenuProvider;
 import dev.thomasglasser.mineraculous.api.core.component.MineraculousDataComponents;
-import dev.thomasglasser.mineraculous.api.world.ability.Ability;
 import dev.thomasglasser.mineraculous.api.world.item.KamikotizationBoundItem;
 import dev.thomasglasser.mineraculous.api.world.item.MineraculousItemUtils;
-import dev.thomasglasser.mineraculous.api.world.item.RevertingItem;
 import dev.thomasglasser.mineraculous.api.world.kamikotization.Kamikotization;
-import dev.thomasglasser.mineraculous.api.world.level.miraculousladybugtarget.MiraculousLadybugTargetCollector;
+import dev.thomasglasser.mineraculous.api.world.level.storage.reversion.ReversionData;
 import dev.thomasglasser.mineraculous.impl.world.item.component.Active;
 import dev.thomasglasser.mineraculouskamikotizations.client.gui.selection.MineraculousKamikotizationsHotbarMenuIcons;
 import dev.thomasglasser.mineraculouskamikotizations.core.component.MineraculousKamikotizationsDataComponents;
@@ -19,9 +17,8 @@ import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingIceCharge;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingLightningBolt;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.reverting.RevertingWindCharge;
-import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.KamikotizationReversionData;
+import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.reversion.entry.RestoreWeatherReversionEntry;
 import io.netty.buffer.ByteBuf;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -35,6 +32,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -51,7 +49,7 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WeatherControlParasolItem extends ParasolItem implements GeoItem, KamikotizationBoundItem, RevertingItem, HotbarMenuProvider<WeatherControlParasolItem.Mode> {
+public class WeatherControlParasolItem extends ParasolItem implements GeoItem, KamikotizationBoundItem, HotbarMenuProvider<WeatherControlParasolItem.Mode> {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public WeatherControlParasolItem(Properties properties) {
@@ -102,14 +100,15 @@ public class WeatherControlParasolItem extends ParasolItem implements GeoItem, K
                     }
                 }
                 case WEATHER -> {
-                    ServerLevel overworld = serverLevel.getServer().overworld();
-                    if (overworld.isThundering())
-                        overworld.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(overworld.random), 0, false, false);
-                    else if (overworld.isRaining())
-                        overworld.setWeatherParameters(0, ServerLevel.THUNDER_DURATION.sample(overworld.random), true, true);
+                    if (owner != null)
+                        ReversionData.get(serverLevel).putEntry(RestoreWeatherReversionEntry.of(owner.getUUID(), serverLevel));
+                    RandomSource random = serverLevel.random;
+                    if (serverLevel.isThundering())
+                        serverLevel.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(random), 0, false, false);
+                    else if (serverLevel.isRaining())
+                        serverLevel.setWeatherParameters(0, ServerLevel.THUNDER_DURATION.sample(random), true, true);
                     else
-                        overworld.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(overworld.random), true, false);
-                    KamikotizationReversionData.get(serverLevel).setWeatherModified(true);
+                        serverLevel.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(random), true, false);
                 }
                 case WIND -> {
                     RevertingWindCharge windCharge = new RevertingWindCharge(owner, level, player.getX(), player.getEyeY(), player.getZ());
@@ -125,17 +124,7 @@ public class WeatherControlParasolItem extends ParasolItem implements GeoItem, K
     }
 
     @Override
-    public void revert(Ability.Context context, MiraculousLadybugTargetCollector targetCollector) {
-        ServerLevel level = context.level();
-        KamikotizationReversionData data = KamikotizationReversionData.get(level);
-        if (data.wasWeatherModified()) {
-            level.getServer().overworld().resetWeatherCycle();
-            data.setWeatherModified(false);
-        }
-    }
-
-    @Override
-    public List<Mode> getOptions(ItemStack stack, InteractionHand hand, Player holder) {
+    public ImmutableList<Mode> getOptions(ItemStack stack, InteractionHand hand, Player holder) {
         return Mode.valuesList();
     }
 
@@ -158,7 +147,7 @@ public class WeatherControlParasolItem extends ParasolItem implements GeoItem, K
         public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
         public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(Mode::of, Mode::getSerializedName);
 
-        private static final List<Mode> VALUES_LIST = ImmutableList.copyOf(values());
+        private static final ImmutableList<Mode> VALUES_LIST = ImmutableList.copyOf(values());
 
         private final Supplier<Component> displayName;
         private final ResourceLocation icon;
@@ -168,7 +157,7 @@ public class WeatherControlParasolItem extends ParasolItem implements GeoItem, K
             this.icon = icon;
         }
 
-        public static List<Mode> valuesList() {
+        public static ImmutableList<Mode> valuesList() {
             return VALUES_LIST;
         }
 

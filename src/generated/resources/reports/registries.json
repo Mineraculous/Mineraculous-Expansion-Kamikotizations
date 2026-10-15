@@ -32,5 +32,8 @@
   ],
   "mineraculous:kamikotization": [
     "mineraculouskamikotizations:weather_control"
+  ],
+  "mineraculous:reversion_entry_type": [
+    "mineraculouskamikotizations:restore_weather"
   ]
 }

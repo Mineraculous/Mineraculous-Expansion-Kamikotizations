@@ -4,7 +4,7 @@ import dev.thomasglasser.mineraculous.api.client.look.asset.LookAssetTypes;
 import dev.thomasglasser.mineraculous.api.client.renderer.item.MineraculousItemProperties;
 import dev.thomasglasser.mineraculous.api.core.look.LookUtils;
 import dev.thomasglasser.mineraculous.api.core.look.context.LookContexts;
-import dev.thomasglasser.mineraculous.impl.data.looks.MineraculousLookProvider;
+import dev.thomasglasser.mineraculous.api.data.look.MineraculousLookProvider;
 import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
 import dev.thomasglasser.mineraculouskamikotizations.world.item.WeatherControlParasolItem;

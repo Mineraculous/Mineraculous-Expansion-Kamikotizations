@@ -24,15 +24,11 @@ public class MineraculousKamikotizationsCreativeModeTabs {
             .displayItems((parameters, output) -> {
                 Set<ItemStack> set = ItemStackLinkedSet.createTypeAndComponentsSet();
 
-                for (CreativeModeTab tab : parameters.holders().lookupOrThrow(Registries.CREATIVE_MODE_TAB).listElements().map(Holder::value).toList()) {
-                    if (tab.getType() != CreativeModeTab.Type.SEARCH) {
-                        for (ItemStack stack : tab.getSearchTabDisplayItems()) {
-                            if (BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals(MineraculousKamikotizations.MOD_ID)) {
+                for (CreativeModeTab tab : parameters.holders().lookupOrThrow(Registries.CREATIVE_MODE_TAB).listElements().map(Holder::value).toList())
+                    if (tab.getType() != CreativeModeTab.Type.SEARCH)
+                        for (ItemStack stack : tab.getSearchTabDisplayItems())
+                            if (BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals(MineraculousKamikotizations.MOD_ID))
                                 set.add(stack);
-                            }
-                        }
-                    }
-                }
 
                 output.acceptAll(set);
             })

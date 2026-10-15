@@ -27,9 +27,8 @@ public class MineraculousKamikotizationsEnUsLanguageProvider extends Mineraculou
 
     protected void addItems() {
         // Kamikotizables
-        for (DyeColor color : DyeColor.values()) {
+        for (DyeColor color : DyeColor.values())
             add(MineraculousKamikotizationsItems.PARASOLS.get(color).get(), capitalize(color.getName()) + " Parasol");
-        }
 
         // Kamikotization Tools
         add(MineraculousKamikotizationsItems.WEATHER_CONTROL_PARASOL.get(), "Weather Control Parasol");

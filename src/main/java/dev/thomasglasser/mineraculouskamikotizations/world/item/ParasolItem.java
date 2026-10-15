@@ -30,8 +30,10 @@ public class ParasolItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (Active.isActive(player.getItemInHand(usedHand))) {
+        ItemStack stack = player.getItemInHand(usedHand);
+        if (Active.isActive(stack)) {
             player.startUsingItem(usedHand);
+            return InteractionResultHolder.consume(stack);
         }
         return super.use(level, player, usedHand);
     }
@@ -39,7 +41,6 @@ public class ParasolItem extends Item {
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         livingEntity.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING));
-        super.onUseTick(level, livingEntity, stack, remainingUseDuration);
     }
 
     @Override
@@ -49,8 +50,6 @@ public class ParasolItem extends Item {
 
     @Override
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        if (Active.isActive(stack))
-            return ACTIVE_MODIFIERS;
-        return super.getDefaultAttributeModifiers(stack);
+        return Active.isActive(stack) ? ACTIVE_MODIFIERS : super.getDefaultAttributeModifiers(stack);
     }
 }

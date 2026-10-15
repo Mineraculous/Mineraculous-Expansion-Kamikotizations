@@ -13,15 +13,15 @@ public class AddToWikiBookSubProvider extends AddToBookSubProvider {
         super(MineraculousConstants.modLoc(WikiBookSubProvider.ID), defaultLang);
     }
 
+    public static ResourceLocation wikiTexture(String path) {
+        return MineraculousKamikotizations.modLoc("textures/modonomicon/wiki/" + path + ".png");
+    }
+
     @Override
     protected void registerDefaultMacros() {}
 
     @Override
     protected void generateCategories() {
         add(new AddToKamikotizationsCategoryProvider(this).generate());
-    }
-
-    public static ResourceLocation wikiTexture(String path) {
-        return MineraculousKamikotizations.modLoc("textures/modonomicon/wiki/" + path + ".png");
     }
 }

@@ -204,24 +204,48 @@ dependencies {
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
+static def getMajorVersionRange(String version) {
+	def prefix = version.contains('-') ? version.substring(0, version.indexOf('-') + 1) : ""
+	def clean = prefix ? version.substring(prefix.length()) : version
+	def major = clean.takeBefore('.') as int
+	def next = prefix ? "${prefix}${major + 1}" : "${major + 1}"
+	return "[${version},${next})".toString()
+}
+
+// For MC and Neo drop versioning
+static def getMinorVersionRange(String version) {
+	def major = version.takeBefore('.')
+	def minor = (version.takeAfter('.').takeBefore('.') ?: version.takeAfter('.')) as int
+	return "[${version},${major}.${minor + 1})".toString()
+}
+
+static def getMineraculousVersionRange(String version) {
+	if (!version.contains('-beta'))
+		return getMajorVersionRange(version)
+	def suffix = version.indexOf('beta') + 4 as int
+	def base = version.substring(0, suffix)
+	def beta = version.substring(suffix) as int
+	return "[${version},${base}${beta + 1})".toString()
+}
+
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
 	var replaceProperties = [
 			version: project.version,
 			group: project.group,
-			minecraft_version: minecraft_version,
-			next_minecraft_version: next_minecraft_version,
+			// Hardcoded for old version format
+			minecraft_version_range: "[${minecraft_version},${next_minecraft_version})".toString(),
 			mod_name: mod_name,
 			mod_author: mod_author,
 			mod_id: mod_id,
 			license: license,
 			description: project.description,
-			neoforge_version: neoforge_version,
+			neoforge_version_range: getMinorVersionRange(neoforge_version),
 			major_fml_version: major_fml_version,
 			java_version: java_version,
 			icon: icon,
 			github_name: github_name,
-			tommylib_version: tommylib_version,
-			mineraculous_version: mineraculous_version
+			tommylib_version_range: getMajorVersionRange(tommylib_version),
+			mineraculous_version_range: getMineraculousVersionRange(mineraculous_version),
 	]
 
 	inputs.properties replaceProperties

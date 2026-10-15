@@ -5,12 +5,12 @@ import dev.thomasglasser.mineraculouskamikotizations.MineraculousKamikotizations
 import net.minecraft.resources.ResourceLocation;
 
 public class MineraculousKamikotizationsHotbarMenuIcons {
-    public static final ResourceLocation ICE = icon("ice");
-    public static final ResourceLocation LIGHTNING = icon("lightning");
-    public static final ResourceLocation CLOUD = icon("cloud");
-    public static final ResourceLocation WIND = icon("wind");
+    public static final ResourceLocation ICE = create("ice");
+    public static final ResourceLocation LIGHTNING = create("lightning");
+    public static final ResourceLocation CLOUD = create("cloud");
+    public static final ResourceLocation WIND = create("wind");
 
-    private static ResourceLocation icon(String name) {
+    private static ResourceLocation create(String name) {
         return HotbarMenuIcons.icon(MineraculousKamikotizations.modLoc(name));
     }
 }

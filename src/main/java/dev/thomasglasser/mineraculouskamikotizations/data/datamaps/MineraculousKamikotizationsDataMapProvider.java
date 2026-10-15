@@ -1,5 +1,6 @@
 package dev.thomasglasser.mineraculouskamikotizations.data.datamaps;
 
+import dev.thomasglasser.mineraculous.api.data.datamaps.MineraculousDataMapProvider;
 import dev.thomasglasser.mineraculous.api.datamaps.LuckyCharms;
 import dev.thomasglasser.mineraculous.api.datamaps.MineraculousDataMaps;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
@@ -7,9 +8,8 @@ import dev.thomasglasser.mineraculouskamikotizations.world.level.storage.loot.Mi
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.DataMapProvider;
 
-public class MineraculousKamikotizationsDataMapProvider extends DataMapProvider {
+public class MineraculousKamikotizationsDataMapProvider extends MineraculousDataMapProvider {
     public MineraculousKamikotizationsDataMapProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(packOutput, lookupProvider);
     }

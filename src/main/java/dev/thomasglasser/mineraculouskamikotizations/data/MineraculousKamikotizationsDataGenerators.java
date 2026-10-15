@@ -13,7 +13,6 @@ import dev.thomasglasser.mineraculouskamikotizations.data.modonomicons.Mineracul
 import dev.thomasglasser.mineraculouskamikotizations.data.recipes.MineraculousKamikotizationsRecipeProvider;
 import dev.thomasglasser.mineraculouskamikotizations.data.tags.MineraculousKamikotizationsItemTagsProvider;
 import dev.thomasglasser.mineraculouskamikotizations.world.entity.kamikotization.MineraculousKamikotizationsKamikotizations;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.RegistrySetBuilder;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -25,7 +24,7 @@ public class MineraculousKamikotizationsDataGenerators {
         // Server
         event.createDatapackRegistryObjects(BUILDER);
         MineraculousDataGenerationUtils.createRegistryDumpReport(event, MineraculousKamikotizations.MOD_ID);
-        MineraculousDataGenerationUtils.createProvider(event, (packOutput, lookupProvider, existingFileHelper) -> new MineraculousKamikotizationsItemTagsProvider(packOutput, lookupProvider, CompletableFuture.completedFuture(null), existingFileHelper));
+        MineraculousDataGenerationUtils.createProvider(event, (packOutput, lookupProvider, existingFileHelper) -> new MineraculousKamikotizationsItemTagsProvider(packOutput, lookupProvider, null, existingFileHelper));
         event.createProvider(MineraculousKamikotizationsDataMapProvider::new);
         event.createProvider(MineraculousKamikotizationsLootTables::new);
         event.createProvider(MineraculousKamikotizationsRecipeProvider::new);

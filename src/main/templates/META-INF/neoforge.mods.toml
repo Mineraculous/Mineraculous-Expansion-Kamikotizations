@@ -20,13 +20,13 @@ loaders = ['neoforge']
 [[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"
-versionRange="[${neoforge_version},)"
+versionRange="${neoforge_version_range}"
 ordering="NONE"
 side="BOTH"
 [[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"
-versionRange="[${minecraft_version},${next_minecraft_version})"
+versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"
 
@@ -34,12 +34,12 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="tommylib"
 type="required"
-versionRange="[${tommylib_version},)"
+versionRange="${tommylib_version_range}"
 ordering="NONE"
 side="BOTH"
 [[dependencies.${mod_id}]]
 modId="mineraculous"
 type="required"
-versionRange="[${mineraculous_version},)"
+versionRange="${mineraculous_version_range}"
 ordering="AFTER"
 side="BOTH"
