@@ -12,5 +12,9 @@ on:
 
 jobs:
   tommi:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     uses: Mineraculous/.github/.github/workflows/tommi_reviewer.yml@main
     secrets: inherit

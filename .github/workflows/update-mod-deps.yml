@@ -7,6 +7,9 @@ on:
 
 jobs:
   update-mod-deps:
+    permissions:
+      contents: write
+      pull-requests: write
     uses: Mineraculous/.github/.github/workflows/update-mod-deps.yml@main
     secrets: inherit
     with:

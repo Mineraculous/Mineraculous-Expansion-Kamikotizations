@@ -22,6 +22,8 @@ on:
 
 jobs:
   publish:
+    permissions:
+      contents: write
     uses: Mineraculous/.github/.github/workflows/publish.yml@main
     secrets: inherit
     with:
