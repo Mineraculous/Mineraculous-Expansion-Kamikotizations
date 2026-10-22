@@ -1,36 +1,19 @@
 name: build
 
-on: [push, pull_request, workflow_call]
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: "Name of the artifact to upload"
+        required: false
+        type: string
+        default: "Mineraculous Expansion Kamikotizations"
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-
-      - name: Setup JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Build with Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Assemble the project
-        run: ./gradlew build
-        env:
-          MINERACULOUS_USERNAME: ${{ secrets.MINERACULOUS_USERNAME }}
-          MINERACULOUS_PASSWORD: ${{ secrets.MINERACULOUS_PASSWORD }}
-
-      - name: Upload Jars
-        if: github.event_name == 'workflow_call'
-        uses: actions/upload-artifact@v4
-        with:
-          name: Mineraculous
-          if-no-files-found: error
-          path: build/libs
+    uses: Mineraculous/.github/.github/workflows/build.yml@main
+    secrets: inherit
+    with:
+      artifact-name: ${{ inputs.artifact-name || 'Mineraculous Expansion Kamikotizations' }}

@@ -1,0 +1,16 @@
+name: Update Mod Dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  update-mod-deps:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: Mineraculous/.github/.github/workflows/update-mod-deps.yml@main
+    secrets: inherit
+    with:
+      config-path: '.github/mod_deps.json'

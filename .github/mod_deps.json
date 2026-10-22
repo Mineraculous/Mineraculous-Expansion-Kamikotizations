@@ -1,0 +1,16 @@
+[
+  {
+    "mod_id": "smartbrainlib"
+  },
+  {
+    "mod_id": "jade",
+    "strip_suffix": "\\+neoforge$"
+  },
+  {
+    "mod_id": "jei"
+  },
+  {
+    "mod_id": "modonomicon",
+    "strip_prefix": "^1\\.\\d+\\.\\d+-"
+  }
+]
