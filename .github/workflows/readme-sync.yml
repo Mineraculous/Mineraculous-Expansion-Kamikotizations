@@ -1,0 +1,19 @@
+name: Sync Project Description
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+      - '.github/workflows/readme-sync.yml'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: Mineraculous/.github/.github/workflows/readme-sync.yml@main
+    secrets: inherit
+    with:
+      modrinth-id: 'mineraculouskamikotizations'
+      curseforge-id: '1649852'
+      readme-path: 'README.md'

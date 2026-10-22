@@ -21,105 +21,14 @@ on:
         type: string
 
 jobs:
-  call-build-workflow:
-    permissions:
-      contents: read
-    uses: "./.github/workflows/build.yml"
-
   publish:
-    needs: call-build-workflow
-    runs-on: ubuntu-latest
-    env:
-      changelog: '**Full Changelog**: https://github.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/compare/'
-    permissions:
-      contents: write
-    strategy:
-      matrix:
-        website: [ modrinth, curseforge, github_release ]
-    name: ${{ matrix.website }}
-
-    steps:
-      - name: Download mod artifact
-        uses: actions/download-artifact@v4
-        continue-on-error: false
-        with:
-          name: Mineraculous Expansion Kamikotizations
-          path: build/libs
-
-      - name: Checking and setting the environment
-        id: mod_env
-        continue-on-error: true
-        run: |
-          export name=$(ls build/libs/ | grep shadow -v | grep sources -v | grep javadoc -v | awk -F.jar '{print $1}')
-          export mod_name=$(echo $name | awk -F- '{print $1}')
-          export mc_version=$(echo $name | awk -F- '{print $3}')
-          export mod_version=$(echo $name | awk -F- '{print $4}')
-          echo "name=$name" >> $GITHUB_OUTPUT
-          echo "mod_name=$mod_name" >> $GITHUB_OUTPUT
-          echo "mc_version=$mc_version" >> $GITHUB_OUTPUT
-          echo "mod_version=$mod_version" >> $GITHUB_OUTPUT
-
-      - name: Publish Github Release
-        uses: Kir-Antipov/mc-publish@v3.3
-        continue-on-error: true
-        if : (matrix.website == 'github_release')
-        with:
-          files: |
-            build/libs/!(*-@(dev|sources|javadoc)).jar
-            build/libs/*-@(dev|sources|javadoc).jar
-          name : ${{ inputs.title }}
-          version: ${{ steps.mod_env.outputs.mod_version }}
-          changelog: ${{ env.changelog }}${{ inputs.last_version }}...${{ inputs.version }}
-          github-tag: ${{ steps.mod_env.outputs.mod_version }}
-          github-generate-changelog: true
-          java : Java 21
-          game-versions: |
-            ${{ inputs.game_versions }}
-
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish Modrinth Release
-        uses: Kir-Antipov/mc-publish@v3.3
-        continue-on-error: true
-        if : (matrix.website == 'modrinth')
-        with:
-          files: |
-            build/libs/!(*-@(dev|sources|javadoc)).jar
-            build/libs/*-@(dev|sources|javadoc).jar
-          name: ${{ inputs.title }}
-          version: ${{ steps.mod_env.outputs.mod_version }}
-          changelog: ${{ env.changelog }}${{ inputs.last_version }}...${{ inputs.version }}
-          java: Java 21
-          game-versions: |
-            ${{ inputs.game_versions }}
-
-          modrinth-id: mineraculouskamikotizations
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-
-      - name: Publish Curseforge Release
-        uses: Kir-Antipov/mc-publish@v3.3
-        continue-on-error: true
-        if: (matrix.website == 'curseforge')
-        with:
-          files: |
-            build/libs/!(*-@(dev|sources|javadoc)).jar
-            build/libs/*-@(dev|sources|javadocs).jar
-          name: ${{ inputs.title }}
-          version: ${{ steps.mod_env.outputs.mod_version }}
-          changelog: ${{ env.changelog }}${{ inputs.last_version }}...${{ inputs.version }}
-          java: Java 21
-          game-versions: |
-            ${{ inputs.game_versions }}
-
-          # TODO: Replace with CurseForge ID
-          curseforge-id: 123456
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
-  cleanup:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Delete artifact
-        uses: geekyeggo/delete-artifact@v6
-        with:
-          name: Mineraculous Expansion Kamikotizations
+    uses: Mineraculous/.github/.github/workflows/publish.yml@main
+    secrets: inherit
+    with:
+      title: ${{ inputs.title }}
+      last_version: ${{ inputs.last_version }}
+      version: ${{ inputs.version }}
+      game_versions: ${{ inputs.game_versions }}
+      artifact-name: 'Mineraculous Expansion Kamikotizations'
+      modrinth-id: 'mineraculouskamikotizations'
+      curseforge-id: '1649852'

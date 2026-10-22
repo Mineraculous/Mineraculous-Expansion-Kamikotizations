@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ServerLevelData;
 
 public record RestoreWeatherReversionEntry(UUID cause, ResourceKey<Level> dimension, int clearTime, int weatherTime, boolean raining, boolean thundering) implements IntrinsicReversionEntry<RestoreWeatherReversionEntry> {
-
     private static final MapCodec<RestoreWeatherReversionEntry> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             UUIDUtil.CODEC.fieldOf("cause").forGetter(RestoreWeatherReversionEntry::cause),
             ResourceKey.codec(Registries.DIMENSION).fieldOf("dimension").forGetter(RestoreWeatherReversionEntry::dimension),
@@ -33,6 +32,7 @@ public record RestoreWeatherReversionEntry(UUID cause, ResourceKey<Level> dimens
             ByteBufCodecs.BOOL, RestoreWeatherReversionEntry::thundering,
             RestoreWeatherReversionEntry::new);
     public static final Type<RestoreWeatherReversionEntry> TYPE = new Type<>(CODEC, STREAM_CODEC);
+
     public static RestoreWeatherReversionEntry of(UUID cause, ServerLevel level) {
         ServerLevelData data = (ServerLevelData) level.getLevelData();
         return new RestoreWeatherReversionEntry(cause, level.dimension(), data.getClearWeatherTime(), data.getRainTime(), data.isRaining(), data.isThundering());
