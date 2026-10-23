@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-mod-deps:
+  update-mod-dependencies:
     permissions:
       contents: write
       pull-requests: write
-    uses: Mineraculous/.github/.github/workflows/update-mod-deps.yml@main
+    uses: Mineraculous/.github/.github/workflows/update-mod-dependencies.yml@main
     secrets: inherit
     with:
-      config-path: '.github/mod_deps.json'
+      config-path: '.github/mod_dependencies.json'
