@@ -1,0 +1,16 @@
+name: PR Summary Writer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  summarize:
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    uses: Mineraculous/.github/.github/workflows/pr_summary_writer.yml@main
+    secrets: inherit
